@@ -5,7 +5,6 @@ title: Home
 
 <div class="home-container">
   
-  {% comment %} Saare pages ko filter karke ek jagah jama karna {% endcomment %}
   {% assign all_articles = site.pages | where: "is_post", true | sort: "title" %}
 
   <div class="post-list" id="post-wrapper">
@@ -43,8 +42,9 @@ title: Home
 <style>
   .home-container { max-width: 900px; margin: 40px auto; padding: 0 5%; }
   
+  /* IMPORTANT: display:none JS handle karega, lekin default list ke liye flex hi rahega */
   .horizontal-card {
-    display: flex;
+    display: none; 
     background: #fff;
     border: 1px solid #eee;
     border-radius: 12px;
@@ -52,32 +52,19 @@ title: Home
     margin-bottom: 25px;
     transition: 0.3s;
     height: 200px;
-    display: none; /* Initially hide all, JS will show them */
   }
 
   .horizontal-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-
   .card-left { width: 35%; min-width: 200px; }
   .card-left img { width: 100%; height: 100%; object-fit: cover; }
-
-  .card-right { 
-    width: 65%; 
-    padding: 20px; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: space-between; 
-  }
-
+  .card-right { width: 65%; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
   .content-top h2 { font-size: 20px; margin-bottom: 10px; }
   .content-top h2 a { text-decoration: none; color: #111; font-weight: 800; }
   .content-top p { font-size: 14px; color: #555; line-height: 1.5; }
-
   .content-bottom { display: flex; justify-content: space-between; align-items: center; }
-
   .share-btn { font-size: 13px; font-weight: bold; color: #666; text-decoration: none; background: #f0f0f0; padding: 5px 12px; border-radius: 4px; }
   .read-btn { font-size: 13px; font-weight: bold; color: #166534; text-decoration: none; border: 1px solid #166534; padding: 5px 12px; border-radius: 4px; }
   .read-btn:hover { background: #166534; color: #fff; }
-
   .pagination-wrapper { text-align: center; margin-top: 30px; }
   .page-num { padding: 8px 16px; background: #eee; border-radius: 6px; margin: 0 5px; cursor: pointer; font-weight: bold; border: none; }
   .page-num.active { background: #166534; color: #fff; }
@@ -90,52 +77,47 @@ title: Home
 </style>
 
 <script>
-  const postsPerPage = 2;
-  const allPosts = document.querySelectorAll('.js-post');
-  const paginationNav = document.getElementById('pagination-nav');
-  let currentPage = 1;
+  // DOM load hone ka wait karein
+  document.addEventListener("DOMContentLoaded", function() {
+    const postsPerPage = 2;
+    const allPosts = document.querySelectorAll('.js-post');
+    const paginationNav = document.getElementById('pagination-nav');
+    const wrapper = document.getElementById('post-wrapper');
+    
+    function showPage(page) {
+      const start = (page - 1) * postsPerPage;
+      const end = start + postsPerPage;
 
-  function showPage(page) {
-    const start = (page - 1) * postsPerPage;
-    const end = start + postsPerPage;
-
-    allPosts.forEach((post, index) => {
-      if (index >= start && index < end) {
-        post.style.display = 'flex';
-      } else {
-        post.style.display = 'none';
-      }
-    });
-
-    updatePaginationButtons(page);
-  }
-
-  function updatePaginationButtons(activePage) {
-    const totalPages = Math.ceil(allPosts.length / postsPerPage);
-    paginationNav.innerHTML = '';
-
-    if (totalPages <= 1) return;
-
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.innerText = i;
-      btn.classList.add('page-num');
-      if (i === activePage) btn.classList.add('active');
-      
-      btn.addEventListener('click', () => {
-        currentPage = i;
-        showPage(currentPage);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      allPosts.forEach((post, index) => {
+        if (index >= start && index < end) {
+          post.style.display = 'flex';
+        } else {
+          post.style.display = 'none';
+        }
       });
-      
-      paginationNav.appendChild(btn);
+      updatePaginationButtons(page);
     }
-  }
 
-  // Initial Load
-  if(allPosts.length > 0) {
-    showPage(1);
-  } else {
-    document.getElementById('post-wrapper').innerHTML = "<p style='text-align:center;'>No posts found. Add 'is_post: true' to your page Front Matter.</p>";
-  }
+    function updatePaginationButtons(activePage) {
+      const totalPages = Math.ceil(allPosts.length / postsPerPage);
+      if (!paginationNav) return;
+      paginationNav.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.innerText = i;
+        btn.classList.add('page-num');
+        if (i === activePage) btn.classList.add('active');
+        btn.onclick = () => { showPage(i); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+        paginationNav.appendChild(btn);
+      }
+    }
+
+    if(allPosts.length > 0) {
+      showPage(1);
+    } else {
+      wrapper.innerHTML = "<p style='text-align:center;'>Bhai, koi post nahi mili. Check Front Matter!</p>";
+    }
+  });
 </script>
