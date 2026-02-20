@@ -2,7 +2,64 @@
 layout: default
 title: Home
 ---
+<div class="category-section">
+  <div class="category-scroll-container" id="category-bar">
+    <button class="cat-btn active" onclick="filterCategory('all', this)">All Posts</button>
+    <button class="cat-btn" onclick="filterCategory('Networking', this)">Networking</button>
+    <button class="cat-btn" onclick="filterCategory('Cyber', this)">Cyber Security</button>
+    <button class="cat-btn" onclick="filterCategory('AI', this)">Artificial Intelligence</button>
+    <button class="cat-btn" onclick="filterCategory('Linux', this)">Linux</button>
+    <button class="cat-btn" onclick="filterCategory('Privacy', this)">Privacy</button>
+    <button class="cat-btn" onclick="filterCategory('Cloud', this)">Cloud Computing</button>
+  </div>
+</div>
 
+<style>
+/* Category Scroll Styling */
+.category-section {
+  padding: 20px 0;
+  background: transparent;
+  margin-bottom: 10px;
+}
+
+.category-scroll-container {
+  display: flex;
+  overflow-x: auto; /* Horizontal scroll enable */
+  white-space: nowrap;
+  gap: 12px;
+  padding-bottom: 10px;
+  scrollbar-width: none; /* Firefox ke liye scrollbar hide */
+}
+
+.category-scroll-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari ke liye scrollbar hide */
+}
+
+.cat-btn {
+  padding: 8px 20px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+  cursor: pointer;
+  transition: 0.3s;
+  flex-shrink: 0; /* Buttons ko chipakne se rokta hai */
+}
+
+.cat-btn:hover {
+  border-color: #166534;
+  color: #166534;
+}
+
+.cat-btn.active {
+  background: #166534;
+  color: #fff;
+  border-color: #166534;
+  box-shadow: 0 4px 10px rgba(22, 101, 52, 0.2);
+}
+</style>
 <div class="home-container">
   
   {% assign all_articles = site.pages | where: "is_post", true | sort: "title" %}
@@ -120,4 +177,35 @@ title: Home
       wrapper.innerHTML = "<p style='text-align:center;'>Bhai, koi post nahi mili. Check Front Matter!</p>";
     }
   });
-</script>
+</script><script>function filterCategory(category, btn) {
+  // 1. Active Button Change Karo
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // 2. Posts Filter Karo
+  const allPosts = document.querySelectorAll('.js-post');
+  let visibleCount = 0;
+
+  allPosts.forEach(post => {
+    // Hum assume kar rahe hain ki tumhari post ke title ya content mein category ka naam hoga
+    // Best hai ki tum post card mein data-category dalo, par abhi title se check karte hain
+    const title = post.querySelector('h2').innerText;
+    
+    if (category === 'all' || title.includes(category)) {
+      post.style.display = 'flex';
+      visibleCount++;
+    } else {
+      post.style.display = 'none';
+    }
+  });
+
+  // 3. Pagination hide kar do agar filter on hai
+  const pagination = document.getElementById('pagination-nav');
+  if (category !== 'all') {
+    if(pagination) pagination.style.display = 'none';
+  } else {
+    // Agar 'All' select kiya toh wapas pehla page dikhao
+    if(typeof showPage === 'function') showPage(1);
+    if(pagination) pagination.style.display = 'block';
+  }
+}</script>
