@@ -1,24 +1,39 @@
-# ==============================
-# TYAGI CORE - JEKYLL CONFIG
-# ==============================
+# ==================================================
+# TYAGI CORE - PRODUCTION JEKYLL CONFIG
+# ==================================================
 
 title: "Tyagi Core"
 description: "Deep Technology, Cyber Intelligence, System Architecture & Innovation Hub by Tyagi Core."
 tagline: "Engineering Digital Excellence"
 author: "Himanshu Tyagi"
+email: ""
 
-# ------------------------------
+# ==================================================
 # SITE URL SETTINGS
-# ------------------------------
+# ==================================================
 
-url: "https://HimanshuTyagiJi.github.io"
+url: "https://himanshutyagiji.github.io"
 baseurl: "/TyagiCore"
 
+# Clean URL (No .html, No date)
 permalink: /:title/
 
-# ------------------------------
-# PAGINATION SETTINGS
-# ------------------------------
+# ==================================================
+# BUILD SETTINGS
+# ==================================================
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  auto_ids: true
+
+# ==================================================
+# PAGINATION
+# ==================================================
+# ⚠ GitHub Pages supports jekyll-paginate only (not v2)
 
 paginate: 25
 paginate_path: "/page/:num/"
@@ -28,11 +43,11 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# ------------------------------
+# ==================================================
 # SEO SETTINGS
-# ------------------------------
+# ==================================================
 
-lang: en_IN
+lang: en-IN
 timezone: Asia/Kolkata
 
 twitter:
@@ -42,25 +57,21 @@ twitter:
 social:
   name: Tyagi Core
   links:
-    - https://youtube.com/@tyagicore
     - https://github.com/HimanshuTyagiJi
 
 logo: /assets/images/logo.png
 
-# ------------------------------
-# MARKDOWN SETTINGS
-# ------------------------------
+# ==================================================
+# COLLECTIONS (If you don't want date-based posts)
+# ==================================================
 
-markdown: kramdown
-highlighter: rouge
+collections:
+  posts:
+    output: true
 
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-
-# ------------------------------
+# ==================================================
 # DEFAULTS
-# ------------------------------
+# ==================================================
 
 defaults:
   - scope:
@@ -69,22 +80,25 @@ defaults:
     values:
       layout: "post"
       author: "Himanshu Tyagi"
+      seo: true
 
-# ------------------------------
-# EXCLUDE FILES
-# ------------------------------
-
-exclude:
-  - README.md
-  - node_modules
-  - vendor
-
-# ------------------------------
+# ==================================================
 # PERFORMANCE
-# ------------------------------
+# ==================================================
 
 sass:
   style: compressed
 
 future: false
 show_drafts: false
+
+# ==================================================
+# EXCLUDED FILES
+# ==================================================
+
+exclude:
+  - README.md
+  - node_modules
+  - vendor
+  - Gemfile
+  - Gemfile.lock
