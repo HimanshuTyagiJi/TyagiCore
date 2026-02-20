@@ -1,0 +1,90 @@
+# ==============================
+# TYAGI CORE - JEKYLL CONFIG
+# ==============================
+
+title: "Tyagi Core"
+description: "Deep Technology, Cyber Intelligence, System Architecture & Innovation Hub by Tyagi Core."
+tagline: "Engineering Digital Excellence"
+author: "Himanshu Tyagi"
+
+# ------------------------------
+# SITE URL SETTINGS
+# ------------------------------
+
+url: "https://HimanshuTyagiJi.github.io"
+baseurl: "/TyagiCore"
+
+permalink: /:title/
+
+# ------------------------------
+# PAGINATION SETTINGS
+# ------------------------------
+
+paginate: 25
+paginate_path: "/page/:num/"
+
+plugins:
+  - jekyll-paginate
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# ------------------------------
+# SEO SETTINGS
+# ------------------------------
+
+lang: en_IN
+timezone: Asia/Kolkata
+
+twitter:
+  username: ""
+  card: summary_large_image
+
+social:
+  name: Tyagi Core
+  links:
+    - https://youtube.com/@tyagicore
+    - https://github.com/HimanshuTyagiJi
+
+logo: /assets/images/logo.png
+
+# ------------------------------
+# MARKDOWN SETTINGS
+# ------------------------------
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# ------------------------------
+# DEFAULTS
+# ------------------------------
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Himanshu Tyagi"
+
+# ------------------------------
+# EXCLUDE FILES
+# ------------------------------
+
+exclude:
+  - README.md
+  - node_modules
+  - vendor
+
+# ------------------------------
+# PERFORMANCE
+# ------------------------------
+
+sass:
+  style: compressed
+
+future: false
+show_drafts: false
