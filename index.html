@@ -26,7 +26,27 @@ title: Tyagi Core
 </head>
 
 <body>
+  {% for page in site.pages %}
+  {% if page.show_on_home %}
   
+    <div class="post-card">
+      <h2>
+        <a href="{{ page.url | relative_url }}">
+          {{ page.title }}
+        </a>
+      </h2>
+      
+      <p>
+        {{ page.description }}
+      </p>
+
+      <a href="{{ page.url | relative_url }}" class="read-btn">
+        Read More →
+      </a>
+    </div>
+
+  {% endif %}
+{% endfor %}
 <div class="container" id="posts"></div>
 <div class="pagination" id="pagination"></div>
 
