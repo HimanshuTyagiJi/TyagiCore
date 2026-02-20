@@ -1,146 +1,183 @@
 ---
 layout: default
-title: Tyagi Core
+title: Home
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="home-container">
 
-<title>{{ page.title }} | {{ site.title }}</title>
-<meta name="description" content="{{ site.description }}">
-<meta name="keywords" content="Technology, Cyber Security, Programming, Hosting, AI, Projects">
-<meta name="author" content="Himanshu Tyagi">
+  {% assign home_pages = site.pages | where: "show_on_home", true | sort: "title" %}
 
-<!-- OpenGraph -->
-<meta property="og:title" content="{{ page.title }}">
-<meta property="og:description" content="{{ site.description }}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="{{ site.url }}">
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap">
-
-
-</head>
-
-<body>
-  {% for page in site.pages %}
-  {% if page.show_on_home %}
-  
-    <div class="post-card">
-      <h2>
-        <a href="{{ page.url | relative_url }}">
-          {{ page.title }}
-        </a>
-      </h2>
-      
-      <p>
-        {{ page.description }}
-      </p>
-
-      <a href="{{ page.url | relative_url }}" class="read-btn">
-        Read More →
-      </a>
-    </div>
-
+  {% assign per_page = 12 %}
+  {% assign total_pages = home_pages.size | divided_by: per_page %}
+  {% if home_pages.size modulo per_page > 0 %}
+    {% assign total_pages = total_pages | plus: 1 %}
   {% endif %}
-{% endfor %}
-<div class="container" id="posts"></div>
-<div class="pagination" id="pagination"></div>
 
-  <script>
-/* ================= POSTS DATA ================= */
+  {% assign current_page = 1 %}
+  {% if page.page_number %}
+    {% assign current_page = page.page_number %}
+  {% endif %}
 
-let allPosts=[];
-for(let i=1;i<=12;i++){
-  allPosts.push({
-    title:"Post Title "+i,
-    content:"This is preview content for post "+i+". It shows summary text about networking cyber linux cloud and AI.",
-    image:"https://picsum.photos/400/300?random="+i
-  });
-}
+  {% assign start_index = per_page | times: current_page | minus: per_page %}
+  {% assign end_index = start_index | plus: per_page | minus: 1 %}
 
-let posts=[...allPosts];
-let postsPerPage=3;
-let currentPage=1;
+  <div class="post-grid">
+    {% for p in home_pages %}
+      {% if forloop.index0 >= start_index and forloop.index0 <= end_index %}
 
-/* ================= RENDER POSTS ================= */
+        <div class="post-card">
+          
+          {% if p.image %}
+            <img src="{{ p.image | relative_url }}" alt="{{ p.title }}">
+          {% endif %}
 
-function renderPosts(){
-  let container=document.getElementById("posts");
-  container.innerHTML="";
+          <div class="post-content">
+            <h2>
+              <a href="{{ p.url | relative_url }}">
+                {{ p.title }}
+              </a>
+            </h2>
 
-  let start=(currentPage-1)*postsPerPage;
-  let end=start+postsPerPage;
-  let pagePosts=posts.slice(start,end);
+            <p>
+              {{ p.description | truncate: 150 }}
+            </p>
 
-  if(pagePosts.length === 0){
-    container.innerHTML="<p style='text-align:center;font-weight:700;'>No results found</p>";
-    return;
-  }
+            <div class="card-buttons">
+              <a href="https://twitter.com/intent/tweet?url={{ site.url }}{{ p.url }}" target="_blank" class="share-btn">
+                Share
+              </a>
 
-  pagePosts.forEach(post=>{
-    container.innerHTML+=`
-      <div class="post">
-        <img src="${post.image}">
-        <div class="post-content">
-          <h2>${post.title}</h2>
-          <p>${post.content}</p>
-          <div class="buttons">
-            <button class="share">Share</button>
-            <button class="read">Read More</button>
+              <a href="{{ p.url | relative_url }}" class="read-btn">
+                Read More →
+              </a>
+            </div>
           </div>
+
         </div>
-      </div>
-    `;
-  });
+
+      {% endif %}
+    {% endfor %}
+  </div>
+
+
+  <!-- PAGINATION -->
+  {% if total_pages > 1 %}
+  <div class="pagination">
+    {% for i in (1..total_pages) %}
+      {% if i == current_page %}
+        <span class="page-btn active">{{ i }}</span>
+      {% else %}
+        <a href="/page/{{ i }}/" class="page-btn">{{ i }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+
+
+
+<style>
+
+.home-container{
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 5%;
 }
 
-/* ================= PAGINATION ================= */
-
-function renderPagination(){
-  let totalPages=Math.ceil(posts.length/postsPerPage);
-  let pag=document.getElementById("pagination");
-  pag.innerHTML="";
-
-  if(totalPages <= 1) return;
-
-  for(let i=1;i<=totalPages;i++){
-    pag.innerHTML+=`
-      <button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>
-    `;
-  }
+.post-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
 }
 
-function goPage(page){
-  currentPage=page;
-  renderPosts();
-  renderPagination();
+.post-card{
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid #eee;
+  transition:0.3s;
 }
 
-/* ================= LIVE SEARCH ================= */
+.post-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 30px rgba(0,0,0,0.08);
+}
 
-document.querySelector("#searchPanel input").addEventListener("keyup",function(){
-  let value=this.value.toLowerCase();
+.post-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
 
-  posts = allPosts.filter(post =>
-    post.title.toLowerCase().includes(value) ||
-    post.content.toLowerCase().includes(value)
-  );
+.post-content{
+  padding:18px;
+}
 
-  currentPage=1;
-  renderPosts();
-  renderPagination();
-});
+.post-content h2{
+  margin-bottom:10px;
+  font-size:18px;
+}
 
-/* INIT */
-renderPosts();
-renderPagination();
+.post-content h2 a{
+  text-decoration:none;
+  color:#111;
+}
 
-</script>
+.post-content h2 a:hover{
+  color:#166534;
+}
 
+.post-content p{
+  font-size:14px;
+  color:#555;
+  margin-bottom:15px;
+}
 
-</body>
-</html>
+.card-buttons{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.share-btn{
+  background:#e5e7eb;
+  padding:6px 14px;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+  color:#111;
+}
+
+.read-btn{
+  background:#166534;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:6px;
+  text-decoration:none;
+  font-weight:700;
+  font-size:13px;
+}
+
+.pagination{
+  text-align:center;
+  margin-top:40px;
+}
+
+.page-btn{
+  margin:5px;
+  padding:8px 14px;
+  border-radius:6px;
+  text-decoration:none;
+  background:#e5e7eb;
+  font-weight:700;
+  color:#111;
+}
+
+.page-btn.active{
+  background:#166534;
+  color:#fff;
+}
+
+</style>
