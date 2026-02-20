@@ -3,65 +3,120 @@ layout: default
 title: Home
 ---
 
-<div class="container">
+<section class="hero">
+  <div class="hero-content">
+    <h1>Tyagi Core</h1>
+    <p>Deep Technology • Cyber Intelligence • System Innovation</p>
+    <a href="/TyagiCore/about/" class="btn">Explore More</a>
+  </div>
+</section>
+
+<section class="about">
+  <h2>What is Tyagi Core?</h2>
+  <p>
+    Tyagi Core is a deep-technology focused platform dedicated to understanding 
+    digital systems at their foundation. We break down complex infrastructure,
+    cybersecurity layers, and system architecture into practical and actionable insights.
+  </p>
+</section>
+
+<section class="latest-posts">
+  <h2>Latest Articles</h2>
 
   {% for post in paginator.posts %}
-  <article class="post-card">
-
-    {% if post.image %}
-      <div class="post-thumb">
-        <img src="{{ post.image }}" alt="{{ post.title }}">
-      </div>
-    {% endif %}
-
-    <div class="post-content">
-
-      <h2 class="post-title">
-        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      </h2>
-
-      <div class="post-meta">
-        <span>{{ post.date | date: "%d %B %Y" }}</span>
-        {% if post.author %}
-          • <span>{{ post.author }}</span>
-        {% endif %}
-      </div>
-
-      <p class="post-excerpt">
-        {{ post.excerpt | strip_html | truncate: 160 }}
-      </p>
-
-      <a href="{{ post.url | relative_url }}" class="read-more">
-        Read More →
-      </a>
-
+    <div class="post-card">
+      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+      <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
+      <a href="{{ post.url }}" class="read-more">Read More →</a>
     </div>
-
-  </article>
   {% endfor %}
 
-</div>
-
-<!-- Pagination -->
+</section>
 
 <div class="pagination">
-
-  {% if paginator.previous_page %}
-    <a href="{{ paginator.previous_page_path | relative_url }}" class="page-btn">← Prev</a>
+  {% if paginator.total_pages > 1 %}
+    {% for page in (1..paginator.total_pages) %}
+      {% if page == paginator.page %}
+        <span class="active">{{ page }}</span>
+      {% elsif page == 1 %}
+        <a href="/TyagiCore/">{{ page }}</a>
+      {% else %}
+        <a href="/TyagiCore/page/{{ page }}/">{{ page }}</a>
+      {% endif %}
+    {% endfor %}
   {% endif %}
-
-  {% for page in (1..paginator.total_pages) %}
-    {% if page == paginator.page %}
-      <span class="page-btn active">{{ page }}</span>
-    {% elsif page == 1 %}
-      <a href="{{ '/' | relative_url }}" class="page-btn">{{ page }}</a>
-    {% else %}
-      <a href="{{ site.paginate_path | replace: ':num', page | relative_url }}" class="page-btn">{{ page }}</a>
-    {% endif %}
-  {% endfor %}
-
-  {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path | relative_url }}" class="page-btn">Next →</a>
-  {% endif %}
-
 </div>
+
+<style>
+.hero{
+  background:linear-gradient(135deg,#0f172a,#166534);
+  color:#fff;
+  padding:100px 20px;
+  text-align:center;
+}
+.hero h1{
+  font-size:48px;
+  margin-bottom:15px;
+}
+.hero p{
+  font-size:18px;
+  opacity:0.9;
+}
+.btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:12px 25px;
+  background:#fff;
+  color:#166534;
+  font-weight:bold;
+  border-radius:8px;
+  text-decoration:none;
+}
+.about{
+  max-width:900px;
+  margin:60px auto;
+  text-align:center;
+  padding:0 20px;
+}
+.latest-posts{
+  max-width:900px;
+  margin:60px auto;
+  padding:0 20px;
+}
+.post-card{
+  background:#f9fafb;
+  padding:25px;
+  margin-bottom:20px;
+  border-radius:12px;
+  border:1px solid #eee;
+  transition:0.3s;
+}
+.post-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+.read-more{
+  display:inline-block;
+  margin-top:10px;
+  font-weight:bold;
+  color:#166534;
+  text-decoration:none;
+}
+.pagination{
+  text-align:center;
+  margin:50px 0;
+}
+.pagination a,
+.pagination span{
+  display:inline-block;
+  margin:5px;
+  padding:8px 14px;
+  border-radius:6px;
+  text-decoration:none;
+  border:1px solid #166534;
+}
+.pagination .active{
+  background:#166534;
+  color:#fff;
+}
+</style>
