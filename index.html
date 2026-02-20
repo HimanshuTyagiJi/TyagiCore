@@ -1,122 +1,307 @@
 ---
 layout: default
-title: Home
+title: Tyagi Core
 ---
 
-<section class="hero">
-  <div class="hero-content">
-    <h1>Tyagi Core</h1>
-    <p>Deep Technology • Cyber Intelligence • System Innovation</p>
-    <a href="/TyagiCore/about/" class="btn">Explore More</a>
-  </div>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<section class="about">
-  <h2>What is Tyagi Core?</h2>
-  <p>
-    Tyagi Core is a deep-technology focused platform dedicated to understanding 
-    digital systems at their foundation. We break down complex infrastructure,
-    cybersecurity layers, and system architecture into practical and actionable insights.
-  </p>
-</section>
+<title>{{ page.title }} | {{ site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+<meta name="keywords" content="Technology, Cyber Security, Programming, Hosting, AI, Projects">
+<meta name="author" content="Himanshu Tyagi">
 
-<section class="latest-posts">
-  <h2>Latest Articles</h2>
+<!-- OpenGraph -->
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ site.description }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ site.url }}">
 
-  {% for post in paginator.posts %}
-    <div class="post-card">
-      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-      <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
-      <a href="{{ post.url }}" class="read-more">Read More →</a>
-    </div>
-  {% endfor %}
-
-</section>
-
-<div class="pagination">
-  {% if paginator.total_pages > 1 %}
-    {% for page in (1..paginator.total_pages) %}
-      {% if page == paginator.page %}
-        <span class="active">{{ page }}</span>
-      {% elsif page == 1 %}
-        <a href="/TyagiCore/">{{ page }}</a>
-      {% else %}
-        <a href="/TyagiCore/page/{{ page }}/">{{ page }}</a>
-      {% endif %}
-    {% endfor %}
-  {% endif %}
-</div>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap">
 
 <style>
+
+/* ===== GLOBAL ===== */
+
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:#f9fafb;
+color:#111827;
+transition:0.3s;
+}
+
+.dark{
+background:#0f172a;
+color:#f1f5f9;
+}
+
+/* ===== HEADER ===== */
+
+header{
+position:sticky;
+top:0;
+background:white;
+padding:15px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+z-index:999;
+}
+
+.dark header{
+background:#111827;
+}
+
+.logo{
+font-weight:900;
+font-size:20px;
+}
+
+.nav{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.nav a{
+text-decoration:none;
+color:inherit;
+font-weight:600;
+}
+
+.dark-toggle{
+cursor:pointer;
+padding:6px 12px;
+border-radius:6px;
+background:#166534;
+color:white;
+}
+
+/* ===== HERO ===== */
+
 .hero{
-  background:linear-gradient(135deg,#0f172a,#166534);
-  color:#fff;
-  padding:100px 20px;
-  text-align:center;
+padding:80px 5%;
+text-align:center;
+background:linear-gradient(135deg,#166534,#0ea5e9);
+color:white;
+animation:fadeIn 1s ease forwards;
 }
+
 .hero h1{
-  font-size:48px;
-  margin-bottom:15px;
+font-size:42px;
+margin-bottom:20px;
 }
+
 .hero p{
-  font-size:18px;
-  opacity:0.9;
+font-size:18px;
+opacity:0.9;
 }
-.btn{
-  display:inline-block;
-  margin-top:20px;
-  padding:12px 25px;
-  background:#fff;
-  color:#166534;
-  font-weight:bold;
-  border-radius:8px;
-  text-decoration:none;
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
 }
-.about{
-  max-width:900px;
-  margin:60px auto;
-  text-align:center;
-  padding:0 20px;
+
+/* ===== SEARCH ===== */
+
+.search-box{
+text-align:center;
+margin:40px 0;
 }
-.latest-posts{
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
+
+.search-box input{
+padding:10px 15px;
+width:280px;
+border-radius:8px;
+border:1px solid #ddd;
 }
+
+/* ===== POSTS ===== */
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:40px 5%;
+}
+
 .post-card{
-  background:#f9fafb;
-  padding:25px;
-  margin-bottom:20px;
-  border-radius:12px;
-  border:1px solid #eee;
-  transition:0.3s;
+display:flex;
+gap:20px;
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+transition:0.3s;
 }
+
+.dark .post-card{
+background:#1e293b;
+}
+
 .post-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+transform:translateY(-5px);
 }
-.read-more{
-  display:inline-block;
-  margin-top:10px;
-  font-weight:bold;
-  color:#166534;
-  text-decoration:none;
+
+.post-thumb{
+width:120px;
+height:90px;
+background:#e5e7eb;
+border-radius:8px;
 }
+
+.post-content h3{
+margin:0 0 10px;
+}
+
+.post-meta{
+font-size:12px;
+color:#6b7280;
+margin-bottom:10px;
+}
+
+/* ===== PAGINATION ===== */
+
 .pagination{
-  text-align:center;
-  margin:50px 0;
+text-align:center;
+margin-top:40px;
 }
-.pagination a,
-.pagination span{
-  display:inline-block;
-  margin:5px;
-  padding:8px 14px;
-  border-radius:6px;
-  text-decoration:none;
-  border:1px solid #166534;
+
+.pagination a{
+padding:8px 14px;
+margin:5px;
+border-radius:6px;
+background:#e5e7eb;
+text-decoration:none;
+color:#111;
+font-weight:600;
 }
-.pagination .active{
-  background:#166534;
-  color:#fff;
+
+.pagination a.active{
+background:#166534;
+color:white;
 }
+
+/* ===== SIDEBAR ===== */
+
+.sidebar{
+background:#f3f4f6;
+padding:20px;
+border-radius:12px;
+}
+
+.dark .sidebar{
+background:#1f2937;
+}
+
+/* ===== FOOTER ===== */
+
+footer{
+background:#111827;
+color:#cbd5e1;
+padding:40px 5%;
+margin-top:60px;
+}
+
+footer h3{
+margin-top:0;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:768px){
+.post-card{
+flex-direction:column;
+}
+}
+
 </style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">TYAGI CORE</div>
+<div class="nav">
+<a href="#">Home</a>
+<a href="#">Projects</a>
+<a href="#">About</a>
+<div class="dark-toggle" onclick="toggleDark()">Dark</div>
+</div>
+</header>
+
+<section class="hero">
+<h1>Build Real Tech From Scratch</h1>
+<p>Deep Technology • Cyber Intelligence • Innovation</p>
+</section>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Search articles..." onkeyup="searchPosts()">
+</div>
+
+<div class="container">
+
+{% for post in paginator.posts %}
+
+<div class="post-card searchable">
+<div class="post-thumb"></div>
+<div class="post-content">
+<h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+<div class="post-meta">
+By {{ post.author }} • {{ post.date | date: "%d %B %Y" }}
+</div>
+<p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
+</div>
+</div>
+
+{% endfor %}
+
+<div class="pagination">
+{% if paginator.previous_page %}
+<a href="{{ paginator.previous_page_path }}">Prev</a>
+{% endif %}
+
+{% for page in (1..paginator.total_pages) %}
+<a href="/page/{{ page }}/" class="{% if page == paginator.page %}active{% endif %}">{{ page }}</a>
+{% endfor %}
+
+{% if paginator.next_page %}
+<a href="{{ paginator.next_page_path }}">Next</a>
+{% endif %}
+</div>
+
+</div>
+
+<footer>
+<h3>About Tyagi Core</h3>
+<p>Engineering powerful systems with precision and innovation.</p>
+<p>© 2026 Tyagi Core • Privacy • Disclaimer</p>
+</footer>
+
+<script>
+
+/* DARK MODE */
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+/* SEARCH */
+function searchPosts(){
+let input=document.getElementById("searchInput").value.toLowerCase();
+let posts=document.getElementsByClassName("searchable");
+
+for(let i=0;i<posts.length;i++){
+let text=posts[i].innerText.toLowerCase();
+posts[i].style.display=text.includes(input)?"flex":"none";
+}
+}
+
+</script>
+
+</body>
+</html>
