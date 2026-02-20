@@ -1,76 +1,32 @@
 # ==================================================
-# TYAGI CORE - PRODUCTION JEKYLL CONFIG
+# TYAGI CORE - SIMPLE PAGE-BASED CONFIG
 # ==================================================
 
 title: "Tyagi Core"
-description: "Deep Technology, Cyber Intelligence, System Architecture & Innovation Hub by Tyagi Core."
-tagline: "Engineering Digital Excellence"
+description: "Deep Technology, Cyber Intelligence & Innovation Hub."
 author: "Himanshu Tyagi"
-
-# ==================================================
-# SITE URL SETTINGS
-# ==================================================
 
 url: "https://himanshutyagiji.github.io"
 baseurl: "/TyagiCore"
 
-# Clean URL settings
+# Date hatane ke liye simple permalink
 permalink: /:title/
-
-# ==================================================
-# BUILD SETTINGS
-# ==================================================
 
 markdown: kramdown
 highlighter: rouge
 
-kramdown:
-  input: GFM
-  syntax_highlighter: rouge
-  auto_ids: true
-
-# ==================================================
-# PAGINATION (Auto mode: 2 posts per page)
-# ==================================================
+# Pagination settings (Ab ye Pages par kaam karega)
 paginate: 2
 paginate_path: "/page/:num/"
 
 plugins:
   - jekyll-paginate
   - jekyll-seo-tag
-  - jekyll-sitemap
 
-# ==================================================
-# SEO & LOCALIZATION
-# ==================================================
-
-lang: en-IN
-timezone: Asia/Kolkata
-
-twitter:
-  username: ""
-  card: summary_large_image
-
-logo: /assets/images/logo.png
-
-# ==================================================
-# DEFAULTS
-# ==================================================
-
+# Default layout pages ke liye
 defaults:
   - scope:
       path: ""
-      type: "posts"
+      type: "pages"
     values:
-      layout: "post"
-      author: "Himanshu Tyagi"
-      seo: true
-
-# ==================================================
-# EXCLUDED FILES (Gemfile ko hata diya hai build ke liye)
-# ==================================================
-
-exclude:
-  - README.md
-  - node_modules
-  - vendor
+      layout: "default"
