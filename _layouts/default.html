@@ -1,12 +1,13 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>{{ page.title }} | {{ site.title }}</title>
 <meta charset="UTF-8">
+<title>{{ page.title }} | {{ site.title }}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="description" content="{{ page.excerpt | strip_html | truncate: 160 }}">
   
+  {% seo %}
+
   <!-- SEO -->
   <meta name="description" content="{{ page.excerpt | strip_html | truncate: 160 }}">
   <meta name="author" content="{{ site.author }}">
@@ -20,7 +21,15 @@
   <!-- CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 
+<style>
 
+/* ===== RESET ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial;background:#f3f4f6;color:#111}
@@ -164,6 +173,175 @@ body{font-family:Arial;background:#f3f4f6;color:#111}
   color:#222;
 }
 
+
+/* ===== HERO ===== */
+.tc-hero{
+  padding:80px 5%;
+  text-align:left;
+  background:#ffffff;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.tc-hero h1{
+  font-size:42px;
+  font-weight:900;
+  margin-bottom:15px;
+}
+
+.tc-hero p{
+  color:#64748b;
+  font-size:18px;
+  margin-bottom:25px;
+}
+
+.btn{
+  padding:10px 20px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:700;
+  display:inline-block;
+  margin-right:10px;
+}
+
+.btn-primary{
+  background:#166534;
+  color:#fff;
+}
+
+.btn-outline{
+  border:2px solid #166534;
+  color:#166534;
+}
+
+/* ===== FEATURED ===== */
+.tc-featured{
+  padding:60px 5%;
+}
+
+.tc-featured h2{
+  margin-bottom:30px;
+}
+
+.featured-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  text-align:center;
+  font-weight:700;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* ===== MAIN LAYOUT ===== */
+.tc-wrapper{
+  display:grid;
+  grid-template-columns:3fr 1fr;
+  gap:40px;
+  padding:60px 5%;
+}
+
+.tc-left h2{
+  margin-bottom:25px;
+}
+
+.post-card{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  margin-bottom:20px;
+  transition:0.3s;
+}
+
+.post-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+.post-card h3{
+  margin-bottom:10px;
+}
+
+.post-card a{
+  text-decoration:none;
+  color:#166534;
+}
+
+.post-card p{
+  color:#64748b;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* ===== SIDEBAR ===== */
+.tc-sidebar .box{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+/* ===== TOOLS ===== */
+.tc-tools{
+  padding:60px 5%;
+}
+
+.tc-tools h2{
+  margin-bottom:30px;
+}
+
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+/* ===== FOOTER ===== */
+.tc-footer{
+  background:#fff;
+  padding:50px 5%;
+  border-top:1px solid #e5e7eb;
+}
+
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:30px;
+}
+
+.footer-bottom{
+  text-align:center;
+  margin-top:40px;
+  font-size:14px;
+  color:#64748b;
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:900px){
+  .tc-wrapper{
+    grid-template-columns:1fr;
+  }
+  .footer-grid{
+    grid-template-columns:1fr;
+  }
+  .tc-hero h1{
+    font-size:32px;
+  }
+}
+
 /* ================= POSTS ================= */
 
 .container{
@@ -278,12 +456,8 @@ body{font-family:Arial;background:#f3f4f6;color:#111}
 <body>
 
 
-
-
-
-    <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-  
-
+  <div class="logo">{{ site.title }}</div>
+  <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
   
 <header class="header">
   <div class="header-inner">
@@ -344,20 +518,90 @@ body{font-family:Arial;background:#f3f4f6;color:#111}
   </div>
 </div>
 
+<section class="tc-hero">
+  <h1>Build Real Tech From Scratch</h1>
+  <p>Practical guides & projects to master the tech world</p>
+  <a href="#" class="btn btn-primary">Learn Now</a>
+  <a href="#" class="btn btn-outline">Explore Projects</a>
+</section>
 
+<section class="tc-featured">
+  <h2>Featured Categories</h2>
+  <div class="featured-grid">
+    <div class="card">Web Development</div>
+    <div class="card">App Development</div>
+    <div class="card">Server & Hosting</div>
+    <div class="card">3D / Systems</div>
+  </div>
+</section>
 
-  
+<section class="tc-wrapper">
 
-<main class="tc-content">
-  <div class="container">
+  <div class="tc-left">
+    <h2>Latest Articles</h2>
     {{ content }}
   </div>
-</main>
+
+  <aside class="tc-sidebar">
+    <div class="box">Popular Posts</div>
+    <div class="box">Categories</div>
+    <div class="box">Subscribe</div>
+    <div class="box">Join Telegram</div>
+  </aside>
+
+</section>
+
+<section class="tc-tools">
+  <h2>Tools & Projects</h2>
+  <div class="tools-grid">
+    <div class="card">Mini Projects</div>
+    <div class="card">Free Tools</div>
+    <div class="card">Downloads</div>
+    <div class="card">Code Snippets</div>
+  </div>
+</section>
+
+<footer class="tc-footer">
+  <div class="footer-grid">
+    <div>
+      <h3>About Tyagi Core</h3>
+      <p>Innovation and education without limits.</p>
+    </div>
+    <div>
+      <h4>About</h4>
+      <p>Contact</p>
+    </div>
+    <div>
+      <h4>Categories</h4>
+      <p>Projects</p>
+    </div>
+    <div>
+      <h4>Social</h4>
+      <p>Telegram</p>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
 
 
   
-<div class="container" id="posts"></div>
-<div class="pagination" id="pagination"></div>
+
+  
+
+
+
+
+  
+
+
+
+
 <script>
 
 function openSearch(){
@@ -476,6 +720,9 @@ renderPagination();
 </footer>
 
 
-
+  <div class="footer-bottom">
+    © {{ site.time | date: '%Y' }} {{ site.title }}
+  </div>
+</footer>
 </body>
 </html>
