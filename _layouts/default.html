@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ page.title }} | {{ site.title }}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ page.title }} | {{ site.title }}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
   <!-- SEO -->
   <meta name="description" content="{{ page.excerpt | strip_html | truncate: 160 }}">
   <meta name="author" content="{{ site.author }}">
@@ -17,21 +19,334 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial;background:#f3f4f6;color:#111}
+
+/* ================= HEADER ================= */
+
+.header{
+  background:#fff;
+  padding:15px 5%;
+  position:sticky;
+  top:0;
+  z-index:999;
+  box-shadow:0 2px 15px rgba(0,0,0,0.06);
+}
+
+.header-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+  color:#166534;
+}
+
+.nav{
+  display:flex;
+  gap:20px;
+}
+
+.nav a{
+  text-decoration:none;
+  font-size:14px;
+  font-weight:700;
+  color:#222;
+}
+
+.right-icons{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+/* ICON BASE */
+.icon-btn{
+  width:24px;
+  height:24px;
+  cursor:pointer;
+}
+
+/* SEARCH ICON */
+.search-icon circle,
+.search-icon line{
+  stroke:#111;
+  stroke-width:2;
+  fill:none;
+  stroke-linecap:round;
+}
+
+/* ================= SEARCH PANEL ================= */
+
+.search-panel{
+  position:absolute;
+  top:0;
+  right:0;
+  height:100%;
+  width:0;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  transition:width .4s ease;
+  border-left:1px solid #eee;
+  z-index:20;
+}
+
+.search-panel.active{
+  width:60%;
+}
+
+.search-panel input{
+  flex:1;
+  border:none;
+  outline:none;
+  font-size:16px;
+  padding:0 15px;
+}
+
+/* ================= HAMBURGER ================= */
+
+.hamburger{
+  display:none;
+}
+
+/* ================= MOBILE MENU ================= */
+
+.mobile-overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.4);
+  display:none;
+  z-index:1000;
+}
+.mobile-overlay.active{display:block}
+
+.mobile-menu{
+  position:fixed;
+  top:0;
+  left:-100%;
+  width:60%;
+  height:100%;
+  background:#fff;
+  padding:20px;
+  transition:.4s;
+  z-index:1001;
+}
+
+.mobile-menu.active{left:0}
+
+.mobile-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:25px;
+  font-weight:900;
+}
+
+.mobile-nav{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.mobile-nav a{
+  text-decoration:none;
+  font-weight:700;
+  color:#222;
+}
+
+/* ================= POSTS ================= */
+
+.container{
+  max-width:1000px;
+  margin:40px auto;
+  padding:0 5%;
+}
+
+.post{
+  display:flex;
+  gap:20px;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  margin-bottom:20px;
+  border:1px solid #eee;
+  transition:.3s;
+}
+
+.post:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+.post img{
+  width:200px;
+  height:130px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.post-content{flex:1}
+
+.post-content h2{margin-bottom:8px}
+
+.post-content p{
+  font-size:14px;
+  color:#555;
+  margin-bottom:12px;
+}
+
+.buttons{
+  display:flex;
+  justify-content:space-between;
+}
+
+.share{
+  background:#e5e7eb;
+  padding:6px 14px;
+  border-radius:6px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.read{
+  background:#166534;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:6px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination{
+  text-align:center;
+  margin-top:30px;
+}
+
+.page-btn{
+  margin:5px;
+  padding:8px 14px;
+  border:none;
+  border-radius:6px;
+  background:#e5e7eb;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.page-btn.active{
+  background:#166534;
+  color:#fff;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+  .nav{display:none}
+  .hamburger{display:block}
+
+  .post{
+    flex-direction:column;
+  }
+
+  .post img{
+    width:100%;
+    height:200px;
+  }
+
+  .search-panel.active{
+    width:100%;
+  }
+
+}
+</style>
 </head>
 
 <body>
 
-<header class="tc-header">
-  <div class="container">
+
+
+
+
     <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-    <nav>
-      <a href="{{ '/' | relative_url }}">Home</a>
-      <a href="#">Technology</a>
+  
+
+  
+<header class="header">
+  <div class="header-inner">
+
+    <div class="logo">TYAGI CORE</div>
+
+    <nav class="nav">
+       <a href="{{ '/' | relative_url }}">Home</a>
+      <a href="#">Networking</a>
       <a href="#">Cyber</a>
-      <a href="#">Innovation</a>
+      <a href="#">AI</a>
+      <a href="#">Linux</a>
+      <a href="#">Privacy</a>
+      <a href="#">Cloud</a>
     </nav>
+
+    <div class="right-icons">
+
+      <!-- SEARCH ICON -->
+      <svg class="icon-btn search-icon" onclick="openSearch()" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+      </svg>
+
+      <!-- HAMBURGER -->
+      <svg class="icon-btn hamburger" onclick="openMenu()" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="12" x2="21" y2="12" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="18" x2="21" y2="18" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+
+    </div>
+  </div>
+
+  <div class="search-panel" id="searchPanel">
+    <input type="text" placeholder="Search posts...">
+    <svg width="20" height="20" onclick="closeSearch()" viewBox="0 0 24 24" stroke="#166534" stroke-width="2" fill="none">
+      <line x1="5" y1="5" x2="19" y2="19"/>
+      <line x1="19" y1="5" x2="5" y2="19"/>
+    </svg>
   </div>
 </header>
+
+<div class="mobile-overlay" onclick="closeMenu()"></div>
+
+<div class="mobile-menu">
+  <div class="mobile-header">
+    TYAGI CORE
+    <span onclick="closeMenu()" style="cursor:pointer;">✕</span>
+  </div>
+  <div class="mobile-nav">
+    <a href="#">Networking</a>
+    <a href="#">Cyber</a>
+    <a href="#">AI</a>
+    <a href="#">Linux</a>
+    <a href="#">Privacy</a>
+    <a href="#">Cloud</a>
+  </div>
+</div>
+
+
+
+  
 
 <main class="tc-content">
   <div class="container">
@@ -39,11 +354,128 @@
   </div>
 </main>
 
+
+  
+<div class="container" id="posts"></div>
+<div class="pagination" id="pagination"></div>
+<script>
+
+function openSearch(){
+  document.getElementById("searchPanel").classList.add("active");
+}
+
+function closeSearch(){
+  document.getElementById("searchPanel").classList.remove("active");
+}
+
+function openMenu(){
+  document.querySelector(".mobile-menu").classList.add("active");
+  document.querySelector(".mobile-overlay").classList.add("active");
+}
+
+function closeMenu(){
+  document.querySelector(".mobile-menu").classList.remove("active");
+  document.querySelector(".mobile-overlay").classList.remove("active");
+}
+
+/* ================= POSTS DATA ================= */
+
+let allPosts=[];
+for(let i=1;i<=12;i++){
+  allPosts.push({
+    title:"Post Title "+i,
+    content:"This is preview content for post "+i+". It shows summary text about networking cyber linux cloud and AI.",
+    image:"https://picsum.photos/400/300?random="+i
+  });
+}
+
+let posts=[...allPosts];
+let postsPerPage=3;
+let currentPage=1;
+
+/* ================= RENDER POSTS ================= */
+
+function renderPosts(){
+  let container=document.getElementById("posts");
+  container.innerHTML="";
+
+  let start=(currentPage-1)*postsPerPage;
+  let end=start+postsPerPage;
+  let pagePosts=posts.slice(start,end);
+
+  if(pagePosts.length === 0){
+    container.innerHTML="<p style='text-align:center;font-weight:700;'>No results found</p>";
+    return;
+  }
+
+  pagePosts.forEach(post=>{
+    container.innerHTML+=`
+      <div class="post">
+        <img src="${post.image}">
+        <div class="post-content">
+          <h2>${post.title}</h2>
+          <p>${post.content}</p>
+          <div class="buttons">
+            <button class="share">Share</button>
+            <button class="read">Read More</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+/* ================= PAGINATION ================= */
+
+function renderPagination(){
+  let totalPages=Math.ceil(posts.length/postsPerPage);
+  let pag=document.getElementById("pagination");
+  pag.innerHTML="";
+
+  if(totalPages <= 1) return;
+
+  for(let i=1;i<=totalPages;i++){
+    pag.innerHTML+=`
+      <button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>
+    `;
+  }
+}
+
+function goPage(page){
+  currentPage=page;
+  renderPosts();
+  renderPagination();
+}
+
+/* ================= LIVE SEARCH ================= */
+
+document.querySelector("#searchPanel input").addEventListener("keyup",function(){
+  let value=this.value.toLowerCase();
+
+  posts = allPosts.filter(post =>
+    post.title.toLowerCase().includes(value) ||
+    post.content.toLowerCase().includes(value)
+  );
+
+  currentPage=1;
+  renderPosts();
+  renderPagination();
+});
+
+/* INIT */
+renderPosts();
+renderPagination();
+
+</script>
+
+
 <footer class="tc-footer">
   <div class="container">
     <p>© {{ site.time | date: "%Y" }} {{ site.title }}. All rights reserved.</p>
   </div>
 </footer>
+
+
 
 </body>
 </html>
