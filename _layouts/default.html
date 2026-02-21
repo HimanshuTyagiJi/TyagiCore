@@ -116,6 +116,66 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
       <svg class="icon-btn hamburger" onclick="toggleMenu(true)" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </div>
+    <div class="right-icons">
+  <div id="dark-mode-toggle" class="icon-btn theme-icon">
+    <i class="fas fa-moon moon-icon"></i>
+    <i class="fas fa-sun sun-icon" style="display:none;"></i>
+  </div>
+
+  <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+  
+  <svg class="icon-btn hamburger" onclick="toggleMenu(true)" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+</div>
+
+    <style> /* Dark Mode Colors Definitions */
+:root {
+  --bg-color: #f3f4f6;
+  --card-bg: #ffffff;
+  --text-color: #111111;
+  --border-color: #e5e7eb;
+}
+
+body.dark-mode {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f1f5f9;
+  --border-color: #334155;
+}
+
+/* Base Elements par variables apply karo */
+body { background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
+.header, .card, .box, .tc-card, .mobile-menu, .horizontal-post-card { 
+  background: var(--card-bg) !important; 
+  color: var(--text-color) !important; 
+  border-color: var(--border-color) !important; 
+}
+
+/* Icon Styling */
+.theme-icon { display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-color); cursor: pointer; }
+.dark-mode .moon-icon { display: none; }
+.dark-mode .sun-icon { display: block !important; color: #fbbf24; }
+
+/* Link Colors in Dark Mode */
+.dark-mode a { color: #4ade80; }
+.dark-mode .logo { color: #4ade80; }</style><script>const themeBtn = document.getElementById("dark-mode-toggle");
+const body = document.body;
+
+// 1. Check saved theme
+if (localStorage.getItem("theme") === "dark") {
+  body.classList.add("dark-mode");
+}
+
+// 2. Click Event
+themeBtn.addEventListener("click", () => {
+  body.classList.toggle("dark-mode");
+  
+  // Save preference
+  if (body.classList.contains("dark-mode")) {
+    localStorage.setItem("theme", "dark");
+  } else {
+    localStorage.setItem("theme", "light");
+  }
+});</script>
   </div>
 </header>
 
@@ -761,69 +821,7 @@ svg {
 
 
 
-</style><style>.mobile-action-bar {
-  display: none !important; /* Pehle desktop pe pakka hide */
-  position: fixed !important;
-  bottom: 20px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 90% !important;
-  max-width: 400px !important;
-  background: white !important; /* Background color pakka karo */
-  border: 2px solid #166534 !important; /* Border thoda dark taaki dikhe */
-  border-radius: 50px !important;
-  padding: 10px 20px !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  z-index: 999999 !important; /* Sabse upar */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-}
-
-@media (max-width: 900px) {
-  .mobile-action-bar { 
-    display: flex !important; /* Mobile pe pakka show */
-  }
-}</style>
-  <div class="mobile-action-bar">
-  <a href="{{ '/' | relative_url }}" class="action-item">
-    <i class="fas fa-home"></i>
-    <span>Home</span>
-  </a>
-  <div class="action-item" onclick="toggleSearch(true)">
-    <i class="fas fa-search"></i>
-    <span>Search</span>
-  </div>
-  <div class="action-item" id="dark-mode-toggle">
-    <i class="fas fa-moon"></i>
-    <span>Dark</span>
-  </div>
-  <div class="action-item" onclick="nativeShare('{{ page.title }}', '{{ page.url | absolute_url }}')">
-    <i class="fas fa-share-alt"></i>
-    <span>Share</span>
-  </div>
-</div>
-  <script>// Dark Mode Logic
-const darkModeBtn = document.getElementById("dark-mode-toggle");
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark-mode");
-}
-
-darkModeBtn.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  const isDark = document.body.classList.contains("dark-mode");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-});
-
-// Native Share for Floating Bar
-async function nativeShare(title, url) {
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: title, url: url });
-    } catch (err) { console.log("Share failed"); }
-  } else {
-    alert("Link copied: " + url);
-  }
-}</script>
+</style>
 <footer class="tc-footer">
   <div class="footer-grid">
     <div><h3>About Tyagi Core</h3><p>Innovation and education without limits. Deep tech insights for everyone.</p></div>
