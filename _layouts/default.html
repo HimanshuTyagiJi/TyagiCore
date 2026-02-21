@@ -759,7 +759,94 @@ svg {
   to { opacity: 1; }
 }
 
+
+  /* Mobile Bottom Bar Styling */
+.mobile-action-bar {
+  display: none; /* Desktop par nahi dikhega */
+  position: fixed;
+  bottom: 15px; /* Niche se thoda upar taaki premium lage */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid #e2e8f0;
+  border-radius: 25px;
+  padding: 10px 20px;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10000; /* Header se bhi upar taaki click ho sake */
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: #1e293b;
+  cursor: pointer;
+  text-decoration: none;
+  flex: 1;
+}
+
+.action-item i { font-size: 18px; color: #166534; }
+.action-item span { font-size: 10px; font-weight: 700; }
+
+/* Dark Mode (Basic Colors) */
+body.dark-mode { background: #0f172a !important; color: #f1f5f9 !important; }
+.dark-mode .header, .dark-mode .tc-card, .dark-mode .box, .dark-mode .mobile-menu { 
+  background: #1e293b !important; color: #fff !important; border-color: #334155 !important; 
+}
+.dark-mode .mobile-action-bar { background: rgba(30, 41, 59, 0.9); border-color: #475569; }
+.dark-mode .action-item { color: #cbd5e1; }
+.dark-mode .action-item i { color: #4ade80; }
+
+@media (max-width: 900px) {
+  .mobile-action-bar { display: flex; } /* Sirf mobile par activate hoga */
+}
 </style>
+  <div class="mobile-action-bar">
+  <a href="{{ '/' | relative_url }}" class="action-item">
+    <i class="fas fa-home"></i>
+    <span>Home</span>
+  </a>
+  <div class="action-item" onclick="toggleSearch(true)">
+    <i class="fas fa-search"></i>
+    <span>Search</span>
+  </div>
+  <div class="action-item" id="dark-mode-toggle">
+    <i class="fas fa-moon"></i>
+    <span>Dark</span>
+  </div>
+  <div class="action-item" onclick="nativeShare('{{ page.title }}', '{{ page.url | absolute_url }}')">
+    <i class="fas fa-share-alt"></i>
+    <span>Share</span>
+  </div>
+</div>
+  <script>// Dark Mode Logic
+const darkModeBtn = document.getElementById("dark-mode-toggle");
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark-mode");
+}
+
+darkModeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  const isDark = document.body.classList.contains("dark-mode");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
+
+// Native Share for Floating Bar
+async function nativeShare(title, url) {
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: title, url: url });
+    } catch (err) { console.log("Share failed"); }
+  } else {
+    alert("Link copied: " + url);
+  }
+}</script>
 <footer class="tc-footer">
   <div class="footer-grid">
     <div><h3>About Tyagi Core</h3><p>Innovation and education without limits. Deep tech insights for everyone.</p></div>
