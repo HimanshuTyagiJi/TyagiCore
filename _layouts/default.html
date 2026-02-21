@@ -350,33 +350,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   
 </div>
 {% unless page.url == "/" or page.url == "/TyagiCore/" %}
-<div id="comment-section" style="margin: 50px auto; max-width: 800px; padding: 0 15px;">
+<section id="comments-container" style="margin: 50px auto; max-width: 800px; padding: 0 15px;">
   <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 30px; opacity: 0.3;">
-  <h3 style="margin-bottom: 20px; font-family: sans-serif; letter-spacing: 1px;">READER COMMENTS</h3>
+  <h3 style="margin-bottom: 25px; font-weight: 700; color: var(--text-color);">💬 Discussions</h3>
 
-  <div id="comment-container"></div>
-  
-  <link rel="stylesheet" href="https://latest.cactus.chat/style.css" type="text/css">
-  <script type="text/javascript" src="https://latest.cactus.chat/cactus.js"></script>
-
-  <script>
-    initComments({
-      node: document.getElementById("comment-container"),
-      defaultSection: "comments",
-      siteName: "TyagiCore_Blog_Final", // Isko thoda unique naam de diya
-      serverUrl: "https://matrix.cactus.chat:443",
-      guestPosting: true, // Sabse important: Bina login wala feature
-      key: "{{ page.url }}" 
-    })
+  <script async src="https://comments.app/js/widget.js?3" 
+    data-comments-app-website="maMSK6oN" 
+    data-limit="5"
+    data-color="#166534" 
+    data-outlined="1"
+    data-dark="1">
   </script>
-</div>
-
-<style>
-  /* Isse comment box tere theme ke sath ghul-mil jayega */
-  .cactus-container { color: var(--text-color) !important; }
-  .cactus-button { background-color: #166534 !important; border: none !important; color: white !important; border-radius: 6px !important; }
-  .cactus-editor { background-color: var(--card-bg) !important; border: 1px solid var(--border-color) !important; color: var(--text-color) !important; }
-</style>
+</section>
 {% endunless %}
 <style>
   .post-nav-container {
