@@ -3,7 +3,7 @@ layout: default
 title: Home
 ---
 
-<div class="category-wrapper">
+<div class="category-outer-box">
   <div class="category-scroll-container" id="category-bar">
     {% assign all_posts = site.pages | where: "is_post", true %}
     
@@ -65,31 +65,33 @@ title: Home
 </div>
 
 <style>
-  /* --- CATEGORY SCROLL FIX --- */
-  .category-wrapper {
+  /* CATEGORY BOX FIX: Ye page ke layout ko nahi chedega */
+  .category-outer-box {
+    display: block;
     width: 100%;
-    overflow: hidden;
-    background: transparent;
-    padding: 20px 0;
+    background: #ffffff;
+    padding: 15px 0;
     border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
   }
 
+  /* Buttons Container: Flex yahan hai scroll ke liye */
   .category-scroll-container {
-    display: flex;
-    flex-wrap: nowrap; /* Girne nahi dega niche */
-    overflow-x: auto; /* Scroll on */
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
     gap: 12px;
-    padding: 0 5%; /* Side spacing */
-    scrollbar-width: none; /* Firefox hide */
+    padding: 5px 5%;
+    scrollbar-width: none;
   }
 
-  .category-scroll-container::-webkit-scrollbar { display: none; } /* Chrome hide */
+  .category-scroll-container::-webkit-scrollbar { display: none; }
 
   .cat-btn {
-    flex: 0 0 auto; /* Button ko dabne nahi dega, asli size rakhega */
-    padding: 8px 22px;
-    background: #fff;
+    flex: 0 0 auto !important; /* Button ko pichakne se rokta hai */
+    padding: 8px 20px;
+    background: #f3f4f6;
     border: 1px solid #e5e7eb;
     border-radius: 50px;
     font-size: 14px;
@@ -100,46 +102,49 @@ title: Home
     transition: 0.3s;
   }
 
-  .cat-btn span { font-size: 11px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
+  .cat-btn span { font-size: 11px; opacity: 0.6; margin-left: 5px; }
   .cat-btn.active { background: #166534; color: #fff; border-color: #166534; }
-  .cat-btn.active span { background: rgba(255,255,255,0.2); color: #fff; }
+  .cat-btn.active span { opacity: 1; }
 
-  /* --- POST CARDS --- */
-  .home-container { max-width: 900px; margin: 30px auto; padding: 0 5%; }
-  
+  /* HOME LAYOUT FIX */
+  .home-container { 
+    display: block; 
+    max-width: 900px; 
+    margin: 0 auto; 
+    padding: 0 5%; 
+  }
+
   .horizontal-card { 
-    display: none; /* JS handle karega */
+    display: none; /* JS handle karega pagination ke liye */
     background: #fff; 
     border: 1px solid #eee; 
     border-radius: 12px; 
     overflow: hidden; 
     margin-bottom: 25px; 
-    transition: 0.3s; 
     height: 200px; 
+    transition: 0.3s;
   }
 
   .horizontal-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-  .card-left { width: 35%; min-width: 180px; }
+  .card-left { width: 35%; min-width: 150px; }
   .card-left img { width: 100%; height: 100%; object-fit: cover; }
   .card-right { width: 65%; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
   
   .mini-tags { display: flex; gap: 5px; margin-bottom: 8px; }
-  .tag { font-size: 10px; font-weight: 800; background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid #dcfce7; }
+  .tag { font-size: 10px; font-weight: 800; background: #f0fdf4; color: #166534; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
   
   .content-top h2 { font-size: 19px; margin-bottom: 8px; line-height: 1.3; }
   .content-top h2 a { text-decoration: none; color: #111; font-weight: 800; }
-  .content-top p { font-size: 14px; color: #555; line-height: 1.5; }
+  .content-top p { font-size: 14px; color: #555; }
   
   .content-bottom { display: flex; justify-content: space-between; align-items: center; }
   .share-btn { font-size: 12px; font-weight: 700; color: #666; text-decoration: none; background: #f3f4f6; padding: 6px 12px; border-radius: 6px; }
   .read-btn { font-size: 12px; font-weight: 700; color: #166534; text-decoration: none; border: 1px solid #166534; padding: 6px 12px; border-radius: 6px; }
 
-  /* --- PAGINATION --- */
-  .pagination-wrapper { text-align: center; margin-top: 30px; }
+  .pagination-wrapper { text-align: center; margin-top: 30px; padding-bottom: 50px; }
   .page-num { padding: 8px 16px; background: #fff; border: 1px solid #ddd; border-radius: 6px; margin: 0 4px; cursor: pointer; font-weight: 700; }
   .page-num.active { background: #166534; color: #fff; border-color: #166534; }
 
-  /* MOBILE RESPONSIVE */
   @media (max-width: 650px) {
     .horizontal-card { flex-direction: column; height: auto; }
     .card-left, .card-right { width: 100%; }
