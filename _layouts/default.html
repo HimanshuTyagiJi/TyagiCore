@@ -192,7 +192,143 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div id="index-category-nav"></div>
 <main class="tc-wrapper">
   <div class="tc-left">
+    {% unless page.url == "/" or page.url == "/TyagiCore/" %}
+<div class="toc-container" id="toc-box" style="display:none;">
+  <div class="toc-title">
+    <i class="fas fa-list-ul"></i> Topics 
+  </div>
+  <ul id="toc-list"></ul>
+</div>
+
+<style>
+  .toc-container {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .toc-title {
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #166534;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+  }
+  #toc-list { list-style: none; padding: 0; margin: 0; }
+  #toc-list li { margin-bottom: 10px; border-left: 2px solid #e5e7eb; padding-left: 15px; }
+  #toc-list a {
+    text-decoration: none;
+    color: var(--text-color, #111);
+    font-size: 14px;
+    opacity: 0.7;
+    transition: 0.3s;
+    display: block;
+  }
+  #toc-list a:hover { opacity: 1; color: #166534; transform: translateX(5px); }
+  .dark-mode #toc-list li { border-left-color: #334155; }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const tocList = document.getElementById("toc-list");
+    const tocBox = document.getElementById("toc-box");
+    // Sirf post content ke andar ki headings pakdega
+    const contentArea = document.querySelector(".post-content") || document.body;
+    const headings = contentArea.querySelectorAll("h2, h3, h4");
+
+    if (headings.length > 0) {
+      tocBox.style.display = "block";
+      headings.forEach((heading, index) => {
+        const id = "section-" + index;
+        heading.setAttribute("id", id);
+
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.textContent = heading.textContent;
+        a.setAttribute("href", "#" + id);
+        
+        if (heading.tagName === "H3") { li.style.marginLeft = "20px"; li.style.fontSize = "0.9em"; }
+         if (heading.tagName === "H4") { li.style.marginLeft = "40px"; li.style.fontSize = "0.9em"; }
+
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+    }
+  });
+</script>
+{% endunless %}
     {{ content }}
+
+    {% unless page.url == "/" or page.url == "/TyagiCore/" %}
+<div class="share-wrapper">
+  <p class="share-label">Pasand aaya? Doston se share karein!</p>
+  <button onclick="tyagiShare()" class="tyagi-share-btn">
+    <i class="fas fa-paper-plane"></i> SHARE ARTICLE
+  </button>
+</div>
+
+<style>
+  .share-wrapper {
+    margin: 40px 0;
+    padding: 30px;
+    text-align: center;
+    border-top: 1px dashed var(--border-color, #ccc);
+  }
+  .share-label {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    opacity: 0.8;
+  }
+  .tyagi-share-btn {
+    background: #166534;
+    color: white !important;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 14px rgba(22, 101, 52, 0.4);
+  }
+  .tyagi-share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(22, 101, 52, 0.6);
+    background: #15803d;
+  }
+  .tyagi-share-btn:active { transform: scale(0.95); }
+</style>
+
+<script>
+  function tyagiShare() {
+    if (navigator.share) {
+      navigator.share({
+        title: document.title,
+        text: 'Check out this awesome tech post on Tyagi Core:',
+        url: window.location.href
+      }).then(() => console.log('Shared!'))
+        .catch((err) => console.log('Share failed:', err));
+    } else {
+      // Fallback for Desktop
+      navigator.clipboard.writeText(window.location.href);
+      const btn = document.querySelector('.tyagi-share-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> LINK COPIED';
+      setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+    }
+  }
+</script>
+{% endunless %}
   </div>
   <aside class="tc-sidebar">
     <div class="box">Popular Posts</div>
