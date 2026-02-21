@@ -350,18 +350,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   
 </div>
 {% unless page.url == "/" or page.url == "/TyagiCore/" %}
-<section id="comments-container" style="margin: 50px auto; max-width: 800px; padding: 0 15px;">
-  <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 30px; opacity: 0.3;">
-  <h3 style="margin-bottom: 25px; font-weight: 700; color: var(--text-color);">💬 Discussions</h3>
+<div id="graphcomment"></div>
+<script type="text/javascript">
 
-  <script async src="https://comments.app/js/widget.js?3" 
-    data-comments-app-website="maMSK6oN" 
-    data-limit="5"
-    data-color="#166534" 
-    data-outlined="1"
-    data-dark="1">
-  </script>
-</section>
+  /* - - - CONFIGURATION VARIABLES - - - */
+
+  var __semio__params = {
+    graphcommentId: "tyagi-core", // make sure the id is yours
+
+    behaviour: {
+      // HIGHLY RECOMMENDED
+      //  uid: "...", // uniq identifer for the comments thread on your page (ex: your page id)
+    },
+
+    // configure your variables here
+
+  }
+
+  /* - - - DON'T EDIT BELOW THIS LINE - - - */
+
+  function __semio__onload() {
+    __semio__gc_graphlogin(__semio__params)
+  }
+
+
+  (function() {
+    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+    gc.onload = __semio__onload; gc.defer = true; gc.src = 'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+  })();
+  
+
+</script>
 {% endunless %}
 <style>
   .post-nav-container {
