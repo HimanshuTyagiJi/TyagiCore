@@ -760,53 +760,30 @@ svg {
 }
 
 
-  /* Mobile Bottom Bar Styling */
-.mobile-action-bar {
-  display: none; /* Desktop par nahi dikhega */
-  position: fixed;
-  bottom: 15px; /* Niche se thoda upar taaki premium lage */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 92%;
-  max-width: 400px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid #e2e8f0;
-  border-radius: 25px;
-  padding: 10px 20px;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 10000; /* Header se bhi upar taaki click ho sake */
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-}
 
-.action-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  color: #1e293b;
-  cursor: pointer;
-  text-decoration: none;
-  flex: 1;
+</style><style>.mobile-action-bar {
+  display: none !important; /* Pehle desktop pe pakka hide */
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 90% !important;
+  max-width: 400px !important;
+  background: white !important; /* Background color pakka karo */
+  border: 2px solid #166534 !important; /* Border thoda dark taaki dikhe */
+  border-radius: 50px !important;
+  padding: 10px 20px !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  z-index: 999999 !important; /* Sabse upar */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
 }
-
-.action-item i { font-size: 18px; color: #166534; }
-.action-item span { font-size: 10px; font-weight: 700; }
-
-/* Dark Mode (Basic Colors) */
-body.dark-mode { background: #0f172a !important; color: #f1f5f9 !important; }
-.dark-mode .header, .dark-mode .tc-card, .dark-mode .box, .dark-mode .mobile-menu { 
-  background: #1e293b !important; color: #fff !important; border-color: #334155 !important; 
-}
-.dark-mode .mobile-action-bar { background: rgba(30, 41, 59, 0.9); border-color: #475569; }
-.dark-mode .action-item { color: #cbd5e1; }
-.dark-mode .action-item i { color: #4ade80; }
 
 @media (max-width: 900px) {
-  .mobile-action-bar { display: flex; } /* Sirf mobile par activate hoga */
-}
-</style>
+  .mobile-action-bar { 
+    display: flex !important; /* Mobile pe pakka show */
+  }
+}</style>
   <div class="mobile-action-bar">
   <a href="{{ '/' | relative_url }}" class="action-item">
     <i class="fas fa-home"></i>
