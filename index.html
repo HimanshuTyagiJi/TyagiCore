@@ -32,7 +32,7 @@ title: Home
         <div class="post-info">
           <div class="post-top-meta">
              <h2><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h2>
-             <p>{{ p.description | default: p.excerpt | strip_html | truncate: 90 }}</p>
+             <p>{{ p.description | default: p.excerpt | strip_html | truncate: 100 }}</p>
           </div>
           <div class="post-footer">
             <button class="native-share-btn" onclick="nativeShare('{{ p.title | escape }}', '{{ p.url | absolute_url }}')">
@@ -44,6 +44,7 @@ title: Home
       </div>
     {% endfor %}
   </div>
+  
   <div id="pagination-nav" class="pagination-center"></div>
 </div>
 
@@ -52,7 +53,7 @@ title: Home
   .cat-full-width-scroll { width: 100%; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 15px 0; margin-bottom: 20px; }
   .cat-inner-scroll { display: block !important; overflow-x: auto !important; white-space: nowrap !important; padding: 0 5%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .cat-inner-scroll::-webkit-scrollbar { display: none; }
-  .cat-btn { display: inline-block !important; padding: 8px 20px; margin-right: 10px; background: #f3f4f6; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .cat-btn { display: inline-block !important; padding: 8px 20px; margin-right: 10px; background: #f3f4f6; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
   .cat-btn.active { background: #166534; color: #fff; border-color: #166534; }
 
   /* POST CARDS STYLES */
@@ -65,58 +66,41 @@ title: Home
   .post-info h2 a { text-decoration: none; color: #111; }
   .post-info p { font-size: 13px; color: #64748b; }
 
-  /* NATIVE SHARE BUTTON STYLING */
+  /* FOOTER BUTTONS */
   .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-  .native-share-btn { 
-    background: #f1f5f9; color: #1e293b; border: none; padding: 7px 14px; border-radius: 8px; 
-    font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
-  }
+  .native-share-btn { background: #f1f5f9; color: #1e293b; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
   .native-share-btn:hover { background: #e2e8f0; color: #166534; }
-  .native-share-btn i { font-size: 14px; }
-
-  .read-link { color: #166534; font-weight: 800; text-decoration: none; font-size: 13px; border: 1px solid #166534; padding: 6px 14px; border-radius: 8px; transition: 0.2s; }
+  .read-link { color: #166534; font-weight: 800; text-decoration: none; font-size: 13px; border: 1px solid #166534; padding: 6px 14px; border-radius: 8px; }
   .read-link:hover { background: #166534; color: #fff; }
   
-  .pagination-center { text-align: center; padding: 20px 0; }
-  .page-btn { padding: 8px 16px; margin: 0 5px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 8px; font-weight: 700; }
+  /* PAGINATION STYLING */
+  .pagination-center { text-align: center; padding: 30px 0; display: flex; justify-content: center; gap: 10px; }
+  .page-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 8px; font-weight: 700; transition: 0.2s; }
   .page-btn.active { background: #166534; color: #fff; border-color: #166534; }
+  .page-btn:hover:not(.active) { background: #f3f4f6; }
 
   @media (max-width: 768px) {
     .horizontal-post-card { flex-direction: column; height: auto; }
     .post-img, .post-info { width: 100%; }
     .post-img { height: 180px; }
-    .post-info { padding: 15px; }
   }
 </style>
 
 <script>
-// NATIVE SHARE FUNCTION
+// 1. NATIVE SHARE ENGINE
 async function nativeShare(title, url) {
   if (navigator.share) {
     try {
-      await navigator.share({
-        title: title,
-        text: 'Check out this post on Tyagi Core:',
-        url: url,
-      });
-      console.log('Successfully shared');
-    } catch (error) {
-      console.log('Error sharing:', error);
-    }
+      await navigator.share({ title: title, text: 'Tyagi Core - Tech Insights:', url: url });
+    } catch (err) { console.log('Share failed', err); }
   } else {
-    // Fallback if browser doesn't support native share (like some desktop browsers)
-    const tempInput = document.createElement('input');
-    document.body.appendChild(tempInput);
-    tempInput.value = url;
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    alert('Link copied to clipboard (Native share not supported on this browser)');
+    navigator.clipboard.writeText(url);
+    alert('Link copied to clipboard!');
   }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Move Categories
+  // 2. MOVE CATEGORY SECTION
   const source = document.getElementById('source-category-nav');
   const target = document.getElementById('index-category-nav');
   if(source && target) {
@@ -124,47 +108,66 @@ document.addEventListener("DOMContentLoaded", function() {
     source.remove();
   }
 
-  // Pagination Logic
-  const postsPerPage = 6;
-  const posts = Array.from(document.querySelectorAll('.js-post'));
+  // 3. PAGINATION & FILTER LOGIC
+  const postsPerPage = 2; // TERE LIYE 2 SET KIYA HAI
+  let currentFilteredPosts = Array.from(document.querySelectorAll('.js-post'));
   const nav = document.getElementById('pagination-nav');
 
-  function goToPage(num) {
-    const start = (num - 1) * postsPerPage;
-    posts.forEach((p, i) => p.style.display = (i >= start && i < num * postsPerPage) ? 'flex' : 'none');
-    
+  function renderPage(pageNum) {
+    const start = (pageNum - 1) * postsPerPage;
+    const end = start + postsPerPage;
+
+    // Pehle sab chhupao
+    document.querySelectorAll('.js-post').forEach(p => p.style.display = 'none');
+
+    // Sirf filtered list ke posts dikhao range mein
+    currentFilteredPosts.forEach((post, index) => {
+      if (index >= start && index < end) {
+        post.style.display = 'flex';
+      }
+    });
+
+    renderPaginationButtons(pageNum);
+  }
+
+  function renderPaginationButtons(activePage) {
     nav.innerHTML = '';
-    const total = Math.ceil(posts.length/postsPerPage);
-    if(total <= 1) return;
-    for(let i=1; i <= total; i++) {
+    const totalPages = Math.ceil(currentFilteredPosts.length / postsPerPage);
+    
+    if(totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
       const btn = document.createElement('button');
       btn.innerText = i;
-      btn.className = `page-btn ${i===num ? 'active' : ''}`;
-      btn.onclick = () => { goToPage(i); window.scrollTo({top:0, behavior:'smooth'}); };
+      btn.className = `page-btn ${i === activePage ? 'active' : ''}`;
+      btn.onclick = () => {
+        renderPage(i);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
       nav.appendChild(btn);
     }
   }
-  if(posts.length > 0) goToPage(1);
 
-  // Filter Logic
+  // CATEGORY FILTER FUNCTION
   window.filterCategory = function(cat, btn) {
+    // Button active class update
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    if(cat === 'all') {
-      posts.forEach(p => p.classList.remove('hidden-by-cat'));
-      goToPage(1);
-      nav.style.display = 'block';
+
+    const allPosts = Array.from(document.querySelectorAll('.js-post'));
+
+    if (cat === 'all') {
+      currentFilteredPosts = allPosts;
     } else {
-      posts.forEach(p => {
-        const pCats = p.getAttribute('data-categories').split(',');
-        if(pCats.includes(cat)) {
-           p.style.display = 'flex';
-        } else {
-           p.style.display = 'none';
-        }
+      currentFilteredPosts = allPosts.filter(p => {
+        return p.getAttribute('data-categories').split(',').includes(cat);
       });
-      nav.style.display = 'none';
     }
+
+    renderPage(1); // Filter ke baad pehle page par jao
   }
+
+  // Initial Load
+  renderPage(1);
 });
 </script>
