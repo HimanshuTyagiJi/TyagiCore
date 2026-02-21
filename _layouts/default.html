@@ -118,21 +118,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
   </div>
 </header>
-<div id="reading-progress"></div><style>#reading-progress {
+<div id="reading-progress-container">
+  <div id="reading-progress-bar"></div>
+</div>
+  <style>/* Progress container header ke bilkul niche chipka rahega */
+#reading-progress-container {
   position: fixed;
-  top: 60px; /* Header ki height ke hisab se set karein */
+  top: 60px; /* AGAR TERA HEADER 60px se bada hai toh ise badhao */
   left: 0;
-  width: 0%;
+  width: 100%;
   height: 4px;
-  background: #166534;
-  z-index: 998;
-  transition: width 0.1s ease-out;
-}</style><script>window.onscroll = () => {
-  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  background: rgba(0, 0, 0, 0.1); /* Halka background taaki line dikhe kahan tak jayegi */
+  z-index: 1001; /* Header se upar rakho ise */
+}
+
+#reading-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: #166534; /* Tera brand green color */
+  box-shadow: 0 0 10px #166534; /* Glow effect taaki dikhne me asani ho */
+  transition: width 0.2s ease-out;
+}
+
+/* Dark mode me glow aur tez kar dete hain */
+.dark-mode #reading-progress-bar {
+  background: #4ade80; 
+  box-shadow: 0 0 15px #4ade80;
+}</style><script>window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = (winScroll / height) * 100;
-  document.getElementById("reading-progress").style.width = scrolled + "%";
-};</script>
+  
+  const progressBar = document.getElementById("reading-progress-bar");
+  if (progressBar) {
+    progressBar.style.width = scrolled + "%";
+  }
+});</script>
 <div id="searchModal" onclick="closeOnOverlay(event)">
   <div class="search-box">
     <div class="search-input-area">
