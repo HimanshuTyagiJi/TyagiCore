@@ -103,6 +103,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <header class="header">
   <div class="header-inner">
     <a href="{{ '/' | relative_url }}" class="logo">TYAGI CORE</a>
+    
     <nav class="nav">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="#">Networking</a>
@@ -112,70 +113,75 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
       <a href="#">Privacy</a>
       <a href="#">Cloud</a>
     </nav>
+
     <div class="right-icons">
-      <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
-      <svg class="icon-btn hamburger" onclick="toggleMenu(true)" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      <div id="dark-mode-toggle" class="icon-btn theme-icon">
+        <i class="fas fa-moon moon-icon"></i>
+        <i class="fas fa-sun sun-icon" style="display:none;"></i>
+      </div>
+
+      <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+      </svg>
+      
+      <svg class="icon-btn hamburger" onclick="toggleMenu(true)" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
     </div>
-    <div class="right-icons">
-  <div id="dark-mode-toggle" class="icon-btn theme-icon">
-    <i class="fas fa-moon moon-icon"></i>
-    <i class="fas fa-sun sun-icon" style="display:none;"></i>
-  </div>
 
-  <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
-  
-  <svg class="icon-btn hamburger" onclick="toggleMenu(true)" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-</div>
+    <style>
+      /* Dark Mode Variable Logic */
+      :root {
+        --bg-color: #f3f4f6;
+        --card-bg: #ffffff;
+        --text-color: #111111;
+        --border-color: #e5e7eb;
+      }
 
-    <style> /* Dark Mode Colors Definitions */
-:root {
-  --bg-color: #f3f4f6;
-  --card-bg: #ffffff;
-  --text-color: #111111;
-  --border-color: #e5e7eb;
-}
+      body.dark-mode {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --text-color: #f1f5f9;
+        --border-color: #334155;
+      }
 
-body.dark-mode {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --text-color: #f1f5f9;
-  --border-color: #334155;
-}
+      body { background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
+      
+      /* Applying Variables to your components */
+      .header, .card, .box, .tc-card, .mobile-menu, .horizontal-post-card, .app-card, .hub-card { 
+        background: var(--card-bg) !important; 
+        color: var(--text-color) !important; 
+        border-color: var(--border-color) !important; 
+      }
 
-/* Base Elements par variables apply karo */
-body { background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
-.header, .card, .box, .tc-card, .mobile-menu, .horizontal-post-card { 
-  background: var(--card-bg) !important; 
-  color: var(--text-color) !important; 
-  border-color: var(--border-color) !important; 
-}
+      .theme-icon { display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-color); cursor: pointer; }
+      .dark-mode .moon-icon { display: none; }
+      .dark-mode .sun-icon { display: block !important; color: #fbbf24; }
+      
+      .dark-mode .logo, .dark-mode .nav a { color: #4ade80; }
+      .dark-mode .icon-btn { stroke: #f1f5f9; } /* Search aur hamburger lines ko white karne ke liye */
+    </style>
 
-/* Icon Styling */
-.theme-icon { display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-color); cursor: pointer; }
-.dark-mode .moon-icon { display: none; }
-.dark-mode .sun-icon { display: block !important; color: #fbbf24; }
+    <script>
+      const themeBtn = document.getElementById("dark-mode-toggle");
+      const body = document.body;
 
-/* Link Colors in Dark Mode */
-.dark-mode a { color: #4ade80; }
-.dark-mode .logo { color: #4ade80; }</style><script>const themeBtn = document.getElementById("dark-mode-toggle");
-const body = document.body;
+      if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+      }
 
-// 1. Check saved theme
-if (localStorage.getItem("theme") === "dark") {
-  body.classList.add("dark-mode");
-}
-
-// 2. Click Event
-themeBtn.addEventListener("click", () => {
-  body.classList.toggle("dark-mode");
-  
-  // Save preference
-  if (body.classList.contains("dark-mode")) {
-    localStorage.setItem("theme", "dark");
-  } else {
-    localStorage.setItem("theme", "light");
-  }
-});</script>
+      themeBtn.addEventListener("click", () => {
+        body.classList.toggle("dark-mode");
+        if (body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+        } else {
+          localStorage.setItem("theme", "light");
+        }
+      });
+    </script>
   </div>
 </header>
 
