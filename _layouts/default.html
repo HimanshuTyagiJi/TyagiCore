@@ -349,40 +349,79 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   </div>
   
 </div>
-{% unless page.url == "/" or page.url == "/TyagiCore/" %}
-<div id="graphcomment"></div>
-<script type="text/javascript">
+<hr style="margin: 50px 0;">
+<div id="comment-section" style="max-width: 800px; margin: auto; font-family: sans-serif;">
+    <h3 style="color: #166534; border-bottom: 2px solid #166534; padding-bottom: 10px;">💬 Jan-Samvad (Comments)</h3>
+    
+    <div style="background: #fdfdfd; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <input type="text" id="c-name" placeholder="Apna Naam" style="width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width: 100%; height: 100px; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+        <button onclick="postComment()" id="send-btn" style="background: #166534; color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-weight: bold;">Post Comment</button>
+    </div>
 
-  /* - - - CONFIGURATION VARIABLES - - - */
+    <div id="comments-display" style="margin-top: 30px;">Loading comments...</div>
+</div>
 
-  var __semio__params = {
-    graphcommentId: "tyagi-core", // make sure the id is yours
+<script>
+// TERA INFINITYFREE API URL
+const API_URL = "https://comment.infinityfree.me/api.php";
+const PAGE_ID = window.location.pathname;
 
-    behaviour: {
-      // HIGHLY RECOMMENDED
-      //  uid: "...", // uniq identifer for the comments thread on your page (ex: your page id)
-    },
+// 1. Comments Fetch Karne Ka Function
+async function loadComments() {
+    try {
+        const response = await fetch(`${API_URL}?url=${PAGE_ID}`);
+        const data = await response.json();
+        const display = document.getElementById('comments-display');
+        
+        if (!data || data.length === 0) {
+            display.innerHTML = "<p style='color:#888;'>Abhi tak koi comment nahi hai. Pehle aap banein!</p>";
+            return;
+        }
 
-    // configure your variables here
+        display.innerHTML = data.map(c => `
+            <div style="background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-bottom: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
+                <strong style="color: #333;">${c.user_name}</strong> 
+                <small style="color: #aaa; float: right;">${c.created_at}</small>
+                <p style="margin: 10px 0 0; color: #555; line-height: 1.5;">${c.comment_text}</p>
+            </div>
+        `).join('');
+    } catch (e) {
+        document.getElementById('comments-display').innerHTML = "Comments load nahi ho paye.";
+    }
+}
 
-  }
+// 2. Comment Save Karne Ka Function
+async function postComment() {
+    const name = document.getElementById('c-name').value;
+    const msg = document.getElementById('c-msg').value;
+    const btn = document.getElementById('send-btn');
 
-  /* - - - DON'T EDIT BELOW THIS LINE - - - */
+    if(!name || !msg) { alert("Naam aur comment dono zaroori hain!"); return; }
 
-  function __semio__onload() {
-    __semio__gc_graphlogin(__semio__params)
-  }
+    btn.innerText = "Sending...";
+    btn.disabled = true;
 
+    try {
+        await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
+        });
+        document.getElementById('c-msg').value = '';
+        loadComments(); // Refresh list immediately
+    } catch (e) {
+        alert("Server connection failed. Please check back later.");
+    } finally {
+        btn.innerText = "Post Comment";
+        btn.disabled = false;
+    }
+}
 
-  (function() {
-    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
-    gc.onload = __semio__onload; gc.defer = true; gc.src = 'https://integration.graphcomment.com/gc_graphlogin.js?' + Date.now();
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
-  })();
-  
-
+// Initial Load
+loadComments();
 </script>
-{% endunless %}
+
+  
 <style>
   .post-nav-container {
     display: flex;
