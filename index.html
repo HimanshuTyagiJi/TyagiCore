@@ -61,14 +61,40 @@ title: Home
 </div>
 
 <style>
-  .category-section { padding: 20px 0; margin-bottom: 10px; }
-  .category-scroll-container { display: flex; overflow-x: auto; gap: 12px; scrollbar-width: none; padding-bottom: 5px; }
-  .category-scroll-container::-webkit-scrollbar { display: none; }
-  
-  .cat-btn { 
-    padding: 8px 18px; background: #fff; border: 1px solid #e5e7eb; border-radius: 50px; 
-    font-size: 14px; font-weight: 700; color: #4b5563; cursor: pointer; white-space: nowrap; transition: 0.3s;
-  }
+.category-section { 
+  padding: 15px 0; 
+  margin-bottom: 10px;
+  width: 100%; /* Section ko puri width do */
+  overflow: hidden; /* Bahar nikalne wala maal chhupao */
+}
+
+.category-scroll-container { 
+  display: flex; 
+  overflow-x: auto; /* Horizontal scroll enable */
+  -webkit-overflow-scrolling: touch; /* Mobile par smooth scroll ke liye */
+  gap: 12px; 
+  padding: 5px 20px; /* Thoda side space */
+  scrollbar-width: none; 
+  width: 100%; /* Container width fix */
+}
+
+.category-scroll-container::-webkit-scrollbar { 
+  display: none; /* Chrome/Safari ke liye hide */
+}
+
+.cat-btn { 
+  flex-shrink: 0; /* Sabse Zaroori: Buttons ko sikudne se rokta hai */
+  padding: 8px 18px; 
+  background: #fff; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 50px; 
+  font-size: 14px; 
+  font-weight: 700; 
+  color: #4b5563; 
+  cursor: pointer; 
+  white-space: nowrap; /* Text ko ek line me rakhta hai */
+  transition: 0.3s;
+}
   .cat-btn span { font-size: 11px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 10px; margin-left: 5px; }
   .cat-btn.active { background: #166534; color: #fff; border-color: #166534; }
   .cat-btn.active span { background: rgba(255,255,255,0.2); color: #fff; }
