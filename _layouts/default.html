@@ -118,7 +118,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
   </div>
 </header>
-
+<div id="reading-progress"></div><style>#reading-progress {
+  position: fixed;
+  top: 60px; /* Header ki height ke hisab se set karein */
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background: #166534;
+  z-index: 998;
+  transition: width 0.1s ease-out;
+}</style><script>window.onscroll = () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById("reading-progress").style.width = scrolled + "%";
+};</script>
 <div id="searchModal" onclick="closeOnOverlay(event)">
   <div class="search-box">
     <div class="search-input-area">
@@ -896,6 +910,90 @@ function toggleMenu(s) {
 function closeOnOverlay(e) { if(e.target.id === "searchModal") toggleSearch(false); }
 document.addEventListener('keydown', (e) => { if(e.key === "Escape") toggleSearch(false); });
 </script>
+<style>
+  /* Code Box Container */
+  pre {
+    background: #1e293b; /* Dark Blue-Gray Tech Look */
+    color: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    position: relative; /* Button ko position karne ke liye */
+    overflow-x: auto;
+    border: 1px solid #334155;
+    margin: 20px 0;
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
 
+  code {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Copy Button Style */
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #166534; /* Tera Green Brand Color */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    opacity: 0; /* Normal me hidden rahega */
+  }
+
+  /* Hover karne par button dikhega */
+  pre:hover .copy-btn {
+    opacity: 1;
+  }
+
+  .copy-btn:hover {
+    background: #15803d;
+    transform: scale(1.05);
+  }
+
+  .copy-btn:active {
+    transform: scale(0.95);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Page ke saare <pre> blocks ko pakdo
+    const codeBlocks = document.querySelectorAll("pre");
+
+    codeBlocks.forEach((block) => {
+      // Naya button banao
+      const button = document.createElement("button");
+      button.innerText = "Copy";
+      button.className = "copy-btn";
+
+      // Button ko block ke andar dalo
+      block.appendChild(button);
+
+      // Click event logic
+      button.addEventListener("click", () => {
+        const codeText = block.querySelector("code").innerText.trim();
+        
+        navigator.clipboard.writeText(codeText).then(() => {
+          button.innerText = "COPIED!";
+          button.style.background = "#22c55e"; // Success Green
+
+          setTimeout(() => {
+            button.innerText = "COPY";
+            button.style.background = "#166534";
+          }, 2000);
+        }).catch(err => {
+          console.error("Copy failed", err);
+        });
+      });
+    });
+  });
+</script>
 </body>
 </html>
