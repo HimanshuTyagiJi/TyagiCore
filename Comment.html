@@ -12,6 +12,7 @@
 </div>
 
 <script>
+// TERA FINAL API URL
 const API = "https://comment.infinityfree.me/api.php";
 const PAGE_ID = window.location.pathname;
 
@@ -21,19 +22,20 @@ async function loadComments() {
         const data = await res.json();
         const div = document.getElementById('comments-display');
         
-        if (!data.length) {
-            div.innerHTML = "<p style='color:#888;'>Be the first to comment!</p>";
+        if (!data || data.length === 0) {
+            div.innerHTML = "<p style='color:#888;'>Phla comment aap karein!</p>";
             return;
         }
 
         div.innerHTML = data.map(c => `
             <div style="background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #166534;">
-                <strong>${c.user_name}</strong> <small style="float:right; color:#aaa;">${c.created_at}</small>
+                <strong style="color:#333;">${c.user_name}</strong> 
+                <small style="float:right; color:#aaa;">${c.created_at}</small>
                 <p style="margin:5px 0 0; color:#444;">${c.comment_text}</p>
             </div>
         `).join('');
     } catch (e) {
-        div.innerHTML = "Comments temporary unavailable. Please click <a href='"+API+"' target='_blank'>here</a> and click 'Approve' if asked.";
+        document.getElementById('comments-display').innerHTML = "Comments load nahi ho pa rhe.";
     }
 }
 
@@ -42,25 +44,31 @@ async function postComment() {
     const msg = document.getElementById('c-msg').value;
     const btn = document.getElementById('send-btn');
 
-    if(!name || !msg) return alert("Fill all fields!");
+    if(!name || !msg) return alert("Naam aur message dono likho!");
 
     btn.innerText = "Bheja ja raha hai...";
     btn.disabled = true;
 
     try {
-        await fetch(API, {
+        const response = await fetch(API, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
         });
-        document.getElementById('c-msg').value = '';
-        loadComments();
+        
+        const result = await response.json();
+        if(result.status === "success") {
+            document.getElementById('c-msg').value = '';
+            loadComments(); // Refresh list
+        }
     } catch (e) {
-        alert("Error! Open this link first: " + API);
+        alert("Server error! API link ek baar khol kar check karein.");
     } finally {
         btn.innerText = "Post Comment";
         btn.disabled = false;
     }
 }
+
+// Page load hote hi comments dikhao
 loadComments();
 </script>
