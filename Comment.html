@@ -1,0 +1,66 @@
+<div id="tyagi-comment-box" style="max-width:800px; margin:20px auto; padding:20px; background:#fff; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); font-family:sans-serif;">
+    <h3 style="color:#166534; border-bottom:2px solid #166534; padding-bottom:10px;">💬 Jan-Samvad (Comments)</h3>
+
+    <div style="margin-top:15px;">
+        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:80px; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
+        <button onclick="postComment()" id="send-btn" style="background:#166534; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold;">Post Comment</button>
+    </div>
+
+    <hr style="margin:25px 0; border:0; border-top:1px solid #eee;">
+    <div id="comments-display">Loading...</div>
+</div>
+
+<script>
+const API = "https://comment.infinityfree.me/api.php";
+const PAGE_ID = window.location.pathname;
+
+async function loadComments() {
+    try {
+        const res = await fetch(`${API}?url=${encodeURIComponent(PAGE_ID)}`);
+        const data = await res.json();
+        const div = document.getElementById('comments-display');
+        
+        if (!data.length) {
+            div.innerHTML = "<p style='color:#888;'>Be the first to comment!</p>";
+            return;
+        }
+
+        div.innerHTML = data.map(c => `
+            <div style="background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #166534;">
+                <strong>${c.user_name}</strong> <small style="float:right; color:#aaa;">${c.created_at}</small>
+                <p style="margin:5px 0 0; color:#444;">${c.comment_text}</p>
+            </div>
+        `).join('');
+    } catch (e) {
+        div.innerHTML = "Comments temporary unavailable. Please click <a href='"+API+"' target='_blank'>here</a> and click 'Approve' if asked.";
+    }
+}
+
+async function postComment() {
+    const name = document.getElementById('c-name').value;
+    const msg = document.getElementById('c-msg').value;
+    const btn = document.getElementById('send-btn');
+
+    if(!name || !msg) return alert("Fill all fields!");
+
+    btn.innerText = "Bheja ja raha hai...";
+    btn.disabled = true;
+
+    try {
+        await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
+        });
+        document.getElementById('c-msg').value = '';
+        loadComments();
+    } catch (e) {
+        alert("Error! Open this link first: " + API);
+    } finally {
+        btn.innerText = "Post Comment";
+        btn.disabled = false;
+    }
+}
+loadComments();
+</script>
