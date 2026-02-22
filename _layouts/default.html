@@ -349,6 +349,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   </div>
   
 </div>
+
 <hr style="margin: 50px 0;">
 <div id="comment-section" style="max-width: 800px; margin: auto; font-family: sans-serif;">
     <h3 style="color: #166534; border-bottom: 2px solid #166534; padding-bottom: 10px;">💬 Jan-Samvad (Comments)</h3>
@@ -363,14 +364,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <script>
-// TERA INFINITYFREE API URL
+// TERA SAHI URL
 const API_URL = "https://comment.infinityfree.me/api.php";
 const PAGE_ID = window.location.pathname;
 
 // 1. Comments Fetch Karne Ka Function
 async function loadComments() {
     try {
-        const response = await fetch(`${API_URL}?url=${PAGE_ID}`);
+        const response = await fetch(`${API_URL}?url=${encodeURIComponent(PAGE_ID)}`);
         const data = await response.json();
         const display = document.getElementById('comments-display');
         
@@ -387,39 +388,58 @@ async function loadComments() {
             </div>
         `).join('');
     } catch (e) {
-        document.getElementById('comments-display').innerHTML = "Comments load nahi ho paye.";
+        document.getElementById('comments-display').innerHTML = "Comments load nahi ho paye. Ek baar API link direct khol kar check karein.";
     }
 }
 
 // 2. Comment Save Karne Ka Function
 async function postComment() {
-    const name = document.getElementById('c-name').value;
-    const msg = document.getElementById('c-msg').value;
+    const nameInput = document.getElementById('c-name');
+    const msgInput = document.getElementById('c-msg');
     const btn = document.getElementById('send-btn');
 
-    if(!name || !msg) { alert("Naam aur comment dono zaroori hain!"); return; }
+    if(!nameInput.value || !msgInput.value) { 
+        alert("Naam aur comment dono zaroori hain!"); 
+        return; 
+    }
 
-    btn.innerText = "Sending...";
+    btn.innerText = "Bheja ja raha hai...";
     btn.disabled = true;
 
     try {
-        await fetch(API_URL, {
+        const response = await fetch(API_URL, {
             method: 'POST',
-            body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
+            headers: {
+                'Content-Type': 'application/json' // YE LINE ZAROORI THI
+            },
+            body: JSON.stringify({ 
+                url: PAGE_ID, 
+                name: nameInput.value, 
+                comment: msgInput.value 
+            })
         });
-        document.getElementById('c-msg').value = '';
-        loadComments(); // Refresh list immediately
+
+        const result = await response.json();
+        
+        if(result.status === "success") {
+            msgInput.value = '';
+            loadComments(); // Turant naya comment dikhao
+        } else {
+            alert("Error: " + (result.error || "Submit nahi hua"));
+        }
     } catch (e) {
-        alert("Server connection failed. Please check back later.");
+        console.error("Fetch Error:", e);
+        alert("Server se connect nahi ho paya. Ek baar direct API link khol kar 'Approve' karein.");
     } finally {
         btn.innerText = "Post Comment";
         btn.disabled = false;
     }
 }
 
-// Initial Load
+// Load comments on page start
 loadComments();
 </script>
+    
 
   
 <style>
