@@ -776,7 +776,9 @@ body.dark-mode { background-color: var(--bg) !important; color: var(--text-color
 
   #tyagi-top-wrap:hover {
     box-shadow: 0 6px 20px rgba(22, 101, 52, 0.3);
-  }/* ===== DESKTOP SIDEBAR SCROLL LOGIC ===== */
+  }
+
+/* ===== DESKTOP SIDEBAR SCROLL LOGIC ===== */
 @media (min-width: 901px) {
     .tc-wrapper {
         display: flex; /* Grid ki jagah flex asan rahega yahan */
