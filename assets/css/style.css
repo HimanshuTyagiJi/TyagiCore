@@ -76,6 +76,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .tc-hero{padding:40px 5%;background:var(--card-bg);border-bottom:1px solid var(--border-color);}
 .tc-hero h1{font-size:42px;font-weight:900;margin-bottom:15px;}
 .tc-hero {
+    border-radius: 25px;
 
     color: white;
     text-align: center;
@@ -105,10 +106,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     }
 }
 
-.tc-hero p{color:#64748b;font-size:18px;margin-bottom:25px;}
+.tc-hero p{font-size:18px;margin-bottom:25px;}
 .btn{padding:10px 22px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;margin-right:10px;}
 .btn-primary{background:#166534;color:#fff;}
-.btn-outline{border:2px solid #166534;color:#166534;}
+.btn-outline{border:2px solid #166534;}
 
  .tc-tools{padding:60px 5%;}
 .featured-grid, .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:25px;}
