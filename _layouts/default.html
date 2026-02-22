@@ -428,6 +428,20 @@
   </svg>
   <i class="fas fa-arrow-up top-arrow-icon"></i>
 </div>
+
+  <script>
+  const allPosts = [
+    {% assign post_pages = site.posts %}
+    {% for p in post_pages %}
+    {
+      title: {{ p.title | jsonify }},
+      url: {{ p.url | absolute_url | jsonify }},
+      excerpt: {{ p.description | default: p.excerpt | strip_html | truncate: 100 | jsonify }},
+      image: "{{ p.image | default: 'https://picsum.photos/200/150' }}"
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
  <script src="{{ 'assets/js/main.js' | absolute_url }}" defer></script> 
  <script src="https://accounts.google.com/gsi/client" async defer>
 </body>
