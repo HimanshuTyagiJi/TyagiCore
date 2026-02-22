@@ -1,188 +1,196 @@
-<div id="comment-system-final" style="max-width:800px; margin:20px auto; font-family:'Segoe UI', Tahoma, sans-serif; background:#ffffff; padding:25px; border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.12);">
+<div id="tyagi-feedback-system" style="max-width:800px; margin:30px auto; font-family:'Segoe UI', Roboto, Helvetica, sans-serif; background:#ffffff; padding:25px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.08); color:#202124;">
     
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f3f4; padding-bottom:15px; margin-bottom:20px;">
-        <h2 style="margin:0; color:#1a73e8; font-size:24px;">Comments </h2>
-        <span style="font-size:12px; color:#188038; background:#e6f4ea; padding:6px 12px; border-radius:20px; font-weight:500;">🔒 Privacy Encrypted</span>
-    </div>
-
-    <div id="auth-box" style="text-align:center; padding:40px; border:2px dashed #dadce0; border-radius:12px; background:#fafafa;">
-        <p style="margin-bottom:20px; color:#5f6368; font-weight:500;">Log in with Google to rate and join the discussion.</p>
-        <div id="g_id_onload"
-             data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
-             data-callback="onUserLogin">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f3f4; padding-bottom:20px; margin-bottom:25px;">
+        <div>
+            <h2 style="margin:0; font-size:22px; color:#1a73e8;">Community Reviews</h2>
+            <div id="rating-summary" style="margin-top:8px; font-size:18px; color:#f4b400; font-weight:bold;">
+                ⭐ Loading scores...
+            </div>
         </div>
-        <div class="g_id_signin" data-type="standard" data-shape="rectangular"></div>
+        <div id="privacy-status" style="text-align:right;">
+            <span style="font-size:12px; background:#e6f4ea; color:#137333; padding:6px 14px; border-radius:20px; font-weight:500;">🔒 Privacy Protected</span>
+        </div>
     </div>
 
-    <div id="editor-box" style="display:none; background:#f8f9fa; padding:20px; border-radius:12px; border:1px solid #e8eaed;">
+    <div id="rating-widget" style="background:#f8f9fa; padding:20px; border-radius:12px; margin-bottom:25px; text-align:center; border:1px solid #e8eaed;">
+        <p style="margin:0 0 12px 0; font-weight:600; color:#5f6368;">How would you rate this page?</p>
+        <div id="star-row" style="font-size:32px; color:#dadce0; cursor:pointer; transition: transform 0.2s;">
+            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
+        </div>
+        <p id="rating-msg" style="margin-top:8px; font-size:13px; color:#1a73e8; display:none;"></p>
+    </div>
+
+    <div id="login-panel" style="text-align:center; padding:40px; border:2px dashed #dadce0; border-radius:12px; background:#fafafa;">
+        <p style="color:#3c4043; margin-bottom:20px; font-weight:500;">Login with Google to post comments and save your rating.</p>
+        <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
+        <div class="g_id_signin" data-type="standard"></div>
+    </div>
+
+    <div id="editor-panel" style="display:none; background:#ffffff; border:1px solid #dadce0; padding:20px; border-radius:12px;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
-            <img id="u-avatar" src="" style="width:45px; height:45px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-            <div style="flex-grow:1;">
-                <strong id="u-display-name" style="display:block; color:#202124; font-size:16px;"></strong>
-                <small style="color:#70757a;">Your email is private & only visible to site owner.</small>
+            <img id="user-pfp" src="" style="width:40px; height:40px; border-radius:50%; border:2px solid #1a73e8;">
+            <div>
+                <strong id="user-name" style="font-size:15px;"></strong>
+                <small style="display:block; color:#70757a; font-size:12px;">Identity Verified via Google</small>
             </div>
-            <button onclick="userLogout()" style="background:#f1f3f4; border:none; padding:5px 12px; border-radius:4px; cursor:pointer; font-size:12px; color:#d93025;">Logout</button>
+            <button onclick="logout()" style="margin-left:auto; background:none; border:none; color:#d93025; font-size:12px; cursor:pointer;">Sign Out</button>
         </div>
-
-        <div style="margin-bottom:15px; display:flex; align-items:center; gap:10px;">
-            <span style="font-size:14px; font-weight:bold; color:#3c4043;">Rate us:</span>
-            <div id="stars" style="font-size:24px; color:#dadce0; cursor:pointer;">
-                <span onclick="rate(1)">★</span><span onclick="rate(2)">★</span><span onclick="rate(3)">★</span><span onclick="rate(4)">★</span><span onclick="rate(5)">★</span>
+        <form onsubmit="submitComment(event)">
+            <input type="hidden" id="reply-to" value="0">
+            <textarea id="comment-input" placeholder="Share your thoughts..." required style="width:100%; height:100px; padding:15px; border:1px solid #dadce0; border-radius:8px; font-size:15px; outline:none; focus:border-color:#1a73e8;"></textarea>
+            <div id="reply-banner" style="display:none; background:#e8f0fe; color:#1967d2; padding:8px 12px; border-radius:5px; margin-top:8px; font-size:13px;">
+                Replying to user... <span onclick="cancelReply()" style="float:right; cursor:pointer; font-weight:bold; color:#d93025;">Cancel</span>
             </div>
-        </div>
-
-        <form onsubmit="sendComment(event)">
-            <input type="hidden" id="parent-id" value="0">
-            <textarea id="msg-input" placeholder="Join the conversation..." required style="width:100%; height:110px; padding:15px; border:1px solid #dadce0; border-radius:8px; font-size:15px; outline:none; transition:border 0.3s;" onfocus="this.style.borderColor='#1a73e8'"></textarea>
-            <div id="reply-info" style="display:none; background:#e8f0fe; color:#1967d2; padding:8px 12px; border-radius:5px; margin-top:8px; font-size:13px;">
-                Replying to thread... <span onclick="cancelReply()" style="float:right; cursor:pointer; font-weight:bold; color:#d93025;">Cancel</span>
-            </div>
-            <button type="submit" id="submit-btn" style="margin-top:12px; padding:12px 30px; background:#1a73e8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; font-size:15px; box-shadow:0 2px 4px rgba(0,0,0,0.2);">Post Comment</button>
+            <button type="submit" id="post-btn" style="margin-top:12px; padding:12px 35px; background:#1a73e8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: 0.3s;">Post Comment</button>
         </form>
     </div>
 
-    <div id="comments-container" style="margin-top:35px; border-top:1px solid #f1f3f4; padding-top:20px;">
-        <p style="text-align:center; color:#999;">Loading comments...</p>
+    <div id="feed-container" style="margin-top:40px;">
+        <div style="text-align:center; color:#999;">🔄 Loading the latest discussion...</div>
     </div>
 </div>
 
 <script>
-// 1. TERA NEW SCRIPT URL
-const API_URL = "https://script.google.com/macros/s/AKfycbz8kh-hBXoJlbhybcTehqmk7mu5olWObUXyjHOJ_lj4wVV_XVOLQTWzyDmHzZiyYyCl/exec";
-let userData = null;
-let currentRating = 0;
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJw3Y9NNNidGTwkztEDpT6fF5lFkvg-EQodSW6VeetxnfeYlV_Zy3GT38BtAGux4QR/exec";
+let currentUser = null;
+let selectedRating = 0;
+let commentCount = 0;
 
-// 2. Persistence & Init
+// Initialize
 window.onload = () => {
-    const saved = localStorage.getItem("site_user");
-    if(saved) {
-        userData = JSON.parse(saved);
-        showEditorUI();
-    }
-    fetchComments();
+    const session = localStorage.getItem("app_user");
+    if(session) { currentUser = JSON.parse(session); showEditor(); }
+    
+    const prevRate = localStorage.getItem("rate_" + window.location.pathname);
+    if(prevRate) { selectedRating = prevRate; applyStarLock(prevRate); }
+    
+    sync();
+    setInterval(sync, 12000); // Live sync every 12s
     if ("Notification" in window) Notification.requestPermission();
 };
 
-function onUserLogin(res) {
-    const payload = JSON.parse(atob(res.credential.split('.')[1]));
-    userData = { name: payload.name, email: payload.email, pic: payload.picture };
-    localStorage.setItem("site_user", JSON.stringify(userData));
-    showEditorUI();
-    fetchComments(); // Reload to show Delete buttons if Admin
+function onGoogleAuth(res) {
+    const data = JSON.parse(atob(res.credential.split('.')[1]));
+    currentUser = { n: data.name, e: data.email, p: data.picture };
+    localStorage.setItem("app_user", JSON.stringify(currentUser));
+    showEditor();
+    sync();
 }
 
-function showEditorUI() {
-    document.getElementById("auth-box").style.display = "none";
-    document.getElementById("editor-box").style.display = "block";
-    document.getElementById("u-display-name").innerText = userData.name;
-    document.getElementById("u-avatar").src = userData.pic;
+function showEditor() {
+    document.getElementById("login-panel").style.display = "none";
+    document.getElementById("editor-panel").style.display = "block";
+    document.getElementById("user-name").innerText = currentUser.n;
+    document.getElementById("user-pfp").src = currentUser.p;
 }
 
-function userLogout() {
-    localStorage.removeItem("site_user");
-    location.reload();
+function logout() { localStorage.removeItem("app_user"); location.reload(); }
+
+// Rating Stars Logic
+function hoverStars(n) { updateStarsUI(n, "#f4b400"); }
+function resetStars() { updateStarsUI(selectedRating, "#f4b400"); }
+function applyStarLock(n) { updateStarsUI(n, "#f4b400"); document.getElementById("rating-msg").innerText = "You rated this " + n + " stars"; document.getElementById("rating-msg").style.display = "block"; }
+
+function updateStarsUI(n, color) {
+    const s = document.querySelectorAll("#star-row span");
+    s.forEach((el, i) => el.style.color = i < n ? color : "#dadce0");
 }
 
-function rate(n) {
-    currentRating = n;
-    const s = document.querySelectorAll("#stars span");
-    s.forEach((el, i) => el.style.color = i < n ? "#f4b400" : "#dadce0");
+function handleStarClick(n) {
+    if(!currentUser) { alert("Please login to rate!"); return; }
+    selectedRating = n;
+    localStorage.setItem("rate_" + window.location.pathname, n);
+    applyStarLock(n);
+    submitComment(null, true); // Auto-submit rating
 }
 
-async function sendComment(e) {
-    e.preventDefault();
-    const btn = document.getElementById("submit-btn");
-    const msg = document.getElementById("msg-input").value;
-    const parent = document.getElementById("parent-id").value;
-
+async function submitComment(e, isRateOnly = false) {
+    if(e) e.preventDefault();
+    const btn = document.getElementById("post-btn");
+    const txt = isRateOnly ? "Gave a rating" : document.getElementById("comment-input").value;
+    
     btn.disabled = true;
-    btn.innerText = "Posting...";
-
     const payload = {
         url: window.location.pathname,
-        name: userData.name,
-        email: userData.email, // Backend checks this
-        comment: msg,
-        parentId: parent,
-        pic: userData.pic,
-        rating: currentRating
+        name: currentUser.n,
+        email: currentUser.e,
+        comment: txt,
+        parentId: document.getElementById("reply-to").value || "0",
+        pic: currentUser.p,
+        rating: selectedRating
     };
 
-    try {
-        await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
-        document.getElementById("msg-input").value = "";
-        cancelReply();
-        setTimeout(fetchComments, 1500);
-    } catch(err) { alert("Failed to post."); }
-    finally { btn.disabled = false; btn.innerText = "Post Comment"; }
+    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
+    if(!isRateOnly) { document.getElementById("comment-input").value = ""; cancelReply(); }
+    setTimeout(sync, 1500);
+    btn.disabled = false;
 }
 
-async function fetchComments() {
+async function sync() {
     try {
-        const res = await fetch(`${API_URL}?url=${window.location.pathname}`);
+        const res = await fetch(`${SCRIPT_URL}?url=${window.location.pathname}`);
         const data = await res.json();
-        const container = document.getElementById("comments-container");
-        container.innerHTML = "";
-
-        if(data.length === 0) {
-            container.innerHTML = "<p style='text-align:center; color:#bdc3c7;'>No comments yet. Be the first!</p>";
-            return;
+        
+        // Notifications
+        if(data.comments.length > commentCount && commentCount !== 0) {
+            new Notification("New Comment!", { body: data.comments[0].name + " just posted." });
         }
+        commentCount = data.comments.length;
 
-        const parents = data.filter(c => c.parentId == "0");
-        parents.reverse().forEach(p => {
-            container.innerHTML += buildCommentUI(p, false, data);
-            data.filter(r => r.parentId == p.rowId).forEach(reply => {
-                container.innerHTML += buildCommentUI(reply, true, data);
+        // Avg Rating UI
+        document.getElementById("rating-summary").innerText = "⭐ " + data.avgRating + "/5 (" + data.totalVotes + " reviews)";
+
+        const box = document.getElementById("feed-container");
+        box.innerHTML = "";
+        
+        if(data.comments.length === 0) { box.innerHTML = "<p style='text-align:center; color:#999;'>No comments yet.</p>"; return; }
+
+        const mains = data.comments.filter(c => c.parentId == "0");
+        mains.reverse().forEach(m => {
+            box.innerHTML += renderCard(m, false);
+            data.comments.filter(r => r.parentId == m.rowId).forEach(rep => {
+                box.innerHTML += renderCard(rep, true);
             });
         });
-    } catch(e) { console.error(e); }
+    } catch(e) { console.log("Sync error"); }
 }
 
-function buildCommentUI(c, isReply, fullData) {
-    const margin = isReply ? "margin-left:50px; border-left:2px solid #f1f3f4; background:#fcfcfc;" : "margin-bottom:20px; border:1px solid #f1f3f4;";
+function renderCard(c, isRep) {
+    const margin = isRep ? "margin-left:45px; border-left:3px solid #f1f3f4; background:#fcfcfc;" : "border-bottom:1px solid #f1f3f4;";
+    // Check if current logged user is owner of comment OR Admin (Admin check is via flag from backend)
+    const canDelete = currentUser && (c.isAdmin || currentUser.e === c.uMail);
     const starStr = "★".repeat(c.rating) + "☆".repeat(5 - c.rating);
-    
-    // Privacy: Only owner of comment or Admin can delete
-    // Note: 'c.email' backend se nahi aayega agar tune security lagayi hai, 
-    // Isliye hum backend se 'isCanDelete' flag bhejte hain ya phir email match karte hain.
-    // Filhaal hum email match kar rahe hain (par screen par display nahi kar rahe).
-    const canDelete = userData && (userData.email === "officialhimanshutyagi@gmail.com" || userData.email === c.email);
 
     return `
-        <div style="${margin} padding:15px; border-radius:10px; transition:all 0.2s;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                <img src="${c.pic || 'https://www.gravatar.com/avatar/?d=mp'}" style="width:32px; height:32px; border-radius:50%;">
-                <strong style="color:#202124; font-size:14px;">${c.name} ${c.email === "officialhimanshutyagi@gmail.com" ? '<span style="color:#1a73e8; font-size:10px; background:#e8f0fe; padding:2px 6px; border-radius:10px; margin-left:5px;">Admin</span>' : ''}</strong>
+        <div style="${margin} padding:15px; position:relative;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                <img src="${c.pic}" style="width:32px; height:32px; border-radius:50%;">
+                <strong style="font-size:14px; color:#202124;">${c.name} ${c.isAdmin ? '<span style="color:#1a73e8; background:#e8f0fe; padding:2px 8px; border-radius:10px; font-size:10px; margin-left:5px;">Admin</span>' : ''}</strong>
                 <span style="color:#f4b400; font-size:12px;">${c.rating > 0 ? starStr : ''}</span>
-                <small style="color:#9aa0a6; font-size:11px;">${c.date}</small>
             </div>
-            <p style="margin:5px 0 10px 42px; color:#3c4043; line-height:1.5; font-size:15px;">${c.comment}</p>
+            <p style="margin:5px 0 10px 42px; color:#3c4043; line-height:1.5;">${c.comment}</p>
             <div style="margin-left:42px; display:flex; gap:20px;">
-                <button onclick="handleReplyTrigger('${c.rowId}')" style="background:none; border:none; color:#1a73e8; font-size:12px; cursor:pointer; font-weight:600;">Reply</button>
-                ${canDelete ? `<button onclick="handleDelete('${c.rowId}')" style="background:none; border:none; color:#d93025; font-size:12px; cursor:pointer; font-weight:600;">Delete</button>` : ""}
+                <button onclick="triggerReply('${c.rowId}')" style="background:none; border:none; color:#1a73e8; font-size:12px; cursor:pointer; font-weight:600;">Reply</button>
+                ${canDelete ? `<button onclick="deleteMsg('${c.rowId}')" style="background:none; border:none; color:#d93025; font-size:12px; cursor:pointer; font-weight:600;">Delete</button>` : ""}
+                <small style="color:#9aa0a6; font-size:11px; margin-left:auto;">${c.date}</small>
             </div>
         </div>
     `;
 }
 
-function handleReplyTrigger(id) {
-    if(!userData) { alert("Please login to reply!"); window.scrollTo(0, document.getElementById('auth-box').offsetTop - 50); return; }
-    document.getElementById("parent-id").value = id;
-    document.getElementById("reply-info").style.display = "block";
-    document.getElementById("msg-input").focus();
+function triggerReply(id) { 
+    if(!currentUser) return alert("Login to reply!");
+    document.getElementById("reply-to").value = id; 
+    document.getElementById("reply-banner").style.display = "block";
+    document.getElementById("comment-input").focus(); 
 }
 
-function cancelReply() {
-    document.getElementById("parent-id").value = "0";
-    document.getElementById("reply-info").style.display = "none";
-}
+function cancelReply() { document.getElementById("reply-to").value = "0"; document.getElementById("reply-banner").style.display = "none"; }
 
-async function handleDelete(id) {
-    if(!confirm("Are you sure you want to delete this comment?")) return;
-    const payload = { action: "delete", rowId: id, userEmail: userData.email };
-    await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
-    setTimeout(fetchComments, 1000);
+async function deleteMsg(id) {
+    if(!confirm("Are you sure?")) return;
+    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action:"delete", rowId:id, userEmail:currentUser.e}), mode: 'no-cors' });
+    setTimeout(sync, 1000);
 }
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
