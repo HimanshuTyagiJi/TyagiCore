@@ -211,7 +211,7 @@ async function deleteMsg(id) {
     setTimeout(sync, 1000);
 }
 
-<script src="https://accounts.google.com/gsi/client" async defer>
+
 
   
 
