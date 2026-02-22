@@ -1,72 +1,101 @@
-<div id="tyagi-comment-box" style="max-width:800px; margin:40px auto; padding:25px; background:#fff; border-radius:12px; box-shadow:0 8px 25px rgba(0,0,0,0.1); font-family:sans-serif; border:1px solid #eee;">
-    <h3 style="color:#166534; border-bottom:2px solid #166534; padding-bottom:12px; margin-top:0;">💬 Jan-Samvad (Comments)</h3>
+<div id="comment-section" style="max-width: 600px; margin: 20px auto; font-family: Arial, sans-serif; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff;">
+    <h3 style="text-align: center; color: #333;">Comments</h3>
 
-    <div style="margin-top:20px;">
-        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; font-size:16px;">
-        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:100px; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; font-size:16px;"></textarea>
-        <button onclick="postComment()" id="send-btn" style="background:#166534; color:white; border:none; padding:14px 25px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; font-size:16px;">Post Comment</button>
+    <form id="comment-form" onsubmit="submitComment(event)" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="user-name" placeholder="Aapka Naam" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <textarea id="user-comment" placeholder="Apna comment likhein..." required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-height: 80px;"></textarea>
+        <button type="submit" id="submit-btn" style="padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Post Comment</button>
+    </form>
+
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+    <div id="comments-container">
+        <p style="text-align: center; color: #888;">Comments load ho rahe hain...</p>
     </div>
-
-    <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
-    <div id="comments-display" style="min-height:50px; color:#666;">Loading comments...</div>
 </div>
 
 <script>
-const API = "https://tyagicore.gklearnstudy.in/api";
-const PAGE_ID = window.location.pathname;
+    // 1. TERA GOOGLE SCRIPT URL (Don't change this)
+    const API_URL = "https://script.google.com/macros/s/AKfycbyHafCHqnjst1Zzm-tnc1Vt9rhjB0cSQAuCe438PGmlMGo12r31NULdexrjMsBgRMP-/exec";
 
-async function loadComments() {
-    try {
-        const res = await fetch(`${API}?url=${encodeURIComponent(PAGE_ID)}`);
-        const data = await res.json();
-        const div = document.getElementById('comments-display');
+    // 2. Comments Load Karne Wala Function
+    async function loadComments() {
+        const pageUrl = window.location.pathname; 
+        const container = document.getElementById("comments-container");
+
+        try {
+            const response = await fetch(`${API_URL}?url=${encodeURIComponent(pageUrl)}`);
+            const comments = await response.json();
+            
+            container.innerHTML = ""; 
+
+            if (comments.length === 0) {
+                container.innerHTML = "<p style='text-align:center; color:#999;'>Pehla comment aap karein!</p>";
+                return;
+            }
+
+            comments.forEach(c => {
+                const div = document.createElement("div");
+                div.style = "border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 5px;";
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <strong style="color: #007bff;">${c.name}</strong>
+                        <small style="color: #999; font-size: 11px;">${c.date}</small>
+                    </div>
+                    <p style="margin: 5px 0; color: #444; font-size: 14px;">${c.comment}</p>
+                `;
+                container.appendChild(div);
+            });
+        } catch (e) {
+            container.innerHTML = "<p style='color:red; text-align:center;'>Comments load nahi ho paye!</p>";
+            console.error(e);
+        }
+    }
+
+    // 3. Comment Post Karne Wala Function
+    async function submitComment(e) {
+        e.preventDefault();
         
-        if (!data || data.length === 0) {
-            div.innerHTML = "<p style='text-align:center;'>Phela comment aap karein!</p>";
-            return;
+        const btn = document.getElementById("submit-btn");
+        const nameField = document.getElementById("user-name");
+        const commentField = document.getElementById("user-comment");
+        const pageUrl = window.location.pathname;
+
+        // Button ko lock kar do
+        btn.innerText = "Posting...";
+        btn.disabled = true;
+
+        // Data taiyar karo
+        const payload = new URLSearchParams({
+            "url": pageUrl,
+            "name": nameField.value,
+            "comment": commentField.value
+        });
+
+        try {
+            // Google Script ko bhej do
+            await fetch(API_URL, {
+                method: "POST",
+                body: payload,
+                mode: "no-cors" // Sabse zaruri bypass
+            });
+
+            // Form khali karo aur success message dikhao
+            nameField.value = "";
+            commentField.value = "";
+            alert("Comment successfully post ho gaya!");
+            
+            // 1 second baad naye comments load karo
+            setTimeout(loadComments, 1000);
+        } catch (e) {
+            alert("Kuch galti hui! Dobara try karein.");
+            console.error(e);
+        } finally {
+            btn.innerText = "Post Comment";
+            btn.disabled = false;
         }
-
-        div.innerHTML = data.map(c => `
-            <div style="background:#fdfdfd; padding:15px; border-radius:10px; margin-bottom:15px; border-left:5px solid #166534;">
-                <strong>${c.user_name}</strong> 
-                <small style="float:right; color:#aaa;">${c.created_at}</small>
-                <p style="margin-top:10px;">${c.comment_text}</p>
-            </div>
-        `).join('');
-    } catch (e) {
-        document.getElementById('comments-display').innerHTML = "<p style='color:red;'>Database se data nahi mila.</p>";
     }
-}
 
-async function postComment() {
-    const name = document.getElementById('c-name').value;
-    const msg = document.getElementById('c-msg').value;
-    const btn = document.getElementById('send-btn');
-
-    if(!name || !msg) return alert("Details bharo!");
-
-    btn.innerText = "Bheja ja raha hai...";
-    btn.disabled = true;
-
-    const fd = new FormData();
-    fd.append('name', name);
-    fd.append('comment', msg);
-    fd.append('url', PAGE_ID);
-
-    try {
-        const response = await fetch(API, { method: 'POST', body: fd });
-        const result = await response.json();
-        if(result.status === "success") {
-            document.getElementById('c-msg').value = '';
-            loadComments();
-        }
-    } catch (e) {
-        alert("Success! (Agar data refresh na ho toh ek baar page reload karein)");
-        loadComments();
-    } finally {
-        btn.innerText = "Post Comment";
-        btn.disabled = false;
-    }
-}
-loadComments();
+    // Page khulte hi comments dikhao
+    window.onload = loadComments;
 </script>
