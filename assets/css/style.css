@@ -778,34 +778,25 @@ body.dark-mode { background-color: var(--bg) !important; color: var(--text-color
     box-shadow: 0 6px 20px rgba(22, 101, 52, 0.3);
   }/* ===== DESKTOP SIDEBAR SCROLL LOGIC ===== */
 @media (min-width: 901px) {
-  /* Parent container ko grid setup dena zaroori hai */
-  .tc-wrapper {
-    display: grid;
-    grid-template-columns: 3fr 1fr; /* Left: Content, Right: Sidebar */
-    gap: 40px;
-    align-items: start; /* Ye zaroori hai sticky kaam karne ke liye */
-  }
-
-  .tc-sidebar {
-    position: sticky;
-    top: 80px; /* Header ki height + thoda gap */
-    max-height: calc(100vh - 100px); /* Screen ki height ke hisaab se adjust */
-    overflow-y: auto; /* Agar sidebar khud bada hai toh andar scroll hoga */
-    scrollbar-width: none; /* Firefox ke liye scrollbar chhupa do */
-    -ms-overflow-style: none; /* IE ke liye */
-  }
-
-  /* Chrome/Safari ke liye sidebar ka scrollbar hide karna (clean look ke liye) */
-  .tc-sidebar::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-/* Mobile par scroll normal rahega */
-@media (max-width: 900px) {
-  .tc-sidebar {
-    position: static;
-    max-height: none;
-    overflow-y: visible;
-  }
+    .tc-wrapper {
+        display: flex; /* Grid ki jagah flex asan rahega yahan */
+        gap: 40px;
+        align-items: flex-start;
+    }
+    .post-content-area { /* Tera left side */
+        flex: 3;
+        height: 100vh;
+        overflow-y: scroll; /* Browser ka default scrollbar dikhega */
+        scrollbar-width: none; /* Hide scrollbar */
+    }
+    .tc-sidebar { /* Tera right side */
+        flex: 1;
+        height: 100vh;
+        overflow-y: scroll;
+        scrollbar-width: none;
+    }
+    /* Hide Scrollbars */
+    .post-content-area::-webkit-scrollbar, .tc-sidebar::-webkit-scrollbar {
+        display: none;
+    }
 }
