@@ -12,10 +12,84 @@
 
 <header class="header">
   <div class="header-inner">
- <a href="{{ '/' | relative_url }}" class="logo">
-  <img src="{{ 'assets/images/tyagicore.png' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle; margin-right: 10px;">
-  <span>TYAGI CORE</span>
+<a href="{{ '/' | relative_url }}" class="logo">
+
+<svg width="220" height="60" viewBox="0 0 500 150"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <linearGradient id="gradMove" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4285F4">
+        <animate attributeName="offset" values="0;1;0" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="0.5" stop-color="#EA4335">
+        <animate attributeName="offset" values="0.5;1.5;0.5" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="1" stop-color="#34A853">
+        <animate attributeName="offset" values="1;2;1" dur="4s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+
+  <!-- TYAGI (Animated Stroke Draw) -->
+  <text x="10" y="60"
+        font-size="70"
+        font-weight="900"
+        font-family="Poppins, sans-serif"
+        fill="none"
+        stroke="url(#gradMove)"
+        stroke-width="3"
+        stroke-dasharray="1000"
+        stroke-dashoffset="1000">
+
+    Tyagi
+
+    <animate attributeName="stroke-dashoffset"
+             values="1000;0;1000"
+             dur="6s"
+             repeatCount="indefinite"/>
+  </text>
+
+  <!-- CORE (Outline Only) -->
+  <text x="10" y="140"
+        font-size="60"
+        font-weight="900"
+        font-family="Poppins, sans-serif"
+        fill="none"
+        stroke="url(#gradMove)"
+        stroke-width="3"
+        stroke-linejoin="round"
+        stroke-linecap="round">
+
+    CORE
+
+    <!-- Light pulse animation -->
+    <animate attributeName="stroke-width"
+             values="3;4;3"
+             dur="2s"
+             repeatCount="indefinite"/>
+  </text>
+
+</svg>
 </a>
+
+<style>
+.logo {
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo svg {
+  display: block;
+  height: 50px;
+  width: auto;
+}
+</style>
    <nav class="nav">
   <a href="{{ '' | absolute_url }}">Home</a>
   <a href="{{ 'networking' | absolute_url }}">Networking</a>
