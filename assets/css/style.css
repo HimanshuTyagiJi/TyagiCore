@@ -24,7 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   display: none; 
 }
 /* ===== HEADER ===== */
-.header{background:var(--card-bg);padding:15px 5%;position:sticky;top:0;z-index:999;box-shadow:0 2px 15px rgba(0,0,0,0.06);border-bottom: 1px solid var(--border-color);}
+.header{height: 60px;background:var(--card-bg);padding:15px 5%;position:sticky;top:0;z-index:999;box-shadow:0 2px 15px rgba(0,0,0,0.06);border-bottom: 1px solid var(--border-color);}
 .header-inner{display:flex;align-items:center;justify-content:space-between;position:relative;}
 .logo{font-size:22px;font-weight:900;color:#166534;text-decoration:none;}
 .nav{display:flex;gap:20px;}
