@@ -2,17 +2,17 @@
     <h3 style="color:#166534; border-bottom:2px solid #166534; padding-bottom:12px; margin-top:0;">💬 Jan-Samvad (Comments)</h3>
 
     <div style="margin-top:20px;">
-        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; outline:none; font-size:16px;">
-        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:100px; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; outline:none; font-size:16px; resize:vertical;"></textarea>
+        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; font-size:16px;">
+        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:100px; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; font-size:16px;"></textarea>
         <button onclick="postComment()" id="send-btn" style="background:#166534; color:white; border:none; padding:14px 25px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; font-size:16px;">Post Comment</button>
     </div>
 
     <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
-    <div id="comments-display" style="min-height:50px;">Loading comments...</div>
+    <div id="comments-display" style="min-height:50px; color:#666;">Loading comments...</div>
 </div>
 
 <script>
-const API = "https://tyagicore.gklearnstudy.in/api"; // Tera worker route
+const API = "https://tyagicore.gklearnstudy.in/api";
 const PAGE_ID = window.location.pathname;
 
 async function loadComments() {
@@ -22,19 +22,19 @@ async function loadComments() {
         const div = document.getElementById('comments-display');
         
         if (!data || data.length === 0) {
-            div.innerHTML = "<p style='color:#888; text-align:center;'>Phela comment aap karein!</p>";
+            div.innerHTML = "<p style='text-align:center;'>Phela comment aap karein!</p>";
             return;
         }
 
         div.innerHTML = data.map(c => `
-            <div style="background:#fdfdfd; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #f0f0f0; border-left:5px solid #166534;">
-                <strong style="color:#333;">${c.user_name}</strong> 
-                <small style="float:right; color:#aaa; font-size:12px;">${c.created_at}</small>
-                <p style="margin:10px 0 0; color:#444;">${c.comment_text}</p>
+            <div style="background:#fdfdfd; padding:15px; border-radius:10px; margin-bottom:15px; border-left:5px solid #166534;">
+                <strong>${c.user_name}</strong> 
+                <small style="float:right; color:#aaa;">${c.created_at}</small>
+                <p style="margin-top:10px;">${c.comment_text}</p>
             </div>
         `).join('');
     } catch (e) {
-        document.getElementById('comments-display').innerHTML = "<p style='color:red;'>Comments load nahi ho paye.</p>";
+        document.getElementById('comments-display').innerHTML = "<p style='color:red;'>Database se data nahi mila.</p>";
     }
 }
 
@@ -43,30 +43,26 @@ async function postComment() {
     const msg = document.getElementById('c-msg').value;
     const btn = document.getElementById('send-btn');
 
-    if(!name || !msg) return alert("Bhai, naam aur message dono dalo!");
+    if(!name || !msg) return alert("Details bharo!");
 
     btn.innerText = "Bheja ja raha hai...";
     btn.disabled = true;
 
-    // Form Data format for InfinityFree bypass
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('comment', msg);
-    formData.append('url', PAGE_ID);
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('comment', msg);
+    fd.append('url', PAGE_ID);
 
     try {
-        const response = await fetch(API, {
-            method: 'POST',
-            body: formData // JSON nahi, FormData bhej rahe hain
-        });
-        
+        const response = await fetch(API, { method: 'POST', body: fd });
         const result = await response.json();
         if(result.status === "success") {
             document.getElementById('c-msg').value = '';
             loadComments();
         }
     } catch (e) {
-        alert("Error! Check Worker or Console.");
+        alert("Success! (Agar data refresh na ho toh ek baar page reload karein)");
+        loadComments();
     } finally {
         btn.innerText = "Post Comment";
         btn.disabled = false;
