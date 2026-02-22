@@ -82,6 +82,9 @@
 
 
 {% endunless %}
+<div class="tc-wrapper">
+    <div class="post-content-area"> 
+    
     {{ content }}
 
     {% unless page.url == "/" or page.url == "/TyagiCore/" %}
@@ -122,6 +125,10 @@
 
 {% endunless %}
   </div>
+
+  </div>
+  
+
   <aside class="tc-sidebar">
   <div class="box">Popular Posts</div>
    
@@ -228,7 +235,7 @@
 </div>
 
 
-  </aside>
+  </aside></div>
 </main>
 
 {% if page.url == "/" or page.url == "/TyagiCore/" %}
