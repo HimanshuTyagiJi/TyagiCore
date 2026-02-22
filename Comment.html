@@ -1,101 +1,139 @@
-<div id="comment-section" style="max-width: 600px; margin: 20px auto; font-family: Arial, sans-serif; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff;">
-    <h3 style="text-align: center; color: #333;">Comments ,</h3>
+<div id="comment-system-v2" style="max-width:750px; margin:20px auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#fff; padding:15px; border-radius:12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    
+    <h2 style="border-bottom: 2px solid #007bff; padding-bottom: 10px; color: #333;">Discussion</h2>
 
-    <form id="comment-form" onsubmit="submitComment(event)" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
-        <input type="text" id="user-name" placeholder="Aapka Naam" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <textarea id="user-comment" placeholder="Apna comment likhein..." required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; min-height: 80px;"></textarea>
-        <button type="submit" id="submit-btn" style="padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Post Comment</button>
-    </form>
+    <div id="auth-box" style="text-align:center; padding:30px; border:2px dashed #007bff; border-radius:10px; margin-bottom:20px;">
+        <p style="font-weight:bold;">Comment karne ke liye Google se login karein:</p>
+        <div id="g_id_onload"
+             data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
+             data-callback="onGoogleLogin">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"></div>
+    </div>
 
-    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+    <div id="form-box" style="display:none; margin-bottom:30px; background:#f8f9fa; padding:15px; border-radius:8px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+            <img id="u-img" src="" style="width:45px; height:45px; border-radius:50%; border:2px solid #007bff;">
+            <div>
+                <strong id="u-name" style="display:block; color:#333;"></strong>
+                <small id="u-email" style="color:#666;"></small>
+            </div>
+        </div>
+        <form onsubmit="handlePost(event)">
+            <input type="hidden" id="p-id" value="0">
+            <textarea id="c-text" placeholder="Apne vichar likhein..." required style="width:100%; height:100px; padding:12px; border:1px solid #ddd; border-radius:8px; resize:vertical; font-size:15px;"></textarea>
+            <div id="rep-label" style="display:none; background:#e7f3ff; color:#0056b3; padding:5px 10px; border-radius:4px; margin-top:5px; font-size:13px;">
+                Replying... <span onclick="stopReply()" style="float:right; cursor:pointer; font-weight:bold; color:red;">Cancel</span>
+            </div>
+            <button type="submit" id="s-btn" style="margin-top:10px; padding:10px 25px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer; font-size:16px; font-weight:bold;">Post Comment</button>
+        </form>
+    </div>
 
-    <div id="comments-container">
-        <p style="text-align: center; color: #888;">Comments load ho rahe hain...</p>
+    <div id="comments-display" style="display:flex; flex-direction:column; gap:15px;">
+        <p style="text-align:center; color:#999;">Comments load ho rahe hain...</p>
     </div>
 </div>
 
 <script>
-    // 1. TERA GOOGLE SCRIPT URL (Don't change this)
-    const API_URL = "https://script.google.com/macros/s/AKfycbyHafCHqnjst1Zzm-tnc1Vt9rhjB0cSQAuCe438PGmlMGo12r31NULdexrjMsBgRMP-/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyPbygDiyDaMc33DLHTk-G8ftI9a7XZijJSzLLW7neY6HGmMrkEwd1OP7PD18RGSWwJ/exec";
+const ADMIN = "officialhimanshutyagi@gmail.com";
+let user = null;
 
-    // 2. Comments Load Karne Wala Function
-    async function loadComments() {
-        const pageUrl = window.location.pathname; 
-        const container = document.getElementById("comments-container");
+function onGoogleLogin(res) {
+    const data = JSON.parse(atob(res.credential.split('.')[1]));
+    user = { name: data.name, email: data.email, pic: data.picture };
+    
+    document.getElementById("auth-box").style.display = "none";
+    document.getElementById("form-box").style.display = "block";
+    document.getElementById("u-name").innerText = user.name;
+    document.getElementById("u-email").innerText = user.email;
+    document.getElementById("u-img").src = user.pic;
+    loadComments(); // Login ke baad reload taaki Admin buttons dikhein
+}
 
-        try {
-            const response = await fetch(`${API_URL}?url=${encodeURIComponent(pageUrl)}`);
-            const comments = await response.json();
-            
-            container.innerHTML = ""; 
+async function handlePost(e) {
+    e.preventDefault();
+    const btn = document.getElementById("s-btn");
+    const text = document.getElementById("c-text").value;
+    const parent = document.getElementById("p-id").value;
 
-            if (comments.length === 0) {
-                container.innerHTML = "<p style='text-align:center; color:#999;'>Pehla comment aap karein!</p>";
-                return;
-            }
+    btn.disabled = true;
+    btn.innerText = "Posting...";
 
-            comments.forEach(c => {
-                const div = document.createElement("div");
-                div.style = "border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 5px;";
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <strong style="color: #007bff;">${c.name}</strong>
-                        <small style="color: #999; font-size: 11px;">${c.date}</small>
-                    </div>
-                    <p style="margin: 5px 0; color: #444; font-size: 14px;">${c.comment}</p>
-                `;
-                container.appendChild(div);
+    const payload = {
+        url: window.location.pathname,
+        name: user.name,
+        email: user.email,
+        comment: text,
+        parentId: parent,
+        pic: user.pic
+    };
+
+    try {
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
+        document.getElementById("c-text").value = "";
+        stopReply();
+        setTimeout(loadComments, 1500);
+    } catch(err) { alert("Error posting comment!"); }
+    finally { btn.disabled = false; btn.innerText = "Post Comment"; }
+}
+
+async function loadComments() {
+    try {
+        const res = await fetch(`${SCRIPT_URL}?url=${window.location.pathname}`);
+        const data = await res.json();
+        const box = document.getElementById("comments-display");
+        box.innerHTML = "";
+
+        if(data.length === 0) { box.innerHTML = "<p style='text-align:center; color:#999;'>Pehla comment aap karein!</p>"; return; }
+
+        const main = data.filter(c => c.parentId == "0");
+        main.reverse().forEach(m => {
+            box.innerHTML += drawComment(m, false);
+            data.filter(r => r.parentId == m.rowId).forEach(reply => {
+                box.innerHTML += drawComment(reply, true);
             });
-        } catch (e) {
-            container.innerHTML = "<p style='color:red; text-align:center;'>Comments load nahi ho paye!</p>";
-            console.error(e);
-        }
-    }
-
-    // 3. Comment Post Karne Wala Function
-    async function submitComment(e) {
-        e.preventDefault();
-        
-        const btn = document.getElementById("submit-btn");
-        const nameField = document.getElementById("user-name");
-        const commentField = document.getElementById("user-comment");
-        const pageUrl = window.location.pathname;
-
-        // Button ko lock kar do
-        btn.innerText = "Posting...";
-        btn.disabled = true;
-
-        // Data taiyar karo
-        const payload = new URLSearchParams({
-            "url": pageUrl,
-            "name": nameField.value,
-            "comment": commentField.value
         });
+    } catch(e) { console.error("Load fail", e); }
+}
 
-        try {
-            // Google Script ko bhej do
-            await fetch(API_URL, {
-                method: "POST",
-                body: payload,
-                mode: "no-cors" // Sabse zaruri bypass
-            });
+function drawComment(c, isRep) {
+    const margin = isRep ? "margin-left:50px; background:#fcfcfc;" : "background:#fff; border:1px solid #eee;";
+    const isAdmin = user && user.email === ADMIN;
+    return `
+        <div style="${margin} padding:15px; border-radius:10px; position:relative;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <img src="${c.pic || 'https://www.gravatar.com/avatar/?d=mp'}" style="width:30px; height:30px; border-radius:50%;">
+                <strong style="font-size:14px; color:#333;">${c.name}</strong>
+                <small style="color:#aaa; font-size:11px;">${c.date}</small>
+            </div>
+            <p style="margin:0 0 10px 40px; color:#444; line-height:1.5;">${c.comment}</p>
+            <div style="margin-left:40px; display:flex; gap:15px;">
+                <button onclick="startReply('${c.rowId}')" style="background:none; border:none; color:#007bff; font-size:12px; cursor:pointer; font-weight:600;">Reply</button>
+                ${isAdmin ? `<button onclick="delComment('${c.rowId}')" style="background:none; border:none; color:#dc3545; font-size:12px; cursor:pointer; font-weight:600;">Delete</button>` : ""}
+            </div>
+        </div>
+    `;
+}
 
-            // Form khali karo aur success message dikhao
-            nameField.value = "";
-            commentField.value = "";
-            alert("Comment successfully post ho gaya!");
-            
-            // 1 second baad naye comments load karo
-            setTimeout(loadComments, 1000);
-        } catch (e) {
-            alert("Kuch galti hui! Dobara try karein.");
-            console.error(e);
-        } finally {
-            btn.innerText = "Post Comment";
-            btn.disabled = false;
-        }
-    }
+function startReply(id) {
+    document.getElementById("p-id").value = id;
+    document.getElementById("rep-label").style.display = "block";
+    document.getElementById("c-text").focus();
+}
 
-    // Page khulte hi comments dikhao
-    window.onload = loadComments;
+function stopReply() {
+    document.getElementById("p-id").value = "0";
+    document.getElementById("rep-label").style.display = "none";
+}
+
+async function delComment(id) {
+    if(!confirm("Bhai, pakka uda doon?")) return;
+    const payload = { action: "delete", rowId: id, adminEmail: user.email };
+    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
+    setTimeout(loadComments, 1000);
+}
+
+window.onload = loadComments;
 </script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
