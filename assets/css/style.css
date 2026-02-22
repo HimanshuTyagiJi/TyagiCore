@@ -24,8 +24,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   display: none; 
 }
 /* ===== HEADER ===== */
-.header{height: 60px;background:var(--card-bg);padding:15px 5%;position:sticky;top:0;z-index:999;box-shadow:0 2px 15px rgba(0,0,0,0.06);border-bottom: 1px solid var(--border-color);}
-.header-inner{display:flex;align-items:center;justify-content:space-between;position:relative;}
+.header{height: 60px;background:white;padding:15px 5%;position:sticky;top:0;z-index:999;box-shadow:0 2px 15px rgba(0,0,0,0.06);border-bottom: 1px solid var(--border-color);}
+.header-inner{margin:-5px;display:flex;align-items:center;justify-content:space-between;position:relative;}
 .logo{font-size:22px;font-weight:900;color:#166534;text-decoration:none;}
 .nav{display:flex;gap:20px;}
 .nav a{text-decoration:none;font-size:14px;font-weight:700;color:var(--text-color);transition:0.3s;}
@@ -115,7 +115,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   top: 60px; /* AGAR TERA HEADER 60px se bada hai toh ise badhao */
   left: 0;
   width: 100%;
-  height: 4px;
+  height: 2px;
   background: rgba(0, 0, 0, 0.1); /* Halka background taaki line dikhe kahan tak jayegi */
   z-index: 1001; /* Header se upar rakho ise */
 }
@@ -123,16 +123,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 #reading-progress-bar {
   width: 0%;
   height: 100%;
-  background: #166534; /* Tera brand green color */
-  box-shadow: 0 0 10px #166534; /* Glow effect taaki dikhne me asani ho */
+  background: #005fff;
+  box-shadow: 0 0 2px #166534; 
   transition: width 0.2s ease-out;
 }
 
-/* Dark mode me glow aur tez kar dete hain */
-.dark-mode #reading-progress-bar {
-  background: #4ade80; 
-  box-shadow: 0 0 15px #4ade80;
-}
   .toc-container {
     background: var(--card-bg, #ffffff);
     border: 1px solid var(--border-color, #e5e7eb);
