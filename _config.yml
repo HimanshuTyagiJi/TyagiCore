@@ -8,7 +8,7 @@ description: "Deep Technology, Cyber Intelligence & Innovation Hub."
 author: "Himanshu Tyagi"
 
 url: "https://tyagicore.gklearnstudy.in/"
-baseurl: "/"
+baseurl: ""
 
 # Date hatane ke liye simple permalink
 permalink: /:title
