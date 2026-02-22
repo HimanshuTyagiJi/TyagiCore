@@ -12,16 +12,18 @@
 </div>
 
 <script>
-const API = "https://comment.infinityfree.me/api.php";
+// TERA NAYA CLOUDFLARE WORKER ROUTE
+const API = "https://tyagicore.gklearnstudy.in/api"; 
 const PAGE_ID = window.location.pathname;
 
 async function loadComments() {
     try {
+        // Worker ke raste data mangwa rahe hain
         const res = await fetch(`${API}?url=${encodeURIComponent(PAGE_ID)}`);
         const data = await res.json();
         const div = document.getElementById('comments-display');
         
-        if (!data.length) {
+        if (!data || data.length === 0) {
             div.innerHTML = "<p style='color:#888; text-align:center;'>Phela comment aap karein!</p>";
             return;
         }
@@ -34,7 +36,7 @@ async function loadComments() {
             </div>
         `).join('');
     } catch (e) {
-        document.getElementById('comments-display').innerHTML = "<p style='color:red;'>Comments load nahi ho paye.</p>";
+        document.getElementById('comments-display').innerHTML = "<p style='color:red; text-align:center;'>Comments load nahi ho paye. Worker check karein.</p>";
     }
 }
 
@@ -48,10 +50,10 @@ async function postComment() {
     btn.innerText = "Bheja ja raha hai...";
     btn.disabled = true;
 
+    // Worker ko JSON bhej rahe hain
     try {
         const response = await fetch(API, {
             method: 'POST',
-            mode: 'cors', // CORS Mode
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
         });
@@ -59,16 +61,18 @@ async function postComment() {
         const result = await response.json();
         if(result.status === "success") {
             document.getElementById('c-msg').value = '';
-            loadComments();
+            loadComments(); // List refresh karo
         } else {
             alert("Error: " + result.message);
         }
     } catch (e) {
-        alert("Server block kar raha hai! Ek baar ye link browser me kholo aur 'Approve' karo: " + API);
+        alert("Bridge (Worker) me dikkat hai! Ek baar settings check karein.");
     } finally {
         btn.innerText = "Post Comment";
         btn.disabled = false;
     }
 }
+
+// Page load hote hi comments dikhao
 loadComments();
 </script>
