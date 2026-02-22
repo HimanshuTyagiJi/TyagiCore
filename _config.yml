@@ -7,11 +7,11 @@ title: "Tyagi Core"
 description: "Deep Technology, Cyber Intelligence & Innovation Hub."
 author: "Himanshu Tyagi"
 
-url: "https://himanshutyagiji.github.io"
-baseurl: "/TyagiCore"
+url: "https://tyagicore.gklearnstudy.in/"
+baseurl: "/"
 
 # Date hatane ke liye simple permalink
-permalink: /:title/
+permalink: /:title
 
 markdown: kramdown
 highlighter: rouge
