@@ -1,18 +1,17 @@
-<div id="tyagi-comment-box" style="max-width:800px; margin:20px auto; padding:20px; background:#fff; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); font-family:sans-serif;">
-    <h3 style="color:#166534; border-bottom:2px solid #166534; padding-bottom:10px;">💬 Jan-Samvad (Comments)</h3>
+<div id="tyagi-comment-box" style="max-width:800px; margin:40px auto; padding:25px; background:#fff; border-radius:12px; box-shadow:0 8px 25px rgba(0,0,0,0.1); font-family:sans-serif; border:1px solid #eee;">
+    <h3 style="color:#166534; border-bottom:2px solid #166534; padding-bottom:12px; margin-top:0;">💬 Jan-Samvad (Comments)</h3>
 
-    <div style="margin-top:15px;">
-        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
-        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:80px; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
-        <button onclick="postComment()" id="send-btn" style="background:#166534; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold;">Post Comment</button>
+    <div style="margin-top:20px;">
+        <input type="text" id="c-name" placeholder="Apna Naam" style="width:100%; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; outline:none; font-size:16px;">
+        <textarea id="c-msg" placeholder="Apne vichar likhein..." style="width:100%; height:100px; padding:14px; margin-bottom:12px; border:1.5px solid #ddd; border-radius:8px; box-sizing:border-box; outline:none; font-size:16px; resize:vertical;"></textarea>
+        <button onclick="postComment()" id="send-btn" style="background:#166534; color:white; border:none; padding:14px 25px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; font-size:16px; transition:0.3s;">Post Comment</button>
     </div>
 
-    <hr style="margin:25px 0; border:0; border-top:1px solid #eee;">
-    <div id="comments-display">Loading...</div>
+    <hr style="margin:30px 0; border:0; border-top:1px solid #eee;">
+    <div id="comments-display" style="min-height:50px;">Loading comments...</div>
 </div>
 
 <script>
-// TERA FINAL API URL
 const API = "https://comment.infinityfree.me/api.php";
 const PAGE_ID = window.location.pathname;
 
@@ -22,20 +21,20 @@ async function loadComments() {
         const data = await res.json();
         const div = document.getElementById('comments-display');
         
-        if (!data || data.length === 0) {
-            div.innerHTML = "<p style='color:#888;'>Phla comment aap karein!</p>";
+        if (!data.length) {
+            div.innerHTML = "<p style='color:#888; text-align:center;'>Phela comment aap karein!</p>";
             return;
         }
 
         div.innerHTML = data.map(c => `
-            <div style="background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #166534;">
+            <div style="background:#fdfdfd; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #f0f0f0; border-left:5px solid #166534;">
                 <strong style="color:#333;">${c.user_name}</strong> 
-                <small style="float:right; color:#aaa;">${c.created_at}</small>
-                <p style="margin:5px 0 0; color:#444;">${c.comment_text}</p>
+                <small style="float:right; color:#aaa; font-size:12px;">${c.created_at}</small>
+                <p style="margin:10px 0 0; color:#444; line-height:1.6;">${c.comment_text}</p>
             </div>
         `).join('');
     } catch (e) {
-        document.getElementById('comments-display').innerHTML = "Comments load nahi ho pa rhe.";
+        document.getElementById('comments-display').innerHTML = "<p style='color:red;'>Comments load nahi ho paye.</p>";
     }
 }
 
@@ -44,7 +43,7 @@ async function postComment() {
     const msg = document.getElementById('c-msg').value;
     const btn = document.getElementById('send-btn');
 
-    if(!name || !msg) return alert("Naam aur message dono likho!");
+    if(!name || !msg) return alert("Bhai, naam aur message dono likho!");
 
     btn.innerText = "Bheja ja raha hai...";
     btn.disabled = true;
@@ -52,6 +51,7 @@ async function postComment() {
     try {
         const response = await fetch(API, {
             method: 'POST',
+            mode: 'cors', // CORS Mode
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: PAGE_ID, name: name, comment: msg })
         });
@@ -59,16 +59,16 @@ async function postComment() {
         const result = await response.json();
         if(result.status === "success") {
             document.getElementById('c-msg').value = '';
-            loadComments(); // Refresh list
+            loadComments();
+        } else {
+            alert("Error: " + result.message);
         }
     } catch (e) {
-        alert("Server error! API link ek baar khol kar check karein.");
+        alert("Server block kar raha hai! Ek baar ye link browser me kholo aur 'Approve' karo: " + API);
     } finally {
         btn.innerText = "Post Comment";
         btn.disabled = false;
     }
 }
-
-// Page load hote hi comments dikhao
 loadComments();
 </script>
