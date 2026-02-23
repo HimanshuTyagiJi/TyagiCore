@@ -431,59 +431,8 @@ window.addEventListener('load', loadTrendingSidebar);
   </div>
 </div>
 
+////////////////////////////////
 
-
- <div id="tyagi-feedback-system">
-    <div class="feedback-header">
-        <div class="header-left">
-            <h2 class="title">Community Reviews</h2>
-            <div id="rating-summary" class="rating-score">
-                ⭐ Loading scores...
-            </div>
-        </div>
-        <div id="privacy-status">
-            <span class="privacy-badge">🔒 Privacy Protected</span>
-        </div>
-    </div>
-
-    <div id="rating-widget" class="widget-box">
-        <p class="widget-label">How would you rate this page?</p>
-        <div id="star-row" class="star-rating">
-            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
-        </div>
-        <p id="rating-msg" class="status-msg"></p>
-    </div>
-
-    <div id="login-panel" class="auth-panel">
-        <p class="auth-text">Login with Google to post comments and save your rating.</p>
-        <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
-        <div class="g_id_signin" data-type="standard"></div>
-    </div>
-
-    <div id="editor-panel" class="editor-box">
-        <div class="user-meta">
-            <img id="user-pfp" src="" alt="User profile">
-            <div class="user-info">
-                <strong id="user-name"></strong>
-                <small class="verify-tag">Identity Verified via Google</small>
-            </div>
-            <button onclick="logout()" class="logout-btn">Sign Out</button>
-        </div>
-        <form onsubmit="submitComment(event)">
-            <input type="hidden" id="reply-to" value="0">
-            <textarea id="comment-input" placeholder="Share your thoughts..." required></textarea>
-            
-            <div id="reply-banner" class="reply-status">
-                Replying to user... <span onclick="cancelReply()" class="cancel-reply">Cancel</span>
-            </div>
-            
-            <button type="submit" id="post-btn" class="submit-btn">Post Comment</button>
-        </form>
-    </div>
 
     <div id="feed-container">
         <div class="loading-state">🔄 Loading the latest discussion...</div>
