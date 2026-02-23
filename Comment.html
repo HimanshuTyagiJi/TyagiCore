@@ -81,7 +81,9 @@
 
 <script>
 (function() {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwl13-YwDJJMfKq8kTXJ0u436x71sfHwQT_BD6vUBBTaG0ehOgJ_1dg9YGAiKWir4xo/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbye-nktMybJfbyYTMI2E2RXxPZdBkBCo91TvdW8923ztY683thSWZUojJplImlgiXcx/exec";
+  const WORKER_URL = "https://notification.himanshutyagi9710.workers.dev";
+  const VAPID_PUB  = "BEHWdkFA-6s7LDtjKof5GjWdAsrWqifE6VYm7EfnWJugAhbTT6MmJfdAegGrPJfu_o8sCb7qV5Ek2TbJOWPMon0";
   
   let user = JSON.parse(localStorage.getItem("tc_user")) || null;
   let serverData = [];
@@ -98,9 +100,72 @@
     }
     const saved = localStorage.getItem("tc_rate_" + location.pathname);
     if(saved) { currentRating = parseInt(saved); paintStars(currentRating); }
+
+    // ── SERVICE WORKER REGISTER ──────────────────────────
+    if ("serviceWorker" in navigator && "PushManager" in window) {
+      navigator.serviceWorker.register("/sw.js").then(function(reg) {
+        // Agar user logged in hai aur notification allowed hai
+        if (user && Notification.permission === "granted") {
+          subscribePush(reg);
+        }
+        // Agar permission nahi maangi — maango (sirf logged in user se)
+        if (user && Notification.permission === "default") {
+          Notification.requestPermission().then(function(perm) {
+            if (perm === "granted") subscribePush(reg);
+          });
+        }
+      }).catch(function(err) { console.log("SW error:", err); });
+    }
+    // ────────────────────────────────────────────────────
+
     sync();
     setInterval(() => { if(!isTyping) sync(); }, 5000);
   }
+
+  // ── PUSH SUBSCRIBE ────────────────────────────────────
+  function subscribePush(reg) {
+    reg.pushManager.getSubscription().then(function(existing) {
+      var subPromise = existing
+        ? Promise.resolve(existing)
+        : reg.pushManager.subscribe({
+            userVisibleOnly     : true,
+            applicationServerKey: urlB64ToUint8(VAPID_PUB)
+          });
+
+      subPromise.then(function(sub) {
+        // GS mein save karo
+        fetch(SCRIPT_URL, {
+          method: "POST",
+          mode  : "no-cors",
+          body  : JSON.stringify({
+            action      : "subscribe",
+            subscription: sub.toJSON(),
+            email       : user.e,
+            name        : user.n
+          })
+        });
+        // Cloudflare Worker mein bhi save karo
+        fetch(WORKER_URL, {
+          method     : "POST",
+          headers    : { "Content-Type": "application/json" },
+          body       : JSON.stringify({
+            action      : "subscribe",
+            subscription: sub.toJSON(),
+            email       : user.e,
+            name        : user.n
+          })
+        }).catch(function() {});
+      }).catch(function(err) { console.log("Push subscribe failed:", err); });
+    });
+  }
+
+  function urlB64ToUint8(b64) {
+    var padding = "=".repeat((4 - b64.length % 4) % 4);
+    var base64  = (b64 + padding).replace(/-/g, "+").replace(/_/g, "/");
+    var raw     = atob(base64);
+    return Uint8Array.from(Array.from(raw).map(function(c) { return c.charCodeAt(0); }));
+  }
+  // ─────────────────────────────────────────────────────
 
   window.onGoogleAuth = (res) => {
     const p = JSON.parse(atob(res.credential.split('.')[1]));
@@ -166,7 +231,6 @@
   function updateRatingUI(avg, total) {
     document.getElementById("tc-avg-num").innerText = avg;
     document.getElementById("tc-total-votes").innerText = `${total} reviews`;
-    // Fill stars logic
     let starHtml = "";
     let rounded = Math.round(parseFloat(avg));
     for(let i=1; i<=5; i++) {
