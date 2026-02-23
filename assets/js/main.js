@@ -278,35 +278,32 @@ document.addEventListener("wheel", function(e) {
     const left = document.querySelector(".post-content-area");
     const right = document.querySelector(".tc-sidebar");
     
-    // Check karo mouse kiske upar hai
+    // Safety Check: Agar dono elements page par nahi hain, toh scroll logic skip karo
+    if (!left || !right) return; 
+
+    // Ab niche ka logic safe hai kyunki left aur right 'null' nahi hain
     const isOverLeft = left.matches(':hover');
     const isOverRight = right.matches(':hover');
 
     if (isOverLeft) {
-        // Agar left scroll ho sakta hai
         const isAtBottom = left.scrollHeight - left.scrollTop <= left.clientHeight + 1;
         const isAtTop = left.scrollTop === 0;
 
         if (e.deltaY > 0 && isAtBottom) {
-            // Left khatam, ab Right ko scroll karo
             right.scrollTop += e.deltaY;
             e.preventDefault();
         } else if (e.deltaY < 0 && isAtTop) {
-            // Left top par hai, normal page scroll hone do
             return;
         }
     } 
     else if (isOverRight) {
-        // Agar right scroll ho sakta hai
         const isAtBottom = right.scrollHeight - right.scrollTop <= right.clientHeight + 1;
         const isAtTop = right.scrollTop === 0;
 
         if (e.deltaY > 0 && isAtBottom) {
-            // Right khatam, ab Left ko scroll karo
             left.scrollTop += e.deltaY;
             e.preventDefault();
         } else if (e.deltaY < 0 && isAtTop) {
-            // Right top par hai
             return;
         }
     }
