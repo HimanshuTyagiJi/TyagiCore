@@ -893,3 +893,14 @@ body.dark-mode { background-color: var(--bg) !important; color: var(--text-color
     height: 35px;
   }
 }
+
+.tc-left {
+    flex: 1; /* Ye bachi hui sari jagah lega */
+    min-width: 0; /* Content ko overflow hone se rokega */
+}
+
+.tc-sidebar {
+    width: 300px; /* Ya jo bhi tumhara sidebar width hai */
+    position: sticky;
+    top: 20px;
+}
