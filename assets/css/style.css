@@ -193,3 +193,79 @@ pre:hover .copy-btn { opacity: 1; }
 @media (max-width: 650px) { .post-nav-container { flex-direction: column; } .post-nav-link { width: 100%; } .next { text-align: left; } }
 @media (max-width: 600px) { .logo span { font-size: 1.2rem; } .logo img { height: 35px; } }
 @media (min-width: 901px) { .tc-wrapper { display: flex; gap: 40px; align-items: flex-start; } .post-content-area { flex: 3; height: 100vh; overflow-y: scroll; scrollbar-width: none; } .tc-sidebar { flex: 1; height: 100vh; overflow-y: scroll; scrollbar-width: none; } .post-content-area::-webkit-scrollbar, .tc-sidebar::-webkit-scrollbar { display: none; } }
+
+
+/* Container Main */
+#tyagi-feedback-system {
+    max-width: 800px;
+    margin: 30px auto;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    color: #202124;
+}
+
+/* Header & Title */
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f3f4;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+.feedback-header .title { margin: 0; font-size: 22px; color: #1a73e8; }
+.rating-score { margin-top: 8px; font-size: 18px; color: #f4b400; font-weight: bold; }
+.privacy-badge { font-size: 12px; background: #e6f4ea; color: #137333; padding: 6px 14px; border-radius: 20px; font-weight: 500; }
+
+/* Stars Rating */
+.widget-box { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; border: 1px solid #e8eaed; }
+.widget-label { margin: 0 0 12px 0; font-weight: 600; color: #5f6368; }
+.star-rating { font-size: 32px; color: #dadce0; cursor: pointer; transition: transform 0.2s; }
+.star-rating span:hover { color: #f4b400; }
+.status-msg { margin-top: 8px; font-size: 13px; color: #1a73e8; display: none; }
+
+/* Login/Auth Panel */
+.auth-panel { text-align: center; padding: 40px; border: 2px dashed #dadce0; border-radius: 12px; background: #fafafa; }
+.auth-text { color: #3c4043; margin-bottom: 20px; font-weight: 500; }
+
+/* Editor & Form */
+.editor-box { display: none; background: #ffffff; border: 1px solid #dadce0; padding: 20px; border-radius: 12px; }
+.user-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+#user-pfp { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #1a73e8; }
+.verify-tag { display: block; color: #70757a; font-size: 12px; }
+.logout-btn { margin-left: auto; background: none; border: none; color: #d93025; font-size: 12px; cursor: pointer; }
+
+#comment-input {
+    width: 100%;
+    height: 100px;
+    padding: 15px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+#comment-input:focus { border-color: #1a73e8; }
+
+.reply-status { background: #e8f0fe; color: #1967d2; padding: 8px 12px; border-radius: 5px; margin-top: 8px; font-size: 13px; }
+.cancel-reply { float: right; cursor: pointer; font-weight: bold; color: #d93025; }
+
+.submit-btn {
+    margin-top: 12px;
+    padding: 12px 35px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.submit-btn:hover { background: #1557b0; }
+
+/* Feed Loading */
+#feed-container { margin-top: 40px; }
+.loading-state { text-align: center; color: #999; }
