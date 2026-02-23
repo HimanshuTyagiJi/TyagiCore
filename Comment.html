@@ -1,8 +1,8 @@
 <div id="tc-root">
   <div class="tc-header">
     <div class="tc-header-left">
-      <h2 style="margin:0;font-size:18px;">TyagiCore Discussions</h2>
-      <div id="tc-avg-display" style="color:#f4b400;font-weight:bold;font-size:13px;">⭐ Loading...</div>
+      <h2 style="margin:0; font-size:18px;">Discussions & Reviews</h2>
+      <div id="tc-avg-display" style="color:#f4b400; font-weight:bold; font-size:13px;">⭐ Loading...</div>
     </div>
     <div id="tc-user-section" style="display:none">
        <div class="tc-user-pill">
@@ -13,52 +13,80 @@
     </div>
   </div>
 
+  <div class="tc-rating-card">
+    <p style="margin:0 0 5px 0; font-size:12px; color:#666;">Rate this content:</p>
+    <div id="tc-star-row" class="tc-stars">
+      <span class="tc-s" onclick="handleStar(1)" onmouseover="hoverStar(1)" onmouseout="resetStar()">★</span>
+      <span class="tc-s" onclick="handleStar(2)" onmouseover="hoverStar(2)" onmouseout="resetStar()">★</span>
+      <span class="tc-s" onclick="handleStar(3)" onmouseover="hoverStar(3)" onmouseout="resetStar()">★</span>
+      <span class="tc-s" onclick="handleStar(4)" onmouseover="hoverStar(4)" onmouseout="resetStar()">★</span>
+      <span class="tc-s" onclick="handleStar(5)" onmouseover="hoverStar(5)" onmouseout="resetStar()">★</span>
+    </div>
+  </div>
+
   <div id="tc-auth-gate" class="tc-auth-gate">
     <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
     <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
   </div>
 
   <div id="tc-main-editor" class="tc-editor-box" style="display:none">
-    <textarea id="tc-input" placeholder="Apne vichar likhein..."></textarea>
+    <textarea id="tc-input" placeholder="What's on your mind?"></textarea>
     <div style="text-align:right; margin-top:8px;">
       <button onclick="handlePost('0')" class="tc-post-btn">Post Comment</button>
     </div>
   </div>
 
-  <div id="tc-feed" class="tc-feed"></div>
+  <div id="tc-feed" class="tc-feed">
+    <div style="padding:40px; text-align:center; color:#999;">Loading comments...</div>
+  </div>
 </div>
 
 <style>
-  #tc-root { max-width: 800px; margin: 20px auto; border: 1px solid #ddd; border-radius: 12px; background: #fff; font-family: sans-serif; overflow:hidden; }
-  .tc-header { padding: 12px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fdfdfd; }
-  .tc-user-pill { display: flex; align-items: center; gap: 8px; background: #f0f0f0; padding: 4px 12px; border-radius: 20px; }
+  #tc-root { max-width: 800px; margin: 20px auto; border: 1px solid #ddd; border-radius: 12px; background: #fff; font-family: -apple-system, sans-serif; overflow:hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+  .tc-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fdfdfd; }
+  .tc-user-pill { display: flex; align-items: center; gap: 8px; background: #f0f2f5; padding: 5px 12px; border-radius: 20px; border: 1px solid #e0e0e0; }
   .tc-pfp-small { width: 24px; height: 24px; border-radius: 50%; }
-  .tc-logout-btn { border:none; background:none; color:#d93025; font-size:11px; cursor:pointer; font-weight:bold; }
+  .tc-u-name { font-size: 12px; font-weight: bold; color: #444; }
+  .tc-logout-btn { border:none; background:none; color:#d93025; font-size:11px; cursor:pointer; font-weight:bold; padding:0; margin-left:5px; }
   
-  .tc-editor-box { padding: 15px 20px; border-bottom: 1px solid #eee; }
-  textarea { width: 100%; height: 70px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; resize: none; box-sizing: border-box; }
-  .tc-post-btn { background: #1a73e8; color: #fff; border: none; padding: 7px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-  .tc-cancel-btn { background: #eee; color: #333; border: none; padding: 7px 15px; border-radius: 5px; cursor: pointer; margin-right: 5px; }
+  .tc-rating-card { padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #fafafa; }
+  .tc-stars { font-size: 32px; color: #ddd; cursor: pointer; line-height: 1; }
+  .tc-s { transition: color 0.2s; }
+  .tc-s.active { color: #f4b400; }
 
-  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; }
-  .tc-card.reply { margin-left: 45px; border-left: 2px solid #ddd; background: #fafafa; }
-  .tc-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
-  .tc-card-pfp { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; }
-  .tc-card-name { font-weight: bold; font-size: 14px; }
-  .tc-card-time { font-size: 11px; color: #999; }
+  .tc-auth-gate { padding: 40px; text-align: center; }
+  .tc-editor-box { padding: 15px 20px; border-bottom: 1px solid #eee; background: #fff; }
+  textarea { width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; transition: border 0.2s; }
+  textarea:focus { border-color: #1a73e8; }
   
-  .tc-card-body { font-size: 14px; line-height: 1.5; margin-left: 42px; }
-  .tc-actions { margin-left: 42px; margin-top: 8px; display: flex; gap: 12px; font-size: 12px; font-weight: bold; color: #1a73e8; }
-  .tc-act-link { cursor: pointer; }
+  .tc-post-btn { background: #1a73e8; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
+  .tc-cancel-btn { background: #f1f3f4; color: #5f6368; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; margin-right: 8px; }
+
+  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; position: relative; }
+  .tc-card.nested-reply { margin-left: 45px; border-left: 2px solid #eee; background: #fcfcfc; padding-right: 10px; }
+  
+  .tc-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .tc-card-pfp { width: 34px; height: 34px; border-radius: 50%; margin-right: 10px; border: 1px solid #eee; }
+  .tc-admin-badge { background: #1a73e8; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .tc-card-name { font-weight: bold; font-size: 14px; color: #202124; }
+  .tc-card-time { font-size: 11px; color: #70757a; }
+  
+  .tc-card-body { font-size: 14px; line-height: 1.6; margin-left: 44px; color: #3c4043; word-wrap: break-word; }
+  .tc-actions { margin-left: 44px; margin-top: 10px; display: flex; gap: 15px; font-size: 12px; font-weight: bold; color: #1a73e8; }
+  .tc-act-link { cursor: pointer; opacity: 0.8; }
+  .tc-act-link:hover { opacity: 1; text-decoration: underline; }
   .tc-act-link.del { color: #d93025; }
-  .tc-inline-editor { margin: 10px 0 0 42px; }
+  
+  .tc-inline-box { margin: 12px 0 0 44px; }
 </style>
 
 <script>
 (function() {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLXPV1SlmENrKac9Ve_iz2JbZZkOSWl3v3VJSWXsGqXQ8udj6RI1mj0z_sFrZ7Zj_u/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc5e1Ki3VHJ5qjuCswwAxjkEL6tdTAszMRKVnRxttF5YwV7j6YqalGYfPmsmfuUx6E/exec";
+  
   let user = JSON.parse(localStorage.getItem("tc_user")) || null;
-  let isEditingOrReplying = false; // Important: Prevents refresh mid-typing
+  let isLocked = false; 
+  let currentRating = 0;
 
   function init() {
     if(user) {
@@ -68,8 +96,11 @@
       document.getElementById("tc-user-name").innerText = user.n;
       document.getElementById("tc-user-pfp").src = user.p;
     }
+    const saved = localStorage.getItem("tc_rate_" + location.pathname);
+    if(saved) { currentRating = parseInt(saved); paintStars(currentRating); }
+    
     sync();
-    setInterval(() => { if(!isEditingOrReplying) sync(); }, 5000);
+    setInterval(() => { if(!isLocked) sync(); }, 5000);
   }
 
   window.onGoogleAuth = (res) => {
@@ -81,106 +112,135 @@
 
   window.tcLogout = () => { localStorage.removeItem("tc_user"); location.reload(); };
 
-  // SYNC
+  // --- RATING LOGIC ---
+  window.hoverStar = (n) => { if(!isLocked && currentRating === 0) paintStars(n); };
+  window.resetStar = () => { paintStars(currentRating); };
+  window.handleStar = (n) => {
+    if(!user) return alert("Please sign in to rate!");
+    currentRating = n;
+    localStorage.setItem("tc_rate_" + location.pathname, n);
+    paintStars(n);
+    // Silent Update
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }), mode: "no-cors" });
+  };
+  function paintStars(n) { document.querySelectorAll(".tc-s").forEach((s, i) => s.classList.toggle("active", i < n)); }
+
+  // --- SYNC & RENDER ---
   async function sync() {
     try {
       const res = await fetch(`${SCRIPT_URL}?url=${location.pathname}`);
       const data = await res.json();
       document.getElementById("tc-avg-display").innerText = `⭐ ${data.avgRating} (${data.totalVotes} votes)`;
-      render(data.comments);
-    } catch(e) {}
+      renderFeed(data.comments);
+    } catch(e) { console.error("Sync Error"); }
   }
 
-  function render(list) {
+  function renderFeed(list) {
     const feed = document.getElementById("tc-feed");
-    const mains = list.filter(c => c.parentId == "0").reverse();
+    // Get top level comments
+    const topLevel = list.filter(c => c.parentId == "0").reverse();
     
-    feed.innerHTML = mains.map(m => `
-      <div class="tc-card">
-        <div class="tc-card-top">
-          <div style="display:flex;align-items:center;">
-            <img src="${m.pic}" class="tc-card-pfp">
-            <span class="tc-card-name">${m.name} ${m.isAdmin ? '⭐' : ''}</span>
-          </div>
-          <span class="tc-card-time">${m.date}</span>
-        </div>
-        <div class="tc-card-body" id="body-${m.rowId}">${m.comment}</div>
-        <div class="tc-actions">
-          <span class="tc-act-link" onclick="openReply('${m.rowId}')">Reply</span>
-          ${(user && (user.e === "officialhimanshutyagi@gmail.com" || user.n === m.name)) ? `
-            <span class="tc-act-link" onclick="openEdit('${m.rowId}')">Edit</span>
-            <span class="tc-act-link del" onclick="deleteMsg('${m.rowId}')">Delete</span>
-          ` : ''}
-        </div>
-        <div id="box-${m.rowId}"></div>
-        ${list.filter(r => r.parentId == m.rowId).map(rep => `
-          <div class="tc-card reply">
-             <div class="tc-card-top">
-               <span class="tc-card-name">${rep.name}</span>
-               <span class="tc-card-time">${rep.date}</span>
-             </div>
-             <div class="tc-card-body" id="body-${rep.rowId}">${rep.comment}</div>
-             <div class="tc-actions">
-               ${(user && (user.e === "officialhimanshutyagi@gmail.com" || user.n === rep.name)) ? `
-                 <span class="tc-act-link" onclick="openEdit('${rep.rowId}')">Edit</span>
-                 <span class="tc-act-link del" onclick="deleteMsg('${rep.rowId}')">Delete</span>
-               ` : ''}
-             </div>
-             <div id="box-${rep.rowId}"></div>
-          </div>
-        `).join('')}
-      </div>
-    `).join('');
+    let html = "";
+    topLevel.forEach(main => {
+      html += renderCard(main, list, 0);
+    });
+    
+    feed.innerHTML = html || '<div style="padding:40px; text-align:center; color:#999;">No comments yet. Start the conversation!</div>';
   }
 
-  // POST / EDIT / REPLY ACTION
+  function renderCard(c, allList, depth) {
+    const isAdmin = c.isAdmin;
+    const isOwner = user && (user.e === "officialhimanshutyagi@gmail.com" || user.n === c.name);
+    const starStr = c.userRating > 0 ? `<span style="color:#f4b400; font-size:10px; margin-left:8px;">${"★".repeat(c.userRating)}</span>` : "";
+    
+    let cardHtml = `
+      <div class="tc-card ${depth > 0 ? 'nested-reply' : ''}" id="card-${c.rowId}">
+        <div class="tc-card-top">
+          <div style="display:flex; align-items:center;">
+            <img src="${c.pic}" class="tc-card-pfp">
+            <div>
+              <span class="tc-card-name">${c.name}</span>
+              ${isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : ''}
+              ${starStr}
+              <div class="tc-card-time">${c.date}</div>
+            </div>
+          </div>
+        </div>
+        <div class="tc-card-body" id="body-${c.rowId}">${c.comment}</div>
+        <div class="tc-actions">
+          <span class="tc-act-link" onclick="openReply('${c.rowId}')">Reply</span>
+          ${isOwner ? `<span class="tc-act-link" onclick="openEdit('${c.rowId}')">Edit</span>` : ''}
+          ${isOwner || (user && user.e === "officialhimanshutyagi@gmail.com") ? 
+            `<span class="tc-act-link del" onclick="deleteMsg('${c.rowId}')">Delete</span>` : ''}
+        </div>
+        <div id="box-${c.rowId}" class="tc-inline-box"></div>
+      </div>`;
+
+    // Recursive: Find replies to this specific card
+    const replies = allList.filter(r => r.parentId == c.rowId);
+    replies.forEach(reply => {
+      cardHtml += renderCard(reply, allList, depth + 1);
+    });
+
+    return cardHtml;
+  }
+
+  // --- ACTIONS ---
   window.handlePost = async (pid, mode = "new", rowId = null) => {
     const inputId = mode === "edit" ? `edit-in-${rowId}` : (pid === '0' ? 'tc-input' : `reply-in-${pid}`);
-    const msg = document.getElementById(inputId).value.trim();
+    const el = document.getElementById(inputId);
+    const msg = el.value.trim();
     if(!msg) return;
 
-    const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid };
+    isLocked = false; // Release lock
+    const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid, rating: currentRating };
     if(mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
 
-    isEditingOrReplying = false; 
+    // Instant UI Clean
+    if(mode !== "edit" && pid !== '0') document.getElementById(`box-${pid}`).innerHTML = "";
+    if(mode === "edit") document.getElementById(`box-${rowId}`).innerHTML = "";
+    el.value = "";
+
     await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" });
-    sync();
+    setTimeout(sync, 1000);
   };
 
-  // OPEN EDIT BOX
-  window.openEdit = (id) => {
-    isEditingOrReplying = true;
-    const oldMsg = document.getElementById(`body-${id}`).innerText;
-    document.getElementById(`box-${id}`).innerHTML = `
-      <div class="tc-inline-editor">
-        <textarea id="edit-in-${id}">${oldMsg}</textarea>
-        <button onclick="handlePost('0', 'edit', '${id}')" class="tc-post-btn">Save</button>
-        <button onclick="cancelAction('${id}')" class="tc-cancel-btn">Cancel</button>
-      </div>`;
-  };
-
-  // OPEN REPLY BOX
   window.openReply = (id) => {
-    isEditingOrReplying = true;
+    isLocked = true;
+    document.querySelectorAll(".tc-inline-box").forEach(b => b.innerHTML = ""); // Close others
     document.getElementById(`box-${id}`).innerHTML = `
-      <div class="tc-inline-editor">
-        <textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea>
-        <button onclick="handlePost('${id}')" class="tc-post-btn">Reply</button>
+      <textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea>
+      <div style="text-align:right; margin-top:8px;">
         <button onclick="cancelAction('${id}')" class="tc-cancel-btn">Cancel</button>
+        <button onclick="handlePost('${id}')" class="tc-post-btn">Reply</button>
       </div>`;
+    document.getElementById(`reply-in-${id}`).focus();
+  };
+
+  window.openEdit = (id) => {
+    isLocked = true;
+    const oldMsg = document.getElementById(`body-${id}`).innerText.replace(" (Edited)", "");
+    document.getElementById(`box-${id}`).innerHTML = `
+      <textarea id="edit-in-${id}">${oldMsg}</textarea>
+      <div style="text-align:right; margin-top:8px;">
+        <button onclick="cancelAction('${id}')" class="tc-cancel-btn">Cancel</button>
+        <button onclick="handlePost('0', 'edit', '${id}')" class="tc-post-btn">Save Changes</button>
+      </div>`;
+    document.getElementById(`edit-in-${id}`).focus();
   };
 
   window.cancelAction = (id) => {
-    isEditingOrReplying = false;
+    isLocked = false;
     document.getElementById(`box-${id}`).innerHTML = "";
   };
 
   window.deleteMsg = async (id) => {
-    if(!confirm("Delete?")) return;
+    if(!confirm("Are you sure you want to delete this?")) return;
     await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
-    sync();
+    setTimeout(sync, 1000);
   };
 
   init();
 })();
 </script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
