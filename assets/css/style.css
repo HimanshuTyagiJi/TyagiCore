@@ -698,7 +698,7 @@ svg {
 
  .theme-wheel {
   position: fixed;
-  bottom: 30px;
+  bottom: 80px;
   right: 30px;
  
  
@@ -721,7 +721,7 @@ svg {
 .moon-icon, .sun-icon { position: absolute; transition: 0.5s; }
 
 /* Light Mode state */
-.moon-icon { color: #166534; opacity: 1; transform: scale(1); }
+.moon-icon { color: #000000; opacity: 1; transform: scale(1); }
 .sun-icon { color: #fbbf24; opacity: 0; transform: scale(0) rotate(-180deg); }
 
 /* Dark Mode state changes */
