@@ -14,7 +14,6 @@
   </div>
 
   <div class="tc-rating-card">
-    <p style="margin:0 0 5px 0; font-size:12px; color:#666;">Rate this content:</p>
     <div id="tc-star-row" class="tc-stars">
       <span class="tc-s" onclick="handleStar(1)" onmouseover="hoverStar(1)" onmouseout="resetStar()">★</span>
       <span class="tc-s" onclick="handleStar(2)" onmouseover="hoverStar(2)" onmouseout="resetStar()">★</span>
@@ -30,62 +29,45 @@
   </div>
 
   <div id="tc-main-editor" class="tc-editor-box" style="display:none">
-    <textarea id="tc-input" placeholder="What's on your mind?"></textarea>
+    <textarea id="tc-input" placeholder="Join the discussion..."></textarea>
     <div style="text-align:right; margin-top:8px;">
-      <button onclick="handlePost('0')" class="tc-post-btn">Post Comment</button>
+      <button onclick="handleAction('0')" class="tc-post-btn">Post Comment</button>
     </div>
   </div>
 
-  <div id="tc-feed" class="tc-feed">
-    <div style="padding:40px; text-align:center; color:#999;">Loading comments...</div>
-  </div>
+  <div id="tc-feed" class="tc-feed"></div>
 </div>
 
 <style>
-  #tc-root { max-width: 800px; margin: 20px auto; border: 1px solid #ddd; border-radius: 12px; background: #fff; font-family: -apple-system, sans-serif; overflow:hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-  .tc-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fdfdfd; }
-  .tc-user-pill { display: flex; align-items: center; gap: 8px; background: #f0f2f5; padding: 5px 12px; border-radius: 20px; border: 1px solid #e0e0e0; }
+  #tc-root { max-width: 800px; margin: 20px auto; border: 1px solid #ddd; border-radius: 12px; background: #fff; font-family: sans-serif; overflow:hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  .tc-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
+  .tc-user-pill { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #ddd; padding: 4px 12px; border-radius: 20px; }
   .tc-pfp-small { width: 24px; height: 24px; border-radius: 50%; }
-  .tc-u-name { font-size: 12px; font-weight: bold; color: #444; }
-  .tc-logout-btn { border:none; background:none; color:#d93025; font-size:11px; cursor:pointer; font-weight:bold; padding:0; margin-left:5px; }
-  
-  .tc-rating-card { padding: 12px; text-align: center; border-bottom: 1px solid #eee; background: #fafafa; }
-  .tc-stars { font-size: 32px; color: #ddd; cursor: pointer; line-height: 1; }
-  .tc-s { transition: color 0.2s; }
+  .tc-logout-btn { border:none; background:none; color:#d93025; font-size:11px; cursor:pointer; font-weight:bold; }
+  .tc-rating-card { padding: 10px; text-align: center; border-bottom: 1px solid #eee; background: #fff; }
+  .tc-stars { font-size: 30px; color: #ddd; cursor: pointer; }
   .tc-s.active { color: #f4b400; }
-
-  .tc-auth-gate { padding: 40px; text-align: center; }
-  .tc-editor-box { padding: 15px 20px; border-bottom: 1px solid #eee; background: #fff; }
-  textarea { width: 100%; height: 80px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; transition: border 0.2s; }
-  textarea:focus { border-color: #1a73e8; }
-  
-  .tc-post-btn { background: #1a73e8; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; }
-  .tc-cancel-btn { background: #f1f3f4; color: #5f6368; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; margin-right: 8px; }
-
-  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; position: relative; }
-  .tc-card.nested-reply { margin-left: 45px; border-left: 2px solid #eee; background: #fcfcfc; padding-right: 10px; }
-  
-  .tc-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .tc-card-pfp { width: 34px; height: 34px; border-radius: 50%; margin-right: 10px; border: 1px solid #eee; }
-  .tc-admin-badge { background: #1a73e8; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
-  .tc-card-name { font-weight: bold; font-size: 14px; color: #202124; }
-  .tc-card-time { font-size: 11px; color: #70757a; }
-  
-  .tc-card-body { font-size: 14px; line-height: 1.6; margin-left: 44px; color: #3c4043; word-wrap: break-word; }
-  .tc-actions { margin-left: 44px; margin-top: 10px; display: flex; gap: 15px; font-size: 12px; font-weight: bold; color: #1a73e8; }
-  .tc-act-link { cursor: pointer; opacity: 0.8; }
-  .tc-act-link:hover { opacity: 1; text-decoration: underline; }
+  .tc-editor-box { padding: 15px 20px; border-bottom: 1px solid #eee; }
+  textarea { width: 100%; height: 70px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-family: inherit; }
+  .tc-post-btn { background: #1a73e8; color: #fff; border: none; padding: 7px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; }
+  .tc-card.pending { opacity: 0.6; border-left: 3px solid #f4b400; }
+  .tc-card.reply { margin-left: 45px; border-left: 2px solid #ddd; background: #fcfcfc; }
+  .tc-card-pfp { width: 32px; height: 32px; border-radius: 50%; vertical-align: middle; margin-right: 10px; }
+  .tc-admin-badge { background: #1a73e8; color: white; font-size: 9px; padding: 2px 5px; border-radius: 3px; margin-left: 5px; }
+  .tc-actions { margin-left: 42px; margin-top: 10px; display: flex; gap: 12px; font-size: 12px; font-weight: bold; color: #1a73e8; cursor: pointer; }
   .tc-act-link.del { color: #d93025; }
-  
-  .tc-inline-box { margin: 12px 0 0 44px; }
+  .tc-inline-box { margin: 10px 0 0 42px; }
 </style>
 
 <script>
 (function() {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxc5e1Ki3VHJ5qjuCswwAxjkEL6tdTAszMRKVnRxttF5YwV7j6YqalGYfPmsmfuUx6E/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFEjVpWCsMkwITlivcsPocUS2NSSyrYFRd_4YlLUdJJ81VnzQLtqWFvQBS2wj5wVLh/exec";
   
   let user = JSON.parse(localStorage.getItem("tc_user")) || null;
-  let isLocked = false; 
+  let serverData = [];
+  let tempLocal = [];
+  let isTyping = false;
   let currentRating = 0;
 
   function init() {
@@ -98,9 +80,8 @@
     }
     const saved = localStorage.getItem("tc_rate_" + location.pathname);
     if(saved) { currentRating = parseInt(saved); paintStars(currentRating); }
-    
     sync();
-    setInterval(() => { if(!isLocked) sync(); }, 5000);
+    setInterval(() => { if(!isTyping) sync(); }, 5000);
   }
 
   window.onGoogleAuth = (res) => {
@@ -112,132 +93,119 @@
 
   window.tcLogout = () => { localStorage.removeItem("tc_user"); location.reload(); };
 
-  // --- RATING LOGIC ---
-  window.hoverStar = (n) => { if(!isLocked && currentRating === 0) paintStars(n); };
+  // --- RATING ---
+  window.hoverStar = (n) => { if(!isTyping && currentRating === 0) paintStars(n); };
   window.resetStar = () => { paintStars(currentRating); };
   window.handleStar = (n) => {
-    if(!user) return alert("Please sign in to rate!");
+    if(!user) return alert("Login to rate!");
     currentRating = n;
     localStorage.setItem("tc_rate_" + location.pathname, n);
     paintStars(n);
-    // Silent Update
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }), mode: "no-cors" });
   };
   function paintStars(n) { document.querySelectorAll(".tc-s").forEach((s, i) => s.classList.toggle("active", i < n)); }
 
-  // --- SYNC & RENDER ---
+  // --- MAIN ACTION (POST/REPLY/EDIT) ---
+  window.handleAction = (pid, mode = "new", rowId = null) => {
+    const inputId = mode === "edit" ? `edit-in-${rowId}` : (pid === '0' ? 'tc-input' : `reply-in-${pid}`);
+    const inputEl = document.getElementById(inputId);
+    const msg = inputEl.value.trim();
+    if(!msg || !user) return;
+
+    // LOCAL UPDATE (INSTANT)
+    if(mode === "new") {
+      tempLocal.push({ rowId: "temp_"+Date.now(), name: user.n, comment: msg, parentId: pid, pic: user.p, date: "Saving...", pending: true });
+    } else {
+      const target = serverData.find(c => c.rowId == rowId);
+      if(target) { target.comment = msg; target.date += " (Editing...)"; }
+    }
+
+    render();
+    inputEl.value = "";
+    isTyping = false;
+
+    // BACKGROUND SYNC
+    const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid, rating: currentRating };
+    if(mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
+
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" })
+      .then(() => setTimeout(sync, 2000));
+  };
+
   async function sync() {
     try {
       const res = await fetch(`${SCRIPT_URL}?url=${location.pathname}`);
       const data = await res.json();
-      document.getElementById("tc-avg-display").innerText = `⭐ ${data.avgRating} (${data.totalVotes} votes)`;
-      renderFeed(data.comments);
-    } catch(e) { console.error("Sync Error"); }
+      serverData = data.comments;
+      tempLocal = []; // Clear temp
+      document.getElementById("tc-avg-display").innerText = `⭐ ${data.avgRating} (${data.totalVotes})`;
+      render();
+    } catch(e) {}
   }
 
-  function renderFeed(list) {
+  function render() {
     const feed = document.getElementById("tc-feed");
-    // Get top level comments
-    const topLevel = list.filter(c => c.parentId == "0").reverse();
+    const combined = [...serverData, ...tempLocal];
+    const mains = combined.filter(c => c.parentId == "0").reverse();
     
-    let html = "";
-    topLevel.forEach(main => {
-      html += renderCard(main, list, 0);
-    });
-    
-    feed.innerHTML = html || '<div style="padding:40px; text-align:center; color:#999;">No comments yet. Start the conversation!</div>';
+    feed.innerHTML = mains.map(m => renderCard(m, combined)).join('');
   }
 
-  function renderCard(c, allList, depth) {
-    const isAdmin = c.isAdmin;
+  function renderCard(c, list) {
     const isOwner = user && (user.e === "officialhimanshutyagi@gmail.com" || user.n === c.name);
     const starStr = c.userRating > 0 ? `<span style="color:#f4b400; font-size:10px; margin-left:8px;">${"★".repeat(c.userRating)}</span>` : "";
     
-    let cardHtml = `
-      <div class="tc-card ${depth > 0 ? 'nested-reply' : ''}" id="card-${c.rowId}">
-        <div class="tc-card-top">
-          <div style="display:flex; align-items:center;">
-            <img src="${c.pic}" class="tc-card-pfp">
-            <div>
-              <span class="tc-card-name">${c.name}</span>
-              ${isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : ''}
-              ${starStr}
-              <div class="tc-card-time">${c.date}</div>
-            </div>
-          </div>
+    let html = `
+      <div class="tc-card ${c.parentId !== '0' ? 'reply' : ''} ${c.pending ? 'pending' : ''}">
+        <div>
+          <img src="${c.pic}" class="tc-card-pfp">
+          <span class="tc-card-name">${c.name}</span>
+          ${c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : ''}
+          ${starStr}
+          <small style="float:right; color:#999;">${c.date}</small>
         </div>
-        <div class="tc-card-body" id="body-${c.rowId}">${c.comment}</div>
+        <div class="tc-card-body" style="margin:8px 0 0 42px;" id="body-${c.rowId}">${c.comment}</div>
         <div class="tc-actions">
-          <span class="tc-act-link" onclick="openReply('${c.rowId}')">Reply</span>
-          ${isOwner ? `<span class="tc-act-link" onclick="openEdit('${c.rowId}')">Edit</span>` : ''}
-          ${isOwner || (user && user.e === "officialhimanshutyagi@gmail.com") ? 
-            `<span class="tc-act-link del" onclick="deleteMsg('${c.rowId}')">Delete</span>` : ''}
+          <span onclick="openBox('${c.rowId}', 'reply')">Reply</span>
+          ${isOwner ? `<span onclick="openBox('${c.rowId}', 'edit')">Edit</span>` : ''}
+          ${(user && (user.e === "officialhimanshutyagi@gmail.com" || user.n === c.name)) ? `<span class="tc-act-link del" onclick="deleteMsg('${c.rowId}')">Delete</span>` : ''}
         </div>
         <div id="box-${c.rowId}" class="tc-inline-box"></div>
       </div>`;
 
-    // Recursive: Find replies to this specific card
-    const replies = allList.filter(r => r.parentId == c.rowId);
-    replies.forEach(reply => {
-      cardHtml += renderCard(reply, allList, depth + 1);
-    });
-
-    return cardHtml;
+    // Nested Replies
+    const replies = list.filter(r => r.parentId == c.rowId);
+    replies.forEach(r => { html += renderCard(r, list); });
+    
+    return html;
   }
 
-  // --- ACTIONS ---
-  window.handlePost = async (pid, mode = "new", rowId = null) => {
-    const inputId = mode === "edit" ? `edit-in-${rowId}` : (pid === '0' ? 'tc-input' : `reply-in-${pid}`);
-    const el = document.getElementById(inputId);
-    const msg = el.value.trim();
-    if(!msg) return;
-
-    isLocked = false; // Release lock
-    const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid, rating: currentRating };
-    if(mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
-
-    // Instant UI Clean
-    if(mode !== "edit" && pid !== '0') document.getElementById(`box-${pid}`).innerHTML = "";
-    if(mode === "edit") document.getElementById(`box-${rowId}`).innerHTML = "";
-    el.value = "";
-
-    await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" });
-    setTimeout(sync, 1000);
-  };
-
-  window.openReply = (id) => {
-    isLocked = true;
+  window.openBox = (id, type) => {
+    isTyping = true;
+    const box = document.getElementById(`box-${id}`);
     document.querySelectorAll(".tc-inline-box").forEach(b => b.innerHTML = ""); // Close others
-    document.getElementById(`box-${id}`).innerHTML = `
-      <textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea>
-      <div style="text-align:right; margin-top:8px;">
-        <button onclick="cancelAction('${id}')" class="tc-cancel-btn">Cancel</button>
-        <button onclick="handlePost('${id}')" class="tc-post-btn">Reply</button>
-      </div>`;
-    document.getElementById(`reply-in-${id}`).focus();
-  };
-
-  window.openEdit = (id) => {
-    isLocked = true;
-    const oldMsg = document.getElementById(`body-${id}`).innerText.replace(" (Edited)", "");
-    document.getElementById(`box-${id}`).innerHTML = `
-      <textarea id="edit-in-${id}">${oldMsg}</textarea>
-      <div style="text-align:right; margin-top:8px;">
-        <button onclick="cancelAction('${id}')" class="tc-cancel-btn">Cancel</button>
-        <button onclick="handlePost('0', 'edit', '${id}')" class="tc-post-btn">Save Changes</button>
-      </div>`;
-    document.getElementById(`edit-in-${id}`).focus();
-  };
-
-  window.cancelAction = (id) => {
-    isLocked = false;
-    document.getElementById(`box-${id}`).innerHTML = "";
+    
+    if(type === 'reply') {
+      box.innerHTML = `<textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea>
+        <div style="text-align:right; margin-top:5px;">
+          <button onclick="isTyping=false; this.parentElement.parentElement.innerHTML=''" style="background:none; border:none; cursor:pointer; margin-right:10px;">Cancel</button>
+          <button class="tc-post-btn" onclick="handleAction('${id}')">Reply</button>
+        </div>`;
+    } else {
+      const old = document.getElementById(`body-${id}`).innerText;
+      box.innerHTML = `<textarea id="edit-in-${id}">${old}</textarea>
+        <div style="text-align:right; margin-top:5px;">
+          <button onclick="isTyping=false; this.parentElement.parentElement.innerHTML=''" style="background:none; border:none; cursor:pointer; margin-right:10px;">Cancel</button>
+          <button class="tc-post-btn" onclick="handleAction('0', 'edit', '${id}')">Update</button>
+        </div>`;
+    }
+    box.querySelector('textarea').focus();
   };
 
   window.deleteMsg = async (id) => {
-    if(!confirm("Are you sure you want to delete this?")) return;
+    if(!confirm("Delete this?")) return;
     await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
-    setTimeout(sync, 1000);
+    sync();
   };
 
   init();
