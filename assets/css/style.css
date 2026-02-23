@@ -200,7 +200,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 /* Shuruat mein list ki height lock kar di */
 #toc-list {
-    max-height: 120px; /* Adjust karle 3 items ke hisaab se */
+    max-height: 80px; /* Adjust karle 3 items ke hisaab se */
     overflow: hidden;
     transition: max-height 0.5s ease-in-out;
     list-style: none;
