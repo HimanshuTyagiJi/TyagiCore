@@ -167,6 +167,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     margin: 20px 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
+
+.toc-container {
+   
+    position: relative;
+    overflow: hidden;
+}
   .toc-title {
     font-weight: 800;
     font-size: 14px;
@@ -191,6 +197,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   #toc-list a:hover { opacity: 1; color: #166534; transform: translateX(5px); }
   .dark-mode #toc-list li { border-left-color: #334155; }
 
+
+/* Shuruat mein list ki height lock kar di */
+#toc-list {
+    max-height: 120px; /* Adjust karle 3 items ke hisaab se */
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Jab list khulegi tab height auto ho jayegi */
+#toc-list.expanded {
+    max-height: 1000px; 
+}
+
+/* See More Button with Shadow Effect */
+.toc-see-more {
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    color: #166534;
+    font-weight: bold;
+    font-size: 0.9em;
+    background: linear-gradient(to top, white 60%, transparent);
+    position: relative;
+    margin-top: -20px; /* Shadow effect ke liye upar laya */
+    padding-top: 30px;
+}
+
+.toc-see-more:hover {
+    color: #ff4b2b;
+}
 
   .share-wrapper {
     margin: 40px 0;
