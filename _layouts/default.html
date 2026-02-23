@@ -508,15 +508,15 @@ window.addEventListener('load', loadTrendingSidebar);
   <i class="fas fa-arrow-up top-arrow-icon"></i>
 </div>
 
-  <script>
-  const allPosts = [
-    {% assign post_pages = site.posts %}
-    {% for p in post_pages %}
+ <script>
+  window.tyagiPosts = [
+    {% assign all_posts = site.pages | where: "is_post", true %}
+    {% for p in all_posts %} // Limit yahan se hata di, Sidebar function mein handle karenge
     {
-      title: {{ p.title | jsonify }},
-      url: {{ p.url | absolute_url | jsonify }},
-      excerpt: {{ p.description | default: p.excerpt | strip_html | truncate: 100 | jsonify }},
-      image: "{{ p.image | default: 'https://picsum.photos/200/150' }}"
+      "title": {{ p.title | jsonify }},
+      "url": {{ p.url | relative_url | jsonify }},
+      "image": "{{ p.image | default: 'https://picsum.photos/400/300' }}",
+      "excerpt": {{ p.description | default: p.excerpt | strip_html | truncate: 100 | jsonify }}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ];
