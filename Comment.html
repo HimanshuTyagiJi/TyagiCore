@@ -1,71 +1,93 @@
-<div id="tyagi-feedback-system" style="max-width:800px; margin:30px auto; font-family:'Segoe UI', Roboto, Helvetica, sans-serif; background:#ffffff; padding:25px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.08); color:#202124;">
-    
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f3f4; padding-bottom:20px; margin-bottom:25px;">
-        <div>
-            <h2 style="margin:0; font-size:22px; color:#1a73e8;">Community Reviews</h2>
-            <div id="rating-summary" style="margin-top:8px; font-size:18px; color:#f4b400; font-weight:bold;">
-                ⭐ Loading scores...
-            </div>
+<script type="application/ld+json" id="tc-seo-schema"></script>
+
+<div id="tyagi-feedback-system" class="tc-container">
+    <div class="tc-header">
+        <div class="tc-header-left">
+            <h2>Community Reviews</h2>
+            <div id="rating-summary" class="tc-avg">⭐ Loading...</div>
         </div>
-        <div id="privacy-status" style="text-align:right;">
-            <span style="font-size:12px; background:#e6f4ea; color:#137333; padding:6px 14px; border-radius:20px; font-weight:500;">🔒 Privacy Protected</span>
-        </div>
+        <div class="tc-privacy">🔒 Identity Encrypted</div>
     </div>
 
-    <div id="rating-widget" style="background:#f8f9fa; padding:20px; border-radius:12px; margin-bottom:25px; text-align:center; border:1px solid #e8eaed;">
-        <p style="margin:0 0 12px 0; font-weight:600; color:#5f6368;">How would you rate this page?</p>
-        <div id="star-row" style="font-size:32px; color:#dadce0; cursor:pointer; transition: transform 0.2s;">
-            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
+    <div id="rating-widget" class="tc-rating-box">
+        <p>Tap to rate your experience</p>
+        <div id="star-row" class="tc-stars">
+            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
         </div>
-        <p id="rating-msg" style="margin-top:8px; font-size:13px; color:#1a73e8; display:none;"></p>
+        <p id="rating-msg" class="tc-status-msg"></p>
     </div>
 
-    <div id="login-panel" style="text-align:center; padding:40px; border:2px dashed #dadce0; border-radius:12px; background:#fafafa;">
-        <p style="color:#3c4043; margin-bottom:20px; font-weight:500;">Login with Google to post comments and save your rating.</p>
-        <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
+    <div id="login-panel" class="tc-auth">
+        <p>Login with Google to post comments</p>
+        <div id="g_id_onload" 
+             data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" 
+             data-callback="onGoogleAuth"></div>
         <div class="g_id_signin" data-type="standard"></div>
     </div>
 
-    <div id="editor-panel" style="display:none; background:#ffffff; border:1px solid #dadce0; padding:20px; border-radius:12px;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
-            <img id="user-pfp" src="" style="width:40px; height:40px; border-radius:50%; border:2px solid #1a73e8;">
+    <div id="editor-panel" style="display:none;" class="tc-editor">
+        <div class="tc-user-bar">
+            <img id="user-pfp" src="" alt="Profile">
             <div>
-                <strong id="user-name" style="font-size:15px;"></strong>
-                <small style="display:block; color:#70757a; font-size:12px;">Identity Verified via Google</small>
+                <strong id="user-name"></strong>
+                <small>Verified TyagiCore User</small>
             </div>
-            <button onclick="logout()" style="margin-left:auto; background:none; border:none; color:#d93025; font-size:12px; cursor:pointer;">Sign Out</button>
+            <button onclick="logout()" class="tc-logout-btn">Sign Out</button>
         </div>
         <form onsubmit="submitComment(event)">
             <input type="hidden" id="reply-to" value="0">
-            <textarea id="comment-input" placeholder="Share your thoughts..." required style="width:100%; height:100px; padding:15px; border:1px solid #dadce0; border-radius:8px; font-size:15px; outline:none; focus:border-color:#1a73e8;"></textarea>
-            <div id="reply-banner" style="display:none; background:#e8f0fe; color:#1967d2; padding:8px 12px; border-radius:5px; margin-top:8px; font-size:13px;">
-                Replying to user... <span onclick="cancelReply()" style="float:right; cursor:pointer; font-weight:bold; color:#d93025;">Cancel</span>
+            <textarea id="comment-input" placeholder="Share your thoughts..." required></textarea>
+            <div id="reply-banner" style="display:none" class="tc-reply-banner">
+                Replying... <span onclick="cancelReply()">Cancel</span>
             </div>
-            <button type="submit" id="post-btn" style="margin-top:12px; padding:12px 35px; background:#1a73e8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: 0.3s;">Post Comment</button>
+            <button type="submit" id="post-btn" class="tc-submit-btn">Post Comment</button>
         </form>
     </div>
 
-    <div id="feed-container" style="margin-top:40px;">
-        <div style="text-align:center; color:#999;">🔄 Loading the latest discussion...</div>
+    <div id="feed-container" class="tc-feed">
+        <div class="tc-loading">🔄 Syncing discussion...</div>
     </div>
 </div>
 
+<style>
+/* CSS: Dark/Light Mode Compatible */
+.tc-container { max-width: 800px; margin: 20px auto; background: var(--bg-card, #fff); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); font-family: sans-serif; }
+.tc-header { display: flex; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+.tc-avg { color: #f4b400; font-weight: bold; font-size: 1.2rem; }
+.tc-privacy { font-size: 12px; color: #137333; background: #e6f4ea; padding: 5px 12px; border-radius: 20px; height: fit-content; }
+.tc-rating-box { text-align: center; background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid #e8eaed; }
+.tc-stars { font-size: 35px; color: #dadce0; cursor: pointer; }
+.tc-auth { padding: 40px; border: 2px dashed #dadce0; border-radius: 12px; text-align: center; }
+.tc-editor { border: 1px solid #dadce0; padding: 20px; border-radius: 12px; }
+.tc-user-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+#user-pfp { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #1a73e8; }
+#comment-input { width: 100%; height: 100px; border-radius: 8px; border: 1px solid #dadce0; padding: 12px; resize: none; outline: none; box-sizing: border-box; }
+.tc-submit-btn { background: #1a73e8; color: #fff; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+.tc-card { padding: 15px; border-bottom: 1px solid #f1f3f4; transition: background 0.3s; }
+.tc-card.reply { margin-left: 45px; border-left: 3px solid #f1f3f4; background: #fafafa; }
+.tc-admin { background: #1a73e8; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+.tc-del { color: #d93025 !important; font-weight: bold; }
+.tc-status-msg { font-size: 13px; color: #1a73e8; }
+</style>
+
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJw3Y9NNNidGTwkztEDpT6fF5lFkvg-EQodSW6VeetxnfeYlV_Zy3GT38BtAGux4QR/exec";
-let currentUser = null;
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeeUBWEaqml-WGhVy4eqSyhrSYjhknaClxxPvs3apOd6ktPLVUPoH39XEyMQKyD1Or/exec";
+const ADMIN_EMAIL = "officialhimanshutyagi@gmail.com";
+let currentUser = JSON.parse(localStorage.getItem("app_user")) || null;
 let selectedRating = 0;
-let commentCount = 0;
+let lastSyncCount = 0;
 
 // Initialize
 window.onload = () => {
-    const session = localStorage.getItem("app_user");
-    if(session) { currentUser = JSON.parse(session); showEditor(); }
-    
+    if(currentUser) showEditor();
     const prevRate = localStorage.getItem("rate_" + window.location.pathname);
     if(prevRate) { selectedRating = prevRate; applyStarLock(prevRate); }
-    
     sync();
-    setInterval(sync, 12000); // Live sync every 12s
+    setInterval(sync, 1500); // 1.5s fast sync
     if ("Notification" in window) Notification.requestPermission();
 };
 
@@ -86,24 +108,27 @@ function showEditor() {
 
 function logout() { localStorage.removeItem("app_user"); location.reload(); }
 
-// Rating Stars Logic
+// Rating Logic
 function hoverStars(n) { updateStarsUI(n, "#f4b400"); }
 function resetStars() { updateStarsUI(selectedRating, "#f4b400"); }
-function applyStarLock(n) { updateStarsUI(n, "#f4b400"); document.getElementById("rating-msg").innerText = "You rated this " + n + " stars"; document.getElementById("rating-msg").style.display = "block"; }
-
+function applyStarLock(n) { 
+    updateStarsUI(n, "#f4b400"); 
+    document.getElementById("rating-msg").innerText = "You rated this " + n + " stars (Play Store Mode)"; 
+}
 function updateStarsUI(n, color) {
     const s = document.querySelectorAll("#star-row span");
     s.forEach((el, i) => el.style.color = i < n ? color : "#dadce0");
 }
 
 function handleStarClick(n) {
-    if(!currentUser) { alert("Please login to rate!"); return; }
+    if(!currentUser) return alert("Please login to rate!");
     selectedRating = n;
     localStorage.setItem("rate_" + window.location.pathname, n);
     applyStarLock(n);
-    submitComment(null, true); // Auto-submit rating
+    submitComment(null, true);
 }
 
+// Submission
 async function submitComment(e, isRateOnly = false) {
     if(e) e.preventDefault();
     const btn = document.getElementById("post-btn");
@@ -122,60 +147,74 @@ async function submitComment(e, isRateOnly = false) {
 
     await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
     if(!isRateOnly) { document.getElementById("comment-input").value = ""; cancelReply(); }
-    setTimeout(sync, 1500);
+    setTimeout(sync, 1000);
     btn.disabled = false;
 }
 
+// Sync & Render
 async function sync() {
     try {
         const res = await fetch(`${SCRIPT_URL}?url=${window.location.pathname}`);
         const data = await res.json();
         
-        // Notifications
-        if(data.comments.length > commentCount && commentCount !== 0) {
-            new Notification("New Comment!", { body: data.comments[0].name + " just posted." });
+        // Notifications (Live only)
+        if(data.comments.length > lastSyncCount && lastSyncCount !== 0) {
+            const newest = data.comments[data.comments.length - 1];
+            if (Notification.permission === "granted") {
+                new Notification(`TyagiCore: ${newest.name}`, { body: newest.comment, icon: newest.pic });
+            }
         }
-        commentCount = data.comments.length;
+        lastSyncCount = data.comments.length;
 
-        // Avg Rating UI
-        document.getElementById("rating-summary").innerText = "⭐ " + data.avgRating + "/5 (" + data.totalVotes + " reviews)";
+        // SEO & Summary
+        document.getElementById("rating-summary").innerText = `⭐ ${data.avgRating}/5 (${data.totalVotes} reviews)`;
+        updateSEOSchema(data.avgRating, data.totalVotes);
 
         const box = document.getElementById("feed-container");
         box.innerHTML = "";
         
-        if(data.comments.length === 0) { box.innerHTML = "<p style='text-align:center; color:#999;'>No comments yet.</p>"; return; }
-
-        const mains = data.comments.filter(c => c.parentId == "0");
-        mains.reverse().forEach(m => {
+        const mains = data.comments.filter(c => c.parentId == "0").reverse();
+        mains.forEach(m => {
             box.innerHTML += renderCard(m, false);
             data.comments.filter(r => r.parentId == m.rowId).forEach(rep => {
                 box.innerHTML += renderCard(rep, true);
             });
         });
-    } catch(e) { console.log("Sync error"); }
+    } catch(e) { console.log("Sync..."); }
 }
 
 function renderCard(c, isRep) {
-    const margin = isRep ? "margin-left:45px; border-left:3px solid #f1f3f4; background:#fcfcfc;" : "border-bottom:1px solid #f1f3f4;";
-    // Check if current logged user is owner of comment OR Admin (Admin check is via flag from backend)
-    const canDelete = currentUser && (c.isAdmin || currentUser.e === c.uMail);
-    const starStr = "★".repeat(c.rating) + "☆".repeat(5 - c.rating);
+    // Privacy: uMail contains only "admin" or "verified" for front-end safety
+    // True Email comparison happens on the backend during deletion
+    const isAdmin = c.isAdmin;
+    const canDelete = currentUser && (currentUser.e === ADMIN_EMAIL || (currentUser.n === c.name && !isRep));
+    const starStr = "★".repeat(c.rating);
 
     return `
-        <div style="${margin} padding:15px; position:relative;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+        <div class="tc-card ${isRep ? 'reply' : ''}">
+            <div style="display:flex; align-items:center; gap:10px;">
                 <img src="${c.pic}" style="width:32px; height:32px; border-radius:50%;">
-                <strong style="font-size:14px; color:#202124;">${c.name} ${c.isAdmin ? '<span style="color:#1a73e8; background:#e8f0fe; padding:2px 8px; border-radius:10px; font-size:10px; margin-left:5px;">Admin</span>' : ''}</strong>
-                <span style="color:#f4b400; font-size:12px;">${c.rating > 0 ? starStr : ''}</span>
+                <strong>${c.name} ${isAdmin ? '<span class="tc-admin">Admin</span>' : ''}</strong>
+                <span style="color:#f4b400; font-size:12px;">${starStr}</span>
             </div>
-            <p style="margin:5px 0 10px 42px; color:#3c4043; line-height:1.5;">${c.comment}</p>
-            <div style="margin-left:42px; display:flex; gap:20px;">
-                <button onclick="triggerReply('${c.rowId}')" style="background:none; border:none; color:#1a73e8; font-size:12px; cursor:pointer; font-weight:600;">Reply</button>
-                ${canDelete ? `<button onclick="deleteMsg('${c.rowId}')" style="background:none; border:none; color:#d93025; font-size:12px; cursor:pointer; font-weight:600;">Delete</button>` : ""}
-                <small style="color:#9aa0a6; font-size:11px; margin-left:auto;">${c.date}</small>
+            <p style="margin:8px 0 8px 42px; color:#333;">${c.comment}</p>
+            <div style="margin-left:42px; display:flex; gap:15px; font-size:12px;">
+                <button onclick="triggerReply('${c.rowId}')" style="background:none; border:none; color:#1a73e8; cursor:pointer;">Reply</button>
+                ${canDelete ? `<button onclick="deleteMsg('${c.rowId}')" class="tc-del" style="background:none; border:none; cursor:pointer;">Delete</button>` : ""}
+                <span style="color:#999;">${c.date}</span>
             </div>
         </div>
     `;
+}
+
+function updateSEOSchema(avg, count) {
+    const schema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": document.title,
+        "aggregateRating": { "@type": "AggregateRating", "ratingValue": avg, "ratingCount": count }
+    };
+    document.getElementById("tc-seo-schema").innerHTML = JSON.stringify(schema);
 }
 
 function triggerReply(id) { 
@@ -184,11 +223,10 @@ function triggerReply(id) {
     document.getElementById("reply-banner").style.display = "block";
     document.getElementById("comment-input").focus(); 
 }
-
 function cancelReply() { document.getElementById("reply-to").value = "0"; document.getElementById("reply-banner").style.display = "none"; }
 
 async function deleteMsg(id) {
-    if(!confirm("Are you sure?")) return;
+    if(!confirm("Bhai, delete kar du? Chain-replies bhi ud jayenge.")) return;
     await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action:"delete", rowId:id, userEmail:currentUser.e}), mode: 'no-cors' });
     setTimeout(sync, 1000);
 }
