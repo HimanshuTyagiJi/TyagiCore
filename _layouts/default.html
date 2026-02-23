@@ -433,58 +433,62 @@ window.addEventListener('load', loadTrendingSidebar);
 
 
 
-  <div id="tyagi-feedback-system" style="max-width:800px; margin:30px auto; font-family:'Segoe UI', Roboto, Helvetica, sans-serif; background:#ffffff; padding:25px; border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,0.08); color:#202124;">
-    
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f1f3f4; padding-bottom:20px; margin-bottom:25px;">
-        <div>
-            <h2 style="margin:0; font-size:22px; color:#1a73e8;">Community Reviews</h2>
-            <div id="rating-summary" style="margin-top:8px; font-size:18px; color:#f4b400; font-weight:bold;">
+ <div id="tyagi-feedback-system">
+    <div class="feedback-header">
+        <div class="header-left">
+            <h2 class="title">Community Reviews</h2>
+            <div id="rating-summary" class="rating-score">
                 ⭐ Loading scores...
             </div>
         </div>
-        <div id="privacy-status" style="text-align:right;">
-            <span style="font-size:12px; background:#e6f4ea; color:#137333; padding:6px 14px; border-radius:20px; font-weight:500;">🔒 Privacy Protected</span>
+        <div id="privacy-status">
+            <span class="privacy-badge">🔒 Privacy Protected</span>
         </div>
     </div>
 
-    <div id="rating-widget" style="background:#f8f9fa; padding:20px; border-radius:12px; margin-bottom:25px; text-align:center; border:1px solid #e8eaed;">
-        <p style="margin:0 0 12px 0; font-weight:600; color:#5f6368;">How would you rate this page?</p>
-        <div id="star-row" style="font-size:32px; color:#dadce0; cursor:pointer; transition: transform 0.2s;">
-            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span><span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
+    <div id="rating-widget" class="widget-box">
+        <p class="widget-label">How would you rate this page?</p>
+        <div id="star-row" class="star-rating">
+            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span>
+            <span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
         </div>
-        <p id="rating-msg" style="margin-top:8px; font-size:13px; color:#1a73e8; display:none;"></p>
+        <p id="rating-msg" class="status-msg"></p>
     </div>
 
-    <div id="login-panel" style="text-align:center; padding:40px; border:2px dashed #dadce0; border-radius:12px; background:#fafafa;">
-        <p style="color:#3c4043; margin-bottom:20px; font-weight:500;">Login with Google to post comments and save your rating.</p>
+    <div id="login-panel" class="auth-panel">
+        <p class="auth-text">Login with Google to post comments and save your rating.</p>
         <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
         <div class="g_id_signin" data-type="standard"></div>
     </div>
 
-    <div id="editor-panel" style="display:none; background:#ffffff; border:1px solid #dadce0; padding:20px; border-radius:12px;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
-            <img id="user-pfp" src="" style="width:40px; height:40px; border-radius:50%; border:2px solid #1a73e8;">
-            <div>
-                <strong id="user-name" style="font-size:15px;"></strong>
-                <small style="display:block; color:#70757a; font-size:12px;">Identity Verified via Google</small>
+    <div id="editor-panel" class="editor-box">
+        <div class="user-meta">
+            <img id="user-pfp" src="" alt="User profile">
+            <div class="user-info">
+                <strong id="user-name"></strong>
+                <small class="verify-tag">Identity Verified via Google</small>
             </div>
-            <button onclick="logout()" style="margin-left:auto; background:none; border:none; color:#d93025; font-size:12px; cursor:pointer;">Sign Out</button>
+            <button onclick="logout()" class="logout-btn">Sign Out</button>
         </div>
         <form onsubmit="submitComment(event)">
             <input type="hidden" id="reply-to" value="0">
-            <textarea id="comment-input" placeholder="Share your thoughts..." required style="width:100%; height:100px; padding:15px; border:1px solid #dadce0; border-radius:8px; font-size:15px; outline:none; focus:border-color:#1a73e8;"></textarea>
-            <div id="reply-banner" style="display:none; background:#e8f0fe; color:#1967d2; padding:8px 12px; border-radius:5px; margin-top:8px; font-size:13px;">
-                Replying to user... <span onclick="cancelReply()" style="float:right; cursor:pointer; font-weight:bold; color:#d93025;">Cancel</span>
+            <textarea id="comment-input" placeholder="Share your thoughts..." required></textarea>
+            
+            <div id="reply-banner" class="reply-status">
+                Replying to user... <span onclick="cancelReply()" class="cancel-reply">Cancel</span>
             </div>
-            <button type="submit" id="post-btn" style="margin-top:12px; padding:12px 35px; background:#1a73e8; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold; transition: 0.3s;">Post Comment</button>
+            
+            <button type="submit" id="post-btn" class="submit-btn">Post Comment</button>
         </form>
     </div>
 
-    <div id="feed-container" style="margin-top:40px;">
-        <div style="text-align:center; color:#999;">🔄 Loading the latest discussion...</div>
+    <div id="feed-container">
+        <div class="loading-state">🔄 Loading the latest discussion...</div>
     </div>
 </div>
-
 
 <footer class="tc-footer">
   <div class="footer-grid">
