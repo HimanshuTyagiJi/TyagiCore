@@ -1,275 +1,256 @@
 ---
 layout: default
 ---
-
 <div id="source-category-nav" style="display:none;">
-  <div class="cat-full-width-scroll">
-    <div class="cat-inner-scroll">
-      {% assign all_posts = site.pages | where: "is_post", true %}
-      <button class="cat-btn active" onclick="filterCategory('all', this)">All Posts <span>({{ all_posts.size }})</span></button>
-
-      {% assign my_cats = "Cyber Security,Networking,AI,Linux,Privacy,Cloud Computing,Guide" | split: "," %}
-      {% for cat in my_cats %}
-        {% assign count = 0 %}
-        {% for p in all_posts %}{% if p.categories contains cat %}{% assign count = count | plus: 1 %}{% endif %}{% endfor %}
-        {% if count > 0 %}
-          <button class="cat-btn" onclick="filterCategory('{{ cat }}', this)">{{ cat }} <span>({{ count }})</span></button>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
+   <div class="cat-full-width-scroll">
+      <div class="cat-inner-scroll">
+         {% assign all_posts = site.pages | where: "is_post", true %}
+         <button class="cat-btn active" onclick="filterCategory('all', this)">All Posts <span>({{ all_posts.size }})</span></button>
+         {% assign my_cats = "Cyber Security,Networking,AI,Linux,Privacy,Cloud Computing,Guide" | split: "," %}
+         {% for cat in my_cats %}
+         {% assign count = 0 %}
+         {% for p in all_posts %}{% if p.categories contains cat %}{% assign count = count | plus: 1 %}{% endif %}{% endfor %}
+         {% if count > 0 %}
+         <button class="cat-btn" onclick="filterCategory('{{ cat }}', this)">{{ cat }} <span>({{ count }})</span></button>
+         {% endif %}
+         {% endfor %}
+      </div>
+   </div>
 </div>
-
 <div class="post-container-fixed">
-  <div id="post-wrapper">
-    {% assign sorted_posts = all_posts | sort: "date" | reverse %}
-    {% for p in sorted_posts %}
+   <div id="post-wrapper">
+      {% assign sorted_posts = all_posts | sort: "date" | reverse %}
+      {% for p in sorted_posts %}
       <div class="horizontal-post-card js-post" data-categories="{{ p.categories | join: ',' }}">
-        <div class="post-img">
-          <img src="{{ p.image | default: 'https://picsum.photos/400/300' }}" alt="{{ p.title }}">
-        </div>
-        <div class="post-info">
-          <div class="post-top-meta">
-             <h2><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h2>
-             <p>{{ p.description | default: p.excerpt | strip_html | truncate: 100 }}</p>
-          </div>
-          <div class="post-footer">
-            <button class="native-share-btn" onclick="nativeShare('{{ p.title | escape }}', '{{ p.url | absolute_url }}')">
-              <i class="fa-solid fa-share-nodes"></i> Share
-            </button>
-            <a href="{{ p.url | relative_url }}" class="read-link">Read More →</a>
-          </div>
-        </div>
+         <div class="post-img">
+            <img src="{{ p.image | default: 'https://picsum.photos/400/300' }}" alt="{{ p.title }}">
+         </div>
+         <div class="post-info">
+            <div class="post-top-meta">
+               <h2><a href="{{ p.url | relative_url }}">{{ p.title }}</a></h2>
+               <p>{{ p.description | default: p.excerpt | strip_html | truncate: 100 }}</p>
+            </div>
+            <div class="post-footer">
+               <button class="native-share-btn" onclick="nativeShare('{{ p.title | escape }}', '{{ p.url | absolute_url }}')">
+               <i class="fa-solid fa-share-nodes"></i> Share
+               </button>
+               <a href="{{ p.url | relative_url }}" class="read-link">Read More →</a>
+            </div>
+         </div>
       </div>
-    {% endfor %}
-  </div>
-  
-  <div id="pagination-nav" class="pagination-center"></div>
+      {% endfor %}
+   </div>
+   <div id="pagination-nav" class="pagination-center"></div>
 </div>
-
 <style>
-  /* CATEGORY SCROLL STYLES */
-  .cat-full-width-scroll { width: 100%; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 15px 0; margin-bottom: 20px; }
-  .cat-inner-scroll { display: block !important; overflow-x: auto !important; white-space: nowrap !important; padding: 0 5%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .cat-inner-scroll::-webkit-scrollbar { display: none; }
-  .cat-btn { display: inline-block !important; padding: 8px 20px; margin-right: 10px; background: #f3f4f6; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-  .cat-btn.active { background: #166534; color: #fff; border-color: #166534; }
-
-  /* POST CARDS STYLES */
-  .horizontal-post-card { display: none; background: #fff; border: 1px solid #eee; border-radius: 12px; margin-bottom: 20px; overflow: hidden; height: 190px; display: flex; transition: 0.3s; }
-  .horizontal-post-card:hover { border-color: #166534; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-  .post-img { width: 35%; min-width: 130px; }
-  .post-img img { width: 100%; height: 100%; object-fit: cover; }
-  .post-info { width: 65%; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-  .post-info h2 { font-size: 18px; font-weight: 800; line-height: 1.3; margin-bottom: 5px; }
-  .post-info h2 a { text-decoration: none; color: #111; }
-  .post-info p { font-size: 13px; color: #64748b; }
-
-  /* FOOTER BUTTONS */
-  .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-  .native-share-btn { background: #f1f5f9; color: #1e293b; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-  .native-share-btn:hover { background: #e2e8f0; color: #166534; }
-  .read-link { color: #166534; font-weight: 800; text-decoration: none; font-size: 13px; border: 1px solid #166534; padding: 6px 14px; border-radius: 8px; }
-  .read-link:hover { background: #166534; color: #fff; }
-  
-  /* PAGINATION STYLING */
-  .pagination-center { text-align: center; padding: 30px 0; display: flex; justify-content: center; gap: 10px; }
-  .page-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 8px; font-weight: 700; transition: 0.2s; }
-  .page-btn.active { background: #166534; color: #fff; border-color: #166534; }
-  .page-btn:hover:not(.active) { background: #f3f4f6; }
-
-  @media (max-width: 768px) {
-    .horizontal-post-card { flex-direction: column; height: auto; }
-    .post-img, .post-info { width: 100%; }
-    .post-img { height: 180px; }
-  }
+   /* CATEGORY SCROLL STYLES */
+   .cat-full-width-scroll { width: 100%; background: #fff; border-bottom: 1px solid #e5e7eb; padding: 15px 0; margin-bottom: 20px; }
+   .cat-inner-scroll { display: block !important; overflow-x: auto !important; white-space: nowrap !important; padding: 0 5%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+   .cat-inner-scroll::-webkit-scrollbar { display: none; }
+   .cat-btn { display: inline-block !important; padding: 8px 20px; margin-right: 10px; background: #f3f4f6; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+   .cat-btn.active { background: #166534; color: #fff; border-color: #166534; }
+   /* POST CARDS STYLES */
+   .horizontal-post-card { display: none; background: #fff; border: 1px solid #eee; border-radius: 12px; margin-bottom: 20px; overflow: hidden; height: 190px; display: flex; transition: 0.3s; }
+   .horizontal-post-card:hover { border-color: #166534; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+   .post-img { width: 35%; min-width: 130px; }
+   .post-img img { width: 100%; height: 100%; object-fit: cover; }
+   .post-info { width: 65%; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
+   .post-info h2 { font-size: 18px; font-weight: 800; line-height: 1.3; margin-bottom: 5px; }
+   .post-info h2 a { text-decoration: none; color: #111; }
+   .post-info p { font-size: 13px; color: #64748b; }
+   /* FOOTER BUTTONS */
+   .post-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+   .native-share-btn { background: #f1f5f9; color: #1e293b; border: none; padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+   .native-share-btn:hover { background: #e2e8f0; color: #166534; }
+   .read-link { color: #166534; font-weight: 800; text-decoration: none; font-size: 13px; border: 1px solid #166534; padding: 6px 14px; border-radius: 8px; }
+   .read-link:hover { background: #166534; color: #fff; }
+   /* PAGINATION STYLING */
+   .pagination-center { text-align: center; padding: 30px 0; display: flex; justify-content: center; gap: 10px; }
+   .page-btn { padding: 8px 16px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 8px; font-weight: 700; transition: 0.2s; }
+   .page-btn.active { background: #166534; color: #fff; border-color: #166534; }
+   .page-btn:hover:not(.active) { background: #f3f4f6; }
+   @media (max-width: 768px) {
+   .horizontal-post-card { flex-direction: column; height: auto; }
+   .post-img, .post-info { width: 100%; }
+   .post-img { height: 180px; }
+   }
 </style>
-
 <script>
-// 1. NATIVE SHARE ENGINE
-async function nativeShare(title, url) {
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: title, text: 'Tyagi Core - Tech Insights:', url: url });
-    } catch (err) { console.log('Share failed', err); }
-  } else {
-    navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  // 2. MOVE CATEGORY SECTION
-  const source = document.getElementById('source-category-nav');
-  const target = document.getElementById('index-category-nav');
-  if(source && target) {
-    target.innerHTML = source.innerHTML;
-    source.remove();
-  }
-
-  // 3. PAGINATION & FILTER LOGIC
-  const postsPerPage = 2; // TERE LIYE 2 SET KIYA HAI
-  let currentFilteredPosts = Array.from(document.querySelectorAll('.js-post'));
-  const nav = document.getElementById('pagination-nav');
-
-  function renderPage(pageNum) {
-    const start = (pageNum - 1) * postsPerPage;
-    const end = start + postsPerPage;
-
-    // Pehle sab chhupao
-    document.querySelectorAll('.js-post').forEach(p => p.style.display = 'none');
-
-    // Sirf filtered list ke posts dikhao range mein
-    currentFilteredPosts.forEach((post, index) => {
-      if (index >= start && index < end) {
-        post.style.display = 'flex';
-      }
-    });
-
-    renderPaginationButtons(pageNum);
-  }
-
-  function renderPaginationButtons(activePage) {
-    nav.innerHTML = '';
-    const totalPages = Math.ceil(currentFilteredPosts.length / postsPerPage);
-    
-    if(totalPages <= 1) return;
-
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement('button');
-      btn.innerText = i;
-      btn.className = `page-btn ${i === activePage ? 'active' : ''}`;
-      btn.onclick = () => {
-        renderPage(i);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
-      nav.appendChild(btn);
-    }
-  }
-
-  // CATEGORY FILTER FUNCTION
-  window.filterCategory = function(cat, btn) {
-    // Button active class update
-    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const allPosts = Array.from(document.querySelectorAll('.js-post'));
-
-    if (cat === 'all') {
-      currentFilteredPosts = allPosts;
-    } else {
-      currentFilteredPosts = allPosts.filter(p => {
-        return p.getAttribute('data-categories').split(',').includes(cat);
-      });
-    }
-
-    renderPage(1); // Filter ke baad pehle page par jao
-  }
-
-  // Initial Load
-  renderPage(1);
-});
+   // 1. NATIVE SHARE ENGINE
+   async function nativeShare(title, url) {
+     if (navigator.share) {
+       try {
+         await navigator.share({ title: title, text: 'Tyagi Core - Tech Insights:', url: url });
+       } catch (err) { console.log('Share failed', err); }
+     } else {
+       navigator.clipboard.writeText(url);
+       alert('Link copied to clipboard!');
+     }
+   }
+   
+   document.addEventListener("DOMContentLoaded", function() {
+     // 2. MOVE CATEGORY SECTION
+     const source = document.getElementById('source-category-nav');
+     const target = document.getElementById('index-category-nav');
+     if(source && target) {
+       target.innerHTML = source.innerHTML;
+       source.remove();
+     }
+   
+     // 3. PAGINATION & FILTER LOGIC
+     const postsPerPage = 2; // TERE LIYE 2 SET KIYA HAI
+     let currentFilteredPosts = Array.from(document.querySelectorAll('.js-post'));
+     const nav = document.getElementById('pagination-nav');
+   
+     function renderPage(pageNum) {
+       const start = (pageNum - 1) * postsPerPage;
+       const end = start + postsPerPage;
+   
+       // Pehle sab chhupao
+       document.querySelectorAll('.js-post').forEach(p => p.style.display = 'none');
+   
+       // Sirf filtered list ke posts dikhao range mein
+       currentFilteredPosts.forEach((post, index) => {
+         if (index >= start && index < end) {
+           post.style.display = 'flex';
+         }
+       });
+   
+       renderPaginationButtons(pageNum);
+     }
+   
+     function renderPaginationButtons(activePage) {
+       nav.innerHTML = '';
+       const totalPages = Math.ceil(currentFilteredPosts.length / postsPerPage);
+       
+       if(totalPages <= 1) return;
+   
+       for (let i = 1; i <= totalPages; i++) {
+         const btn = document.createElement('button');
+         btn.innerText = i;
+         btn.className = `page-btn ${i === activePage ? 'active' : ''}`;
+         btn.onclick = () => {
+           renderPage(i);
+           window.scrollTo({ top: 0, behavior: 'smooth' });
+         };
+         nav.appendChild(btn);
+       }
+     }
+   
+     // CATEGORY FILTER FUNCTION
+     window.filterCategory = function(cat, btn) {
+       // Button active class update
+       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+       btn.classList.add('active');
+   
+       const allPosts = Array.from(document.querySelectorAll('.js-post'));
+   
+       if (cat === 'all') {
+         currentFilteredPosts = allPosts;
+       } else {
+         currentFilteredPosts = allPosts.filter(p => {
+           return p.getAttribute('data-categories').split(',').includes(cat);
+         });
+       }
+   
+       renderPage(1); // Filter ke baad pehle page par jao
+     }
+   
+     // Initial Load
+     renderPage(1);
+   });
 </script>
-</div></div>
 <div class="tc-ultra-final">
-
-  <div class="bg-mesh"></div>
-  <div class="bg-gradient"></div>
-
-  <div class="tc-header">
-    <span class="badge">Tyagi Core Framework</span>
-    <h2>Architecting The Future of Digital Systems</h2>
-    <p class="subtext">
-      Tyagi Core is not just a content platform — it is a structured knowledge engine focused on
-      understanding how modern digital infrastructure truly operates at its foundational level.
-      We break down complex systems into understandable architecture models.
-    </p>
-  </div>
-
-  <div class="tc-grid">
-
-    <!-- CARD 1 -->
-    <div class="tc-card">
-      <div class="icon">
-        <svg viewbox="0 0 100 100">
-          <circle cx="50" cy="50" r="38" class="draw"/>
-          <circle cx="50" cy="50" r="15" class="draw delay"/>
-          <line x1="50" y1="5" x2="50" y2="95" class="draw"/>
-          <line x1="5" y1="50" x2="95" y2="50" class="draw"/>
-        </line></line></circle></circle></svg>
+   <div class="bg-mesh"></div>
+   <div class="bg-gradient"></div>
+   <div class="tc-header">
+      <span class="badge">Tyagi Core Framework</span>
+      <h2>Architecting The Future of Digital Systems</h2>
+      <p class="subtext">
+         Tyagi Core is not just a content platform — it is a structured knowledge engine focused on
+         understanding how modern digital infrastructure truly operates at its foundational level.
+         We break down complex systems into understandable architecture models.
+      </p>
+   </div>
+   <div class="tc-grid">
+      <!-- CARD 1 -->
+      <div class="tc-card">
+         <div class="icon">
+            <svg viewbox="0 0 100 100">
+               <circle cx="50" cy="50" r="38" class="draw"/>
+               <circle cx="50" cy="50" r="15" class="draw delay"/>
+               <line x1="50" y1="5" x2="50" y2="95" class="draw"/>
+               <line x1="5" y1="50" x2="95" y2="50" class="draw"/>
+            </svg>
+         </div>
+         <h3>Deep System Architecture</h3>
+         <p>
+            Modern applications are built on layered architectures — from hardware abstraction to operating system kernels, 
+            networking stacks, runtime environments, and distributed services. At Tyagi Core, we analyze how these layers 
+            interact and how data travels through them in real time.
+         </p>
+         <p>
+            We explore TCP/IP routing mechanisms, memory allocation models, system interrupts, and packet inspection logic.
+            Our approach is not surface-level usage; it is structural understanding. When you understand architecture,
+            optimization becomes natural.
+         </p>
+         <ul>
+            <li>Low-Level Networking</li>
+            <li>Kernel Execution Models</li>
+            <li>Process & Memory Control</li>
+         </ul>
       </div>
-      <h3>Deep System Architecture</h3>
-      <p>
-        Modern applications are built on layered architectures — from hardware abstraction to operating system kernels, 
-        networking stacks, runtime environments, and distributed services. At Tyagi Core, we analyze how these layers 
-        interact and how data travels through them in real time.
-      </p>
-      <p>
-        We explore TCP/IP routing mechanisms, memory allocation models, system interrupts, and packet inspection logic.
-        Our approach is not surface-level usage; it is structural understanding. When you understand architecture,
-        optimization becomes natural.
-      </p>
-      <ul>
-        <li>Low-Level Networking</li>
-        <li>Kernel Execution Models</li>
-        <li>Process & Memory Control</li>
-      </ul>
-    </div>
-
-    <!-- CARD 2 -->
-    <div class="tc-card">
-      <div class="icon">
-        <svg viewbox="0 0 100 100">
-          <path d="M50 10 L85 25 V55 C85 75 70 90 50 95 C30 90 15 75 15 55 V25 Z" class="draw"/>
-          <circle cx="50" cy="50" r="15" class="pulse"/>
-        </circle></path></svg>
+      <!-- CARD 2 -->
+      <div class="tc-card">
+         <div class="icon">
+            <svg viewbox="0 0 100 100">
+               <path d="M50 10 L85 25 V55 C85 75 70 90 50 95 C30 90 15 75 15 55 V25 Z" class="draw"/>
+               <circle cx="50" cy="50" r="15" class="pulse"/>
+            </svg>
+         </div>
+         <h3>Cyber Defense & Privacy Engineering</h3>
+         <p>
+            Digital identity today is more vulnerable than ever. Every device leaves behind fingerprints —
+            from browser signatures to IP metadata and tracking cookies. Tyagi Core examines how digital tracking works
+            and how security frameworks mitigate exposure.
+         </p>
+         <p>
+            We dive into firewall architecture, encryption layers, zero-trust systems, endpoint hardening,
+            and distributed authentication models. Security is not fear-based — it is architecture-based.
+         </p>
+         <ul>
+            <li>Digital Fingerprint Analysis</li>
+            <li>Encrypted Communication Models</li>
+            <li>Firewall & Access Control</li>
+         </ul>
       </div>
-      <h3>Cyber Defense & Privacy Engineering</h3>
-      <p>
-        Digital identity today is more vulnerable than ever. Every device leaves behind fingerprints —
-        from browser signatures to IP metadata and tracking cookies. Tyagi Core examines how digital tracking works
-        and how security frameworks mitigate exposure.
-      </p>
-      <p>
-        We dive into firewall architecture, encryption layers, zero-trust systems, endpoint hardening,
-        and distributed authentication models. Security is not fear-based — it is architecture-based.
-      </p>
-      <ul>
-        <li>Digital Fingerprint Analysis</li>
-        <li>Encrypted Communication Models</li>
-        <li>Firewall & Access Control</li>
-      </ul>
-    </div>
-
-    <!-- CARD 3 -->
-    <div class="tc-card">
-      <div class="icon">
-        <svg viewbox="0 0 100 100">
-          <circle cx="20" cy="50" r="8" class="draw"/>
-          <circle cx="80" cy="50" r="8" class="draw"/>
-          <circle cx="50" cy="20" r="8" class="draw"/>
-          <circle cx="50" cy="80" r="8" class="draw"/>
-          <line x1="28" y1="50" x2="72" y2="50" class="draw"/>
-          <line x1="50" y1="28" x2="50" y2="72" class="draw"/>
-        </line></line></circle></circle></circle></circle></svg>
+      <!-- CARD 3 -->
+      <div class="tc-card">
+         <div class="icon">
+            <svg viewbox="0 0 100 100">
+               <circle cx="20" cy="50" r="8" class="draw"/>
+               <circle cx="80" cy="50" r="8" class="draw"/>
+               <circle cx="50" cy="20" r="8" class="draw"/>
+               <circle cx="50" cy="80" r="8" class="draw"/>
+               <line x1="28" y1="50" x2="72" y2="50" class="draw"/>
+               <line x1="50" y1="28" x2="50" y2="72" class="draw"/>
+            </svg>
+         </div>
+         <h3>Infrastructure & Distributed Networks</h3>
+         <p>
+            The modern internet is powered by distributed server clusters, content delivery networks,
+            and edge computing nodes that maintain global synchronization. Understanding these systems
+            is key to building scalable applications.
+         </p>
+         <p>
+            Tyagi Core visualizes CDN logic, load balancing algorithms, request routing, and latency optimization.
+            Instead of guessing performance improvements, we engineer them.
+         </p>
+         <ul>
+            <li>CDN & Edge Systems</li>
+            <li>Distributed Topology</li>
+            <li>Latency Optimization</li>
+         </ul>
       </div>
-      <h3>Infrastructure & Distributed Networks</h3>
-      <p>
-        The modern internet is powered by distributed server clusters, content delivery networks,
-        and edge computing nodes that maintain global synchronization. Understanding these systems
-        is key to building scalable applications.
-      </p>
-      <p>
-        Tyagi Core visualizes CDN logic, load balancing algorithms, request routing, and latency optimization.
-        Instead of guessing performance improvements, we engineer them.
-      </p>
-      <ul>
-        <li>CDN & Edge Systems</li>
-        <li>Distributed Topology</li>
-        <li>Latency Optimization</li>
-      </ul>
-    </div>
-
-  </div>
-
+   </div>
 </div>
