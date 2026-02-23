@@ -693,24 +693,29 @@ svg {
   to { opacity: 1; }
 }
 
-
-
-
- .theme-wheel {
-  position: fixed;
-  bottom: 80px;
-  right: 30px;
- 
- 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
+/* 1. MOBILE DEFAULT (Sabse pehle mobile ke liye) */
+.theme-wheel {
+    position: fixed;
+    bottom: 80px;      /* Mobile mein neeche */
+    right: 30px;
+    top: auto;         /* Ye zaroori hai taaki desktop wali top hat jaye */
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 2. DESKTOP/LAPTOP (Screen 768px se upar ho tab) */
+@media screen and (min-width: 768px) {
+    .theme-wheel {
+        top: 30px;     /* Desktop mein upar */
+        bottom: auto;  /* Mobile wali bottom ko cancel karne ke liye */
+        right: 30px;   /* Right side wahi rahegi */
+    }
+}
 .wheel-icon-wrap {
   position: relative;
   width: 100%;
