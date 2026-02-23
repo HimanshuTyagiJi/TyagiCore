@@ -194,7 +194,9 @@ svg.tyagi-progress-svg {border-radius:50%}
 @media screen and (min-width: 768px) { .theme-wheel { top: 30px; bottom: auto; right: 30px; } }
 @media (max-width: 650px) { .post-nav-container { flex-direction: column; } .post-nav-link { width: 100%; } .next { text-align: left; } }
 @media (max-width: 600px) { .logo span { font-size: 1.2rem; } .logo img { height: 35px; } }
-@media (min-width: 901px) { .tc-wrapper { display: flex; gap: 40px; align-items: flex-start; } .post-content-area { flex: 3; height: 100vh; overflow-y: scroll; scrollbar-width: none; } .tc-sidebar { flex: 1; height: 100vh; overflow-y: scroll; scrollbar-width: none; } .post-content-area::-webkit-scrollbar, .tc-sidebar::-webkit-scrollbar { display: none; } }
+@media (min-width: 901px) { .tc-wrapper { display: flex; gap: 40px; align-items: flex-start; }
+                           .post-content-area { flex: 3; height: 100vh; overflow-y: scroll; scrollbar-width: none; } 
+                           .tc-sidebar {  height: 100vh; overflow-y: scroll; scrollbar-width: none; } .post-content-area::-webkit-scrollbar, .tc-sidebar::-webkit-scrollbar { display: none; } }
 
 
 /* Container Main */
