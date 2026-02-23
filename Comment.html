@@ -1,234 +1,754 @@
+<!-- ============================================================
+     TYAGICORE — COMMENT SYSTEM  |  HTML + CSS + JS
+     Dark/Light Toggle | Google Login | Play Store Rating
+     Real-time Sync | Admin Controls | SEO Schema
+     No External Links except Google GSI (required for login)
+     ============================================================ -->
+
 <script type="application/ld+json" id="tc-seo-schema"></script>
 
-<div id="tyagi-feedback-system" class="tc-container">
-    <div class="tc-header">
-        <div class="tc-header-left">
-            <h2>Community Reviews</h2>
-            <div id="rating-summary" class="tc-avg">⭐ Loading...</div>
+<div id="tc-root">
+
+  <!-- ── HEADER ── -->
+  <div class="tc-header">
+    <div class="tc-header-left">
+      <div class="tc-title-row">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <h2>Community Reviews</h2>
+      </div>
+      <div id="tc-avg-display" class="tc-avg">⭐ Loading...</div>
+    </div>
+    <div class="tc-header-right">
+      <div class="tc-privacy-badge">🔒 Identity Encrypted</div>
+      <button class="tc-theme-btn" onclick="toggleTheme()" title="Toggle Theme">
+        <span id="tc-theme-icon">🌙</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── RATING WIDGET ── -->
+  <div class="tc-rating-widget">
+    <p class="tc-rate-label">Rate your experience</p>
+    <div class="tc-stars-row" id="tc-star-row">
+      <span class="tc-star" data-val="1" onclick="handleStar(1)" onmouseover="hoverStar(1)" onmouseout="resetStar()">★</span>
+      <span class="tc-star" data-val="2" onclick="handleStar(2)" onmouseover="hoverStar(2)" onmouseout="resetStar()">★</span>
+      <span class="tc-star" data-val="3" onclick="handleStar(3)" onmouseover="hoverStar(3)" onmouseout="resetStar()">★</span>
+      <span class="tc-star" data-val="4" onclick="handleStar(4)" onmouseover="hoverStar(4)" onmouseout="resetStar()">★</span>
+      <span class="tc-star" data-val="5" onclick="handleStar(5)" onmouseover="hoverStar(5)" onmouseout="resetStar()">★</span>
+    </div>
+    <p id="tc-rate-msg" class="tc-rate-msg"></p>
+  </div>
+
+  <!-- ── LOGIN PANEL ── -->
+  <div id="tc-login-panel" class="tc-login-panel">
+    <div class="tc-login-icon">👤</div>
+    <p>Login with Google to join the discussion</p>
+    <div id="g_id_onload"
+         data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
+         data-callback="onGoogleAuth"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <!-- ── EDITOR PANEL ── -->
+  <div id="tc-editor-panel" class="tc-editor-panel" style="display:none">
+    <div class="tc-user-bar">
+      <div class="tc-user-info">
+        <img id="tc-user-pic" src="" alt="Profile" class="tc-avatar">
+        <div>
+          <div class="tc-user-name" id="tc-user-name"></div>
+          <div class="tc-user-tag">✅ Verified TyagiCore User</div>
         </div>
-        <div class="tc-privacy">🔒 Identity Encrypted</div>
+      </div>
+      <button onclick="tcLogout()" class="tc-signout-btn">Sign Out</button>
     </div>
 
-    <div id="rating-widget" class="tc-rating-box">
-        <p>Tap to rate your experience</p>
-        <div id="star-row" class="tc-stars">
-            <span onclick="handleStarClick(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()">★</span>
-            <span onclick="handleStarClick(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()">★</span>
-        </div>
-        <p id="rating-msg" class="tc-status-msg"></p>
+    <div id="tc-reply-banner" class="tc-reply-banner" style="display:none">
+      <span id="tc-reply-label">Replying to comment...</span>
+      <button onclick="cancelReply()" class="tc-cancel-reply">✕ Cancel</button>
     </div>
 
-    <div id="login-panel" class="tc-auth">
-        <p>Login with Google to post comments</p>
-        <div id="g_id_onload" 
-             data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" 
-             data-callback="onGoogleAuth"></div>
-        <div class="g_id_signin" data-type="standard"></div>
+    <div class="tc-textarea-wrap">
+      <textarea id="tc-comment-input" placeholder="Share your thoughts with the community..." maxlength="1000"></textarea>
+      <div class="tc-char-count"><span id="tc-char-num">0</span>/1000</div>
     </div>
 
-    <div id="editor-panel" style="display:none;" class="tc-editor">
-        <div class="tc-user-bar">
-            <img id="user-pfp" src="" alt="Profile">
-            <div>
-                <strong id="user-name"></strong>
-                <small>Verified TyagiCore User</small>
-            </div>
-            <button onclick="logout()" class="tc-logout-btn">Sign Out</button>
-        </div>
-        <form onsubmit="submitComment(event)">
-            <input type="hidden" id="reply-to" value="0">
-            <textarea id="comment-input" placeholder="Share your thoughts..." required></textarea>
-            <div id="reply-banner" style="display:none" class="tc-reply-banner">
-                Replying... <span onclick="cancelReply()">Cancel</span>
-            </div>
-            <button type="submit" id="post-btn" class="tc-submit-btn">Post Comment</button>
-        </form>
+    <div class="tc-editor-footer">
+      <div class="tc-editor-hint">💡 Be respectful and constructive</div>
+      <button id="tc-post-btn" onclick="submitComment()" class="tc-post-btn">
+        <span id="tc-post-label">Post Comment</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
     </div>
+  </div>
 
-    <div id="feed-container" class="tc-feed">
-        <div class="tc-loading">🔄 Syncing discussion...</div>
+  <!-- ── FEED ── -->
+  <div class="tc-feed-header">
+    <span id="tc-comment-count">0 Comments</span>
+    <div class="tc-sync-dot" id="tc-sync-dot" title="Live sync active"></div>
+  </div>
+  <div id="tc-feed" class="tc-feed">
+    <div class="tc-loading">
+      <div class="tc-spinner"></div>
+      <span>Syncing discussion...</span>
     </div>
+  </div>
+
 </div>
 
+<!-- ============================================================
+     STYLES
+     ============================================================ -->
 <style>
-/* CSS: Dark/Light Mode Compatible */
-.tc-container { max-width: 800px; margin: 20px auto; background: var(--bg-card, #fff); padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); font-family: sans-serif; }
-.tc-header { display: flex; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 15px; }
-.tc-avg { color: #f4b400; font-weight: bold; font-size: 1.2rem; }
-.tc-privacy { font-size: 12px; color: #137333; background: #e6f4ea; padding: 5px 12px; border-radius: 20px; height: fit-content; }
-.tc-rating-box { text-align: center; background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0; border: 1px solid #e8eaed; }
-.tc-stars { font-size: 35px; color: #dadce0; cursor: pointer; }
-.tc-auth { padding: 40px; border: 2px dashed #dadce0; border-radius: 12px; text-align: center; }
-.tc-editor { border: 1px solid #dadce0; padding: 20px; border-radius: 12px; }
-.tc-user-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-#user-pfp { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #1a73e8; }
-#comment-input { width: 100%; height: 100px; border-radius: 8px; border: 1px solid #dadce0; padding: 12px; resize: none; outline: none; box-sizing: border-box; }
-.tc-submit-btn { background: #1a73e8; color: #fff; border: none; padding: 12px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-.tc-card { padding: 15px; border-bottom: 1px solid #f1f3f4; transition: background 0.3s; }
-.tc-card.reply { margin-left: 45px; border-left: 3px solid #f1f3f4; background: #fafafa; }
-.tc-admin { background: #1a73e8; color: #fff; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
-.tc-del { color: #d93025 !important; font-weight: bold; }
-.tc-status-msg { font-size: 13px; color: #1a73e8; }
+/* ── CSS Variables ── */
+#tc-root {
+  --tc-bg:        #ffffff;
+  --tc-bg2:       #f8f9fa;
+  --tc-bg3:       #f1f3f4;
+  --tc-border:    #e8eaed;
+  --tc-text:      #1a1a2e;
+  --tc-text2:     #5f6368;
+  --tc-accent:    #1a73e8;
+  --tc-accent2:   #0d47a1;
+  --tc-star:      #f4b400;
+  --tc-admin-bg:  #1a73e8;
+  --tc-admin-col: #ffffff;
+  --tc-del:       #d93025;
+  --tc-green:     #137333;
+  --tc-green-bg:  #e6f4ea;
+  --tc-reply-bg:  #f8f9ff;
+  --tc-reply-bdr: #c5cae9;
+  --tc-shadow:    0 4px 24px rgba(0,0,0,0.08);
+  --tc-radius:    16px;
+  --tc-card-r:    12px;
+  --tc-font:      'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+#tc-root.tc-dark {
+  --tc-bg:        #0f0f1a;
+  --tc-bg2:       #1a1a2e;
+  --tc-bg3:       #16213e;
+  --tc-border:    #2a2a4a;
+  --tc-text:      #e8e6f0;
+  --tc-text2:     #9e9ec0;
+  --tc-accent:    #6c8fff;
+  --tc-accent2:   #4d6fff;
+  --tc-admin-bg:  #6c8fff;
+  --tc-green:     #4caf7d;
+  --tc-green-bg:  #0d2b1a;
+  --tc-reply-bg:  #13132a;
+  --tc-reply-bdr: #3a3a6a;
+  --tc-shadow:    0 4px 24px rgba(0,0,0,0.4);
+}
+
+/* ── Reset & Base ── */
+#tc-root *, #tc-root *::before, #tc-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#tc-root {
+  max-width: 780px;
+  margin: 32px auto;
+  font-family: var(--tc-font);
+  color: var(--tc-text);
+  background: var(--tc-bg);
+  border-radius: var(--tc-radius);
+  box-shadow: var(--tc-shadow);
+  border: 1px solid var(--tc-border);
+  overflow: hidden;
+  transition: background .3s, color .3s, border-color .3s;
+}
+
+/* ── Header ── */
+.tc-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--tc-border);
+  background: var(--tc-bg);
+}
+.tc-title-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; color: var(--tc-text); }
+.tc-title-row h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.3px; }
+.tc-avg { color: var(--tc-star); font-weight: 700; font-size: 1.05rem; }
+.tc-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.tc-privacy-badge {
+  font-size: 11px; color: var(--tc-green);
+  background: var(--tc-green-bg);
+  padding: 5px 12px; border-radius: 20px;
+  font-weight: 600; border: 1px solid var(--tc-green);
+  white-space: nowrap;
+}
+.tc-theme-btn {
+  background: var(--tc-bg3); border: 1px solid var(--tc-border);
+  border-radius: 50%; width: 36px; height: 36px;
+  cursor: pointer; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; flex-shrink: 0;
+}
+.tc-theme-btn:hover { transform: scale(1.1); border-color: var(--tc-accent); }
+
+/* ── Rating Widget ── */
+.tc-rating-widget {
+  padding: 20px 28px;
+  background: var(--tc-bg2);
+  border-bottom: 1px solid var(--tc-border);
+  text-align: center;
+}
+.tc-rate-label { font-size: .85rem; color: var(--tc-text2); margin-bottom: 12px; font-weight: 500; }
+.tc-stars-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+.tc-star {
+  font-size: 38px; color: var(--tc-border);
+  cursor: pointer; transition: color .15s, transform .15s;
+  line-height: 1; user-select: none;
+}
+.tc-star.active, .tc-star.hover { color: var(--tc-star); transform: scale(1.15); }
+.tc-rate-msg { font-size: .82rem; color: var(--tc-accent); min-height: 18px; font-weight: 500; }
+
+/* ── Login Panel ── */
+.tc-login-panel {
+  padding: 36px 28px;
+  text-align: center;
+  border-bottom: 1px solid var(--tc-border);
+  background: var(--tc-bg);
+}
+.tc-login-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.tc-login-panel p { color: var(--tc-text2); margin-bottom: 20px; font-size: .9rem; }
+
+/* ── Editor Panel ── */
+.tc-editor-panel {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--tc-border);
+  background: var(--tc-bg);
+}
+.tc-user-bar {
+  display: flex; align-items: center;
+  justify-content: space-between; margin-bottom: 16px;
+}
+.tc-user-info { display: flex; align-items: center; gap: 12px; }
+.tc-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid var(--tc-accent); object-fit: cover;
+}
+.tc-user-name { font-weight: 700; font-size: .95rem; color: var(--tc-text); }
+.tc-user-tag { font-size: .72rem; color: var(--tc-green); font-weight: 600; margin-top: 2px; }
+.tc-signout-btn {
+  background: none; border: 1px solid var(--tc-border);
+  color: var(--tc-text2); border-radius: 20px;
+  padding: 6px 14px; font-size: .78rem; cursor: pointer;
+  transition: all .2s; font-family: var(--tc-font);
+}
+.tc-signout-btn:hover { border-color: var(--tc-del); color: var(--tc-del); }
+
+.tc-reply-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--tc-bg3); border: 1px solid var(--tc-accent);
+  border-radius: 8px; padding: 8px 14px; margin-bottom: 10px;
+  font-size: .83rem; color: var(--tc-accent);
+}
+.tc-cancel-reply {
+  background: none; border: none; color: var(--tc-del);
+  cursor: pointer; font-size: .82rem; font-weight: 700;
+  font-family: var(--tc-font); padding: 0;
+}
+
+.tc-textarea-wrap { position: relative; }
+#tc-comment-input {
+  width: 100%; height: 110px; border-radius: 10px;
+  border: 1.5px solid var(--tc-border);
+  background: var(--tc-bg2); color: var(--tc-text);
+  padding: 14px 16px; font-size: .9rem; resize: none;
+  outline: none; transition: border-color .2s;
+  font-family: var(--tc-font); line-height: 1.6;
+}
+#tc-comment-input:focus { border-color: var(--tc-accent); }
+#tc-comment-input::placeholder { color: var(--tc-text2); }
+.tc-char-count {
+  position: absolute; bottom: 10px; right: 12px;
+  font-size: .72rem; color: var(--tc-text2);
+}
+.tc-editor-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px;
+}
+.tc-editor-hint { font-size: .75rem; color: var(--tc-text2); }
+.tc-post-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--tc-accent); color: #fff;
+  border: none; border-radius: 24px; padding: 10px 22px;
+  font-size: .88rem; font-weight: 700; cursor: pointer;
+  font-family: var(--tc-font); transition: all .2s;
+  box-shadow: 0 2px 8px rgba(26,115,232,.3);
+}
+.tc-post-btn:hover { background: var(--tc-accent2); transform: translateY(-1px); }
+.tc-post-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* ── Feed Header ── */
+.tc-feed-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 28px 10px;
+  font-size: .82rem; font-weight: 700; color: var(--tc-text2);
+  background: var(--tc-bg);
+}
+.tc-sync-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #34a853;
+  box-shadow: 0 0 0 0 rgba(52,168,83,.4);
+  animation: tc-pulse 2s infinite;
+}
+@keyframes tc-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(52,168,83,.4); }
+  70%  { box-shadow: 0 0 0 8px rgba(52,168,83,0); }
+  100% { box-shadow: 0 0 0 0 rgba(52,168,83,0); }
+}
+
+/* ── Feed ── */
+.tc-feed { padding: 0 28px 24px; background: var(--tc-bg); }
+.tc-loading {
+  display: flex; align-items: center; gap: 12px;
+  padding: 40px 0; justify-content: center;
+  color: var(--tc-text2); font-size: .9rem;
+}
+.tc-spinner {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--tc-border);
+  border-top-color: var(--tc-accent);
+  animation: tc-spin .7s linear infinite; flex-shrink: 0;
+}
+@keyframes tc-spin { to { transform: rotate(360deg); } }
+
+/* ── Comment Card ── */
+.tc-card {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--tc-border);
+  animation: tcFadeIn .3s ease;
+  transition: background .2s;
+}
+.tc-card:last-child { border-bottom: none; }
+@keyframes tcFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tc-card.tc-reply {
+  margin-left: 52px;
+  padding: 14px 16px;
+  background: var(--tc-reply-bg);
+  border-left: 3px solid var(--tc-reply-bdr);
+  border-radius: 0 10px 10px 0;
+  border-bottom: 1px solid var(--tc-border);
+  margin-top: 6px;
+}
+
+.tc-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.tc-card-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--tc-border); flex-shrink: 0; }
+.tc-card-meta { flex: 1; min-width: 0; }
+.tc-card-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tc-card-name { font-weight: 700; font-size: .9rem; color: var(--tc-text); }
+.tc-admin-badge {
+  background: var(--tc-admin-bg); color: var(--tc-admin-col);
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  font-weight: 700; letter-spacing: .3px;
+}
+.tc-verified-badge {
+  color: var(--tc-green); font-size: 11px; font-weight: 600;
+}
+.tc-card-user-stars { color: var(--tc-star); font-size: 11px; }
+.tc-card-date { font-size: .72rem; color: var(--tc-text2); margin-top: 2px; }
+
+.tc-card-body {
+  font-size: .9rem; color: var(--tc-text);
+  line-height: 1.65; margin-left: 46px;
+  word-break: break-word;
+}
+.tc-card.tc-reply .tc-card-body { margin-left: 0; }
+
+.tc-card-actions {
+  display: flex; align-items: center; gap: 14px;
+  margin-top: 10px; margin-left: 46px;
+}
+.tc-card.tc-reply .tc-card-actions { margin-left: 0; }
+.tc-action-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: .78rem; font-weight: 600; font-family: var(--tc-font);
+  display: flex; align-items: center; gap: 4px; padding: 4px 8px;
+  border-radius: 6px; transition: background .2s, color .2s;
+  color: var(--tc-text2);
+}
+.tc-action-btn:hover { background: var(--tc-bg3); color: var(--tc-accent); }
+.tc-del-btn { color: var(--tc-del) !important; }
+.tc-del-btn:hover { background: rgba(217,48,37,.08) !important; color: var(--tc-del) !important; }
+
+/* ── Empty State ── */
+.tc-empty {
+  text-align: center; padding: 48px 20px;
+  color: var(--tc-text2);
+}
+.tc-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.tc-empty p { font-size: .88rem; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  #tc-root { margin: 0; border-radius: 0; border-left: none; border-right: none; }
+  .tc-header, .tc-rating-widget, .tc-login-panel, .tc-editor-panel, .tc-feed { padding-left: 16px; padding-right: 16px; }
+  .tc-feed-header { padding-left: 16px; }
+  .tc-card.tc-reply { margin-left: 24px; }
+  .tc-card-body, .tc-card-actions { margin-left: 32px; }
+  .tc-stars-row .tc-star { font-size: 32px; }
+  .tc-title-row h2 { font-size: 1.05rem; }
+}
 </style>
 
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzeeUBWEaqml-WGhVy4eqSyhrSYjhknaClxxPvs3apOd6ktPLVUPoH39XEyMQKyD1Or/exec";
-const ADMIN_EMAIL = "officialhimanshutyagi@gmail.com";
-let currentUser = JSON.parse(localStorage.getItem("app_user")) || null;
-let selectedRating = 0;
-let lastSyncCount = 0;
+(function() {
+  // ── Config ──────────────────────────────────────────────────
+  const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbxjQjF_r0U5VOr3ASm5F8w_wWlab2gbMA-EktN74L_0LwGkxZ9YIkqw9Fw7rt2DQJLR/exec";
+  const ADMIN_EMAIL = "officialhimanshutyagi@gmail.com";
+  const SYNC_MS     = 1500;   // 1.5 second sync
+  const PAGE_URL    = window.location.pathname;
+  const RATE_KEY    = "tc_rate_" + PAGE_URL;
+  const USER_KEY    = "tc_user";
+  const THEME_KEY   = "tc_theme";
 
-// Initialize
-window.onload = () => {
-    if(currentUser) showEditor();
-    const prevRate = localStorage.getItem("rate_" + window.location.pathname);
-    if(prevRate) { selectedRating = prevRate; applyStarLock(prevRate); }
-    sync();
-    setInterval(sync, 1500); // 1.5s fast sync
-    if ("Notification" in window) Notification.requestPermission();
-};
+  // ── State ────────────────────────────────────────────────────
+  let currentUser    = null;
+  let selectedRating = 0;
+  let replyToId      = "0";
+  let lastCommentIds = new Set();
+  let syncTimer      = null;
+  let isDark         = false;
 
-function onGoogleAuth(res) {
-    const data = JSON.parse(atob(res.credential.split('.')[1]));
-    currentUser = { n: data.name, e: data.email, p: data.picture };
-    localStorage.setItem("app_user", JSON.stringify(currentUser));
-    showEditor();
-    sync();
-}
+  // ── Init ─────────────────────────────────────────────────────
+  function init() {
+    // Restore theme
+    isDark = localStorage.getItem(THEME_KEY) === "dark";
+    applyTheme();
 
-function showEditor() {
-    document.getElementById("login-panel").style.display = "none";
-    document.getElementById("editor-panel").style.display = "block";
-    document.getElementById("user-name").innerText = currentUser.n;
-    document.getElementById("user-pfp").src = currentUser.p;
-}
-
-function logout() { localStorage.removeItem("app_user"); location.reload(); }
-
-// Rating Logic
-function hoverStars(n) { updateStarsUI(n, "#f4b400"); }
-function resetStars() { updateStarsUI(selectedRating, "#f4b400"); }
-function applyStarLock(n) { 
-    updateStarsUI(n, "#f4b400"); 
-    document.getElementById("rating-msg").innerText = "You rated this " + n + " stars (Play Store Mode)"; 
-}
-function updateStarsUI(n, color) {
-    const s = document.querySelectorAll("#star-row span");
-    s.forEach((el, i) => el.style.color = i < n ? color : "#dadce0");
-}
-
-function handleStarClick(n) {
-    if(!currentUser) return alert("Please login to rate!");
-    selectedRating = n;
-    localStorage.setItem("rate_" + window.location.pathname, n);
-    applyStarLock(n);
-    submitComment(null, true);
-}
-
-// Submission
-async function submitComment(e, isRateOnly = false) {
-    if(e) e.preventDefault();
-    const btn = document.getElementById("post-btn");
-    const txt = isRateOnly ? "Gave a rating" : document.getElementById("comment-input").value;
-    
-    btn.disabled = true;
-    const payload = {
-        url: window.location.pathname,
-        name: currentUser.n,
-        email: currentUser.e,
-        comment: txt,
-        parentId: document.getElementById("reply-to").value || "0",
-        pic: currentUser.p,
-        rating: selectedRating
-    };
-
-    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload), mode: 'no-cors' });
-    if(!isRateOnly) { document.getElementById("comment-input").value = ""; cancelReply(); }
-    setTimeout(sync, 1000);
-    btn.disabled = false;
-}
-
-// Sync & Render
-async function sync() {
+    // Restore user session
     try {
-        const res = await fetch(`${SCRIPT_URL}?url=${window.location.pathname}`);
-        const data = await res.json();
-        
-        // Notifications (Live only)
-        if(data.comments.length > lastSyncCount && lastSyncCount !== 0) {
-            const newest = data.comments[data.comments.length - 1];
-            if (Notification.permission === "granted") {
-                new Notification(`TyagiCore: ${newest.name}`, { body: newest.comment, icon: newest.pic });
-            }
-        }
-        lastSyncCount = data.comments.length;
+      const saved = localStorage.getItem(USER_KEY);
+      if (saved) { currentUser = JSON.parse(saved); showEditor(); }
+    } catch(e) {}
 
-        // SEO & Summary
-        document.getElementById("rating-summary").innerText = `⭐ ${data.avgRating}/5 (${data.totalVotes} reviews)`;
-        updateSEOSchema(data.avgRating, data.totalVotes);
+    // Restore rating
+    const savedRate = localStorage.getItem(RATE_KEY);
+    if (savedRate) { selectedRating = parseInt(savedRate); lockStars(selectedRating); }
 
-        const box = document.getElementById("feed-container");
-        box.innerHTML = "";
-        
-        const mains = data.comments.filter(c => c.parentId == "0").reverse();
-        mains.forEach(m => {
-            box.innerHTML += renderCard(m, false);
-            data.comments.filter(r => r.parentId == m.rowId).forEach(rep => {
-                box.innerHTML += renderCard(rep, true);
-            });
+    // Textarea char count
+    const ta = document.getElementById("tc-comment-input");
+    if (ta) {
+      ta.addEventListener("input", () => {
+        document.getElementById("tc-char-num").textContent = ta.value.length;
+      });
+    }
+
+    // Notification permission
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+
+    // Start sync
+    sync();
+    syncTimer = setInterval(sync, SYNC_MS);
+  }
+
+  // ── Theme ────────────────────────────────────────────────────
+  window.toggleTheme = function() {
+    isDark = !isDark;
+    localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+    applyTheme();
+  };
+  function applyTheme() {
+    const root = document.getElementById("tc-root");
+    if (isDark) root.classList.add("tc-dark");
+    else        root.classList.remove("tc-dark");
+    document.getElementById("tc-theme-icon").textContent = isDark ? "☀️" : "🌙";
+  }
+
+  // ── Google Auth ──────────────────────────────────────────────
+  window.onGoogleAuth = function(response) {
+    try {
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      currentUser = { n: payload.name, e: payload.email, p: payload.picture };
+      localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+      showEditor();
+      sync();
+    } catch(err) { console.error("Auth error:", err); }
+  };
+
+  function showEditor() {
+    document.getElementById("tc-login-panel").style.display = "none";
+    document.getElementById("tc-editor-panel").style.display = "block";
+    document.getElementById("tc-user-name").textContent = currentUser.n;
+    document.getElementById("tc-user-pic").src = currentUser.p;
+  }
+
+  window.tcLogout = function() {
+    localStorage.removeItem(USER_KEY);
+    currentUser = null;
+    location.reload();
+  };
+
+  // ── Star Rating ───────────────────────────────────────────────
+  window.hoverStar = function(n) {
+    if (selectedRating > 0) return; // Already rated — no hover change
+    paintStars(n, true);
+  };
+  window.resetStar = function() {
+    paintStars(selectedRating, false);
+  };
+  window.handleStar = function(n) {
+    if (!currentUser) { alert("Pehle Google se login karo!"); return; }
+    selectedRating = n;
+    localStorage.setItem(RATE_KEY, n);
+    lockStars(n);
+    postRating(n);
+  };
+
+  function paintStars(n, isHover) {
+    document.querySelectorAll(".tc-star").forEach((s, i) => {
+      s.classList.toggle("active", !isHover && i < n);
+      s.classList.toggle("hover", isHover && i < n);
+    });
+  }
+  function lockStars(n) {
+    paintStars(n, false);
+    const labels = ["", "Poor 😞", "Fair 😐", "Good 😊", "Great 😄", "Excellent 🤩"];
+    document.getElementById("tc-rate-msg").textContent =
+      "You rated " + n + "/5 — " + (labels[n] || "") + " (Play Store mode)";
+  }
+
+  async function postRating(n) {
+    if (!currentUser) return;
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          url: PAGE_URL, name: currentUser.n,
+          email: currentUser.e, pic: currentUser.p,
+          comment: "__RATING_ONLY__", parentId: "0", rating: n
+        }),
+        mode: "no-cors"
+      });
+    } catch(e) {}
+  }
+
+  // ── Submit Comment ────────────────────────────────────────────
+  window.submitComment = async function() {
+    if (!currentUser) { alert("Login karo pehle!"); return; }
+    const ta  = document.getElementById("tc-comment-input");
+    const txt = ta.value.trim();
+    if (!txt) { ta.focus(); return; }
+
+    const btn = document.getElementById("tc-post-btn");
+    const lbl = document.getElementById("tc-post-label");
+    btn.disabled = true; lbl.textContent = "Posting...";
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          url: PAGE_URL, name: currentUser.n,
+          email: currentUser.e, pic: currentUser.p,
+          comment: txt, parentId: replyToId,
+          rating: selectedRating
+        }),
+        mode: "no-cors"
+      });
+      ta.value = "";
+      document.getElementById("tc-char-num").textContent = "0";
+      cancelReply();
+      setTimeout(sync, 800);
+    } catch(e) { alert("Post nahi ho paya, dobara try karo."); }
+
+    btn.disabled = false; lbl.textContent = "Post Comment";
+  };
+
+  // ── Reply ─────────────────────────────────────────────────────
+  window.triggerReply = function(id, name) {
+    if (!currentUser) { alert("Login karo pehle!"); return; }
+    replyToId = id;
+    document.getElementById("tc-reply-banner").style.display = "flex";
+    document.getElementById("tc-reply-label").textContent = "Replying to " + name + "...";
+    document.getElementById("tc-comment-input").focus();
+  };
+  window.cancelReply = function() {
+    replyToId = "0";
+    document.getElementById("tc-reply-banner").style.display = "none";
+    document.getElementById("tc-reply-label").textContent = "";
+  };
+
+  // ── Delete ────────────────────────────────────────────────────
+  window.deleteComment = async function(id) {
+    if (!currentUser) return;
+    if (!confirm("Yeh comment aur iske replies delete ho jayenge. Sure?")) return;
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "delete", rowId: id, userEmail: currentUser.e }),
+        mode: "no-cors"
+      });
+      setTimeout(sync, 800);
+    } catch(e) {}
+  };
+
+  // ── Sync ──────────────────────────────────────────────────────
+  async function sync() {
+    try {
+      const res  = await fetch(SCRIPT_URL + "?url=" + encodeURIComponent(PAGE_URL));
+      const data = await res.json();
+
+      // SEO Schema update
+      updateSEO(data.avgRating, data.totalVotes);
+
+      // Rating summary
+      document.getElementById("tc-avg-display").innerHTML =
+        "⭐ " + data.avgRating + "/5 &nbsp;·&nbsp; " + data.totalVotes + " review" + (data.totalVotes !== 1 ? "s" : "");
+
+      // New comment notifications
+      const newIds = new Set(data.comments.map(c => c.rowId));
+      if (lastCommentIds.size > 0) {
+        data.comments.forEach(c => {
+          if (!lastCommentIds.has(c.rowId)) {
+            // New comment aya — notify karo
+            sendNotification(c);
+          }
         });
-    } catch(e) { console.log("Sync..."); }
-}
+      }
+      lastCommentIds = newIds;
 
-function renderCard(c, isRep) {
-    // Privacy: uMail contains only "admin" or "verified" for front-end safety
-    // True Email comparison happens on the backend during deletion
-    const isAdmin = c.isAdmin;
-    const canDelete = currentUser && (currentUser.e === ADMIN_EMAIL || (currentUser.n === c.name && !isRep));
-    const starStr = "★".repeat(c.rating);
+      // Render
+      renderFeed(data.comments);
+
+    } catch(e) { /* silent */ }
+  }
+
+  // ── Notification ──────────────────────────────────────────────
+  function sendNotification(c) {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+    // Admin ko sab ki notification
+    const isCurrentAdmin = currentUser && currentUser.e === ADMIN_EMAIL;
+    // User ko sirf apne reply ki notification
+    const isReplyToMe = currentUser && c.parentId !== "0";
+
+    if (isCurrentAdmin || isReplyToMe) {
+      try {
+        new Notification("💬 TyagiCore: " + c.name, {
+          body: c.comment.substring(0, 80) + (c.comment.length > 80 ? "..." : ""),
+          icon: c.pic || "",
+          badge: c.pic || "",
+          tag: c.rowId
+        });
+      } catch(e) {}
+    }
+  }
+
+  // ── Render Feed ───────────────────────────────────────────────
+  function renderFeed(comments) {
+    const feed = document.getElementById("tc-feed");
+    const mainComments = comments.filter(c => c.parentId == "0").reverse();
+
+    // Comment count (excluding rating-only — already filtered in .gs)
+    const total = comments.length;
+    document.getElementById("tc-comment-count").textContent =
+      total + " Comment" + (total !== 1 ? "s" : "");
+
+    if (total === 0) {
+      feed.innerHTML = `
+        <div class="tc-empty">
+          <div class="tc-empty-icon">💬</div>
+          <p>Pehle comment karne wale bano!</p>
+        </div>`;
+      return;
+    }
+
+    let html = "";
+    mainComments.forEach(m => {
+      html += renderCard(m, false);
+      // Replies
+      comments.filter(r => r.parentId == m.rowId).forEach(rep => {
+        html += renderCard(rep, true);
+      });
+    });
+    feed.innerHTML = html;
+  }
+
+  function renderCard(c, isReply) {
+    const isAdmin   = c.isAdmin;
+    const isOwner   = currentUser && currentUser.n === c.name;
+    const canDelete = currentUser && (currentUser.e === ADMIN_EMAIL || isOwner);
+    const starStr   = c.userRating > 0
+      ? '<span class="tc-card-user-stars">' + "★".repeat(c.userRating) + "☆".repeat(5 - c.userRating) + '</span>'
+      : "";
+
+    const escapedName = escHtml(c.name);
+    const escapedComment = escHtml(c.comment).replace(/\n/g, "<br>");
 
     return `
-        <div class="tc-card ${isRep ? 'reply' : ''}">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="${c.pic}" style="width:32px; height:32px; border-radius:50%;">
-                <strong>${c.name} ${isAdmin ? '<span class="tc-admin">Admin</span>' : ''}</strong>
-                <span style="color:#f4b400; font-size:12px;">${starStr}</span>
+      <div class="tc-card ${isReply ? "tc-reply" : ""}">
+        <div class="tc-card-top">
+          <img class="tc-card-avatar" src="${escHtml(c.pic)}" alt="${escapedName}" loading="lazy"
+               onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 rx=%2220%22 fill=%22%231a73e8%22/><text x=%2250%%22 y=%2255%%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 fill=%22white%22 font-size=%2216%22>${escapedName.charAt(0).toUpperCase()}</text></svg>'">
+          <div class="tc-card-meta">
+            <div class="tc-card-name-row">
+              <span class="tc-card-name">${escapedName}</span>
+              ${isAdmin ? '<span class="tc-admin-badge">Admin</span>' : '<span class="tc-verified-badge">✓ Verified</span>'}
+              ${starStr}
             </div>
-            <p style="margin:8px 0 8px 42px; color:#333;">${c.comment}</p>
-            <div style="margin-left:42px; display:flex; gap:15px; font-size:12px;">
-                <button onclick="triggerReply('${c.rowId}')" style="background:none; border:none; color:#1a73e8; cursor:pointer;">Reply</button>
-                ${canDelete ? `<button onclick="deleteMsg('${c.rowId}')" class="tc-del" style="background:none; border:none; cursor:pointer;">Delete</button>` : ""}
-                <span style="color:#999;">${c.date}</span>
-            </div>
+            <div class="tc-card-date">${escHtml(c.date)}</div>
+          </div>
         </div>
-    `;
-}
+        <div class="tc-card-body">${escapedComment}</div>
+        <div class="tc-card-actions">
+          ${!isReply ? `<button class="tc-action-btn" onclick="triggerReply('${c.rowId}', '${escapedName}')">↩ Reply</button>` : ""}
+          ${canDelete ? `<button class="tc-action-btn tc-del-btn" onclick="deleteComment('${c.rowId}')">🗑 Delete</button>` : ""}
+        </div>
+      </div>`;
+  }
 
-function updateSEOSchema(avg, count) {
+  // ── SEO Schema ────────────────────────────────────────────────
+  function updateSEO(avg, count) {
+    if (count < 1) return;
     const schema = {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": document.title,
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": avg, "ratingCount": count }
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": document.title,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": avg,
+        "ratingCount": count,
+        "bestRating": "5",
+        "worstRating": "1"
+      }
     };
-    document.getElementById("tc-seo-schema").innerHTML = JSON.stringify(schema);
-}
+    const el = document.getElementById("tc-seo-schema");
+    if (el) el.textContent = JSON.stringify(schema);
+  }
 
-function triggerReply(id) { 
-    if(!currentUser) return alert("Login to reply!");
-    document.getElementById("reply-to").value = id; 
-    document.getElementById("reply-banner").style.display = "block";
-    document.getElementById("comment-input").focus(); 
-}
-function cancelReply() { document.getElementById("reply-to").value = "0"; document.getElementById("reply-banner").style.display = "none"; }
+  // ── Helper ────────────────────────────────────────────────────
+  function escHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
 
-async function deleteMsg(id) {
-    if(!confirm("Bhai, delete kar du? Chain-replies bhi ud jayenge.")) return;
-    await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action:"delete", rowId:id, userEmail:currentUser.e}), mode: 'no-cors' });
-    setTimeout(sync, 1000);
-}
+  // ── Start ─────────────────────────────────────────────────────
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else { init(); }
+
+})();
 </script>
+
+<!-- Google Identity Services — Required for Google Login -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
