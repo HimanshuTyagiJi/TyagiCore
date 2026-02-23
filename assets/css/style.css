@@ -700,17 +700,15 @@ svg {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 60px;
-  height: 60px;
+ 
+ 
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 9999;
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  background: var(--card-bg);
-  border-radius: 50%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+
 }
 
 .wheel-icon-wrap {
