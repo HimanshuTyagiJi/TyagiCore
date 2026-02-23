@@ -255,14 +255,7 @@ layout: default
    </div>
 </div>
 <script>
-  if ('serviceWorker' in navigator) {
-    // GitHub Pages ke liye path hamesha root se start hota hai
-    navigator.serviceWorker.register('./sw.js')
-    .then(reg => {
-      console.log('TyagiCore SW Registered!');
-    })
-    .catch(err => {
-      console.log('SW Registration Failed!', err);
-    });
-  }
+
+  navigator.serviceWorker?.register('/sw.js');
+
 </script>
