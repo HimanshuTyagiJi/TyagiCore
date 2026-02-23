@@ -311,3 +311,21 @@ document.addEventListener("wheel", function(e) {
         }
     }
 }, { passive: false });
+
+
+
+document.getElementById('toc-toggle-btn').addEventListener('click', function() {
+    const list = document.getElementById('toc-list');
+    const btn = this;
+
+    if (list.classList.contains('expanded')) {
+        list.classList.remove('expanded');
+        btn.innerHTML = 'See More <i class="fas fa-chevron-down"></i>';
+        // Smooth scroll back to top of TOC if needed
+        document.getElementById('toc-box').scrollIntoView({ behavior: 'smooth' });
+    } else {
+        list.classList.add('expanded');
+        btn.innerHTML = 'See Less <i class="fas fa-chevron-up"></i>';
+        btn.style.background = "none"; // Khulne par shadow hata di
+    }
+});
