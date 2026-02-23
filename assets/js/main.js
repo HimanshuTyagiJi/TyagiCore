@@ -314,18 +314,23 @@ document.addEventListener("wheel", function(e) {
 
 
 
-document.getElementById('toc-toggle-btn').addEventListener('click', function() {
-    const list = document.getElementById('toc-list');
-    const btn = this;
+const tocBtn = document.getElementById('toc-toggle-btn');
 
-    if (list.classList.contains('expanded')) {
-        list.classList.remove('expanded');
-        btn.innerHTML = 'See More <i class="fas fa-chevron-down"></i>';
-        // Smooth scroll back to top of TOC if needed
-        document.getElementById('toc-box').scrollIntoView({ behavior: 'smooth' });
-    } else {
-        list.classList.add('expanded');
-        btn.innerHTML = 'See Less <i class="fas fa-chevron-up"></i>';
-        btn.style.background = "none"; // Khulne par shadow hata di
-    }
-});
+// Check karo ki kya button page par exist karta hai
+if (tocBtn) {
+    tocBtn.addEventListener('click', function() {
+        const list = document.getElementById('toc-list');
+        const btn = this;
+
+        if (list && list.classList.contains('expanded')) {
+            list.classList.remove('expanded');
+            btn.innerHTML = 'See More <i class="fas fa-chevron-down"></i>';
+            const tocBox = document.getElementById('toc-box');
+            if (tocBox) tocBox.scrollIntoView({ behavior: 'smooth' });
+        } else if (list) {
+            list.classList.add('expanded');
+            btn.innerHTML = 'See Less <i class="fas fa-chevron-up"></i>';
+            btn.style.background = "none";
+        }
+    });
+}
