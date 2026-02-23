@@ -61,6 +61,7 @@ body.dark-mode { background-color: var(--bg) !important; color: var(--text-color
 .btn-outline { border:2px solid #166534; color:white; }
 #reading-progress-container { position: fixed; top: 60px; left: 0; width: 100%; height: 2px; background: rgba(0, 0, 0, 0.1); z-index: 1001; }
 #reading-progress-bar { width: 0%; height: 100%; background: #005fff; box-shadow: 0 0 2px #166534; transition: width 0.2s ease-out; }
+svg { width: 100%; height: 100%; background:white; stroke-width: 1.5; }
 
 /* [6. LAYOUT & GRIDS] */
 .tc-wrapper { display:grid; grid-template-columns:3fr 1fr; gap:40px; padding:60px 5%; }
@@ -182,7 +183,7 @@ pre:hover .copy-btn { opacity: 1; }
 #tyagi-top-wrap.active-progress { opacity: 1; visibility: visible; transform: translateY(0); }
 .top-arrow-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #2c00ff; transition: 0.3s; }
 .tyagi-progress-svg path { fill: none; stroke: #effff5;; stroke-width: 6; stroke-linecap: round; box-sizing: border-box; transition: all 10ms linear; }
-svg { width: 100%; height: 100%; background:white; stroke-width: 1.5;border-radius: 50%; }
+svg.tyagi-progress-svg {border-radius:50%}
 #tyagi-top-wrap:hover .top-arrow-icon { transform: translate(-50%, -70%); color: #15803d; }
 
 #tyagi-top-wrap:hover { box-shadow: 0 6px 20px rgba(22, 101, 52, 0.3); }
