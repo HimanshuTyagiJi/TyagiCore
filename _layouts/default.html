@@ -213,8 +213,57 @@
   
 
   <aside class="tc-sidebar">
-  <div class="box">Popular Posts</div>
-   
+ <div class="box">Trending Now</div>
+  <div id="trending-container">
+    <p style="padding:10px; color:#999;">Loading trends...</p>
+  </div>
+   <script>document.addEventListener("DOMContentLoaded", function() {
+    const trendingContainer = document.getElementById('trending-container');
+    
+    if (typeof allPosts !== 'undefined' && trendingContainer) {
+        // 1. Current 6-hour block calculate karein (har 21600 seconds mein badlega)
+        const now = Math.floor(Date.now() / (1000 * 60 * 60 * 6)); 
+        
+        // 2. Posts ko shuffle karne ka logic (Seed based taaki sabko same dikhe)
+        let shuffled = [...allPosts].sort((a, b) => {
+            const hashA = a.title.length + now;
+            const hashB = b.title.length + now;
+            return Math.sin(hashA) - Math.sin(hashB);
+        });
+
+        // 3. Top 5 posts nikaalein
+        const trendingPosts = shuffled.slice(0, 5);
+
+        // 4. HTML Generate karein
+        let html = '<ul class="trending-list" style="list-style:none; padding:0; margin:0;">';
+        trendingPosts.forEach((post, index) => {
+            html += `
+                <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px; font-weight: 900; color: #e2e8f0;">0${index + 1}</span>
+                    <a href="${post.url}" style="text-decoration: none; color: var(--text-color); font-size: 14px; font-weight: 600; line-height: 1.4;">
+                        ${post.title}
+                    </a>
+                </li>`;
+        });
+        html += '</ul>';
+        
+        trendingContainer.innerHTML = html;
+    }
+});</script><style>#trending-container {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.trending-list li:hover a {
+    color: #1a73e8; /* Blue color on hover */
+    transition: 0.2s;
+}
+
+.trending-list span {
+    min-width: 30px;
+    font-family: 'Poppins', sans-serif;
+}</style>
 
 <h3>Our App</h3>
 <div class='tyagi-app-container'>
