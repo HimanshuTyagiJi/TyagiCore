@@ -104,14 +104,16 @@ window._tcInitFCM = async function() {
         method: "POST", mode: "no-cors",
         body: JSON.stringify({ action: "fcm_subscribe", fcmToken: token, email: storedUser.e, name: storedUser.n })
       });
-      console.log("FCM Subscribed ✅");
     }
   } catch(err) { console.log("FCM Error:", err); }
 
+  // Foreground notification — double prevent karo
   onMessage(messaging, function(payload) {
+    if (document.visibilityState === "hidden") return; // SW handle karega background mein
     new Notification(payload.notification.title, {
       body: payload.notification.body,
-      icon: "https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+      icon: "/favicon.ico",
+      tag : "tc-notif" // Same tag = double notification nahi aayegi
     });
   });
 };
@@ -119,14 +121,13 @@ window._tcInitFCM = async function() {
 
 <script>
 (function() {
-  const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbwq9QZ_5jQh_Qe4xOjGj-bzQmJvD34DRitCZkaFYy5ENFvJm2_2yzdXAkXfRZ6NJaLd/exec";
-  const ADMIN_EMAIL = "officialhimanshutyagi@gmail.com";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq9QZ_5jQh_Qe4xOjGj-bzQmJvD34DRitCZkaFYy5ENFvJm2_2yzdXAkXfRZ6NJaLd/exec";
 
   let user          = JSON.parse(localStorage.getItem("tc_user")) || null;
   let serverData    = [];
   let tempLocal     = [];
   let isTyping      = false;
-  let currentRating = 0;
+  let currentRating = 0; // Server se aayegi — localStorage nahi
 
   function init() {
     if (user) {
@@ -136,9 +137,7 @@ window._tcInitFCM = async function() {
       document.getElementById("tc-user-pfp").src = user.p;
       setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
-    var saved = localStorage.getItem("tc_rate_" + location.pathname);
-    if (saved) { currentRating = parseInt(saved); paintStars(currentRating); }
-    sync();
+    sync(); // Rating server se aayegi
     setInterval(function() { if (!isTyping) sync(); }, 5000);
   }
 
@@ -156,11 +155,16 @@ window._tcInitFCM = async function() {
   window.handleStar = function(n) {
     if (!user) return alert("Login required to rate!");
     currentRating = n;
-    localStorage.setItem("tc_rate_" + location.pathname, n);
     paintStars(n);
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }), mode: "no-cors" });
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body  : JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }),
+      mode  : "no-cors"
+    });
   };
-  function paintStars(n) { document.querySelectorAll(".tc-s").forEach(function(s, i) { s.classList.toggle("active", i < n); }); }
+  function paintStars(n) {
+    document.querySelectorAll(".tc-s").forEach(function(s, i) { s.classList.toggle("active", i < n); });
+  }
 
   window.handleAction = function(pid, mode, rowId) {
     mode  = mode  || "new";
@@ -172,7 +176,7 @@ window._tcInitFCM = async function() {
     if (!msg) return;
 
     if (mode === "new") {
-      tempLocal.push({ rowId: "temp_" + Date.now(), name: user.n, comment: msg, parentId: pid, pic: user.p, date: "Saving...", pending: true });
+      tempLocal.push({ rowId: "temp_" + Date.now(), name: user.n, comment: msg, parentId: pid, pic: user.p, date: "Saving...", pending: true, isAdmin: false });
     } else {
       var target = serverData.find(function(c) { return c.rowId == rowId; });
       if (target) { target.comment = msg; target.date = "Updating..."; }
@@ -193,13 +197,30 @@ window._tcInitFCM = async function() {
       var data = await r.json();
       serverData = data.comments;
       tempLocal  = [];
+
+      // Rating server se lo — login ke hisaab se
+      if (user && data.comments) {
+        var myComment = data.comments.find(function(c) { return c.email === user.e || c.userRating > 0; });
+        // userRating server se milta hai
+      }
+      // Apni rating dhundo server data mein
+      if (user) {
+        var myRating = 0;
+        data.comments.forEach(function(c) {
+          if (c.userEmail === user.e && c.userRating > 0) myRating = c.userRating;
+        });
+        // GS se userRating already aata hai apne email ke hisaab se
+        currentRating = data.myRating || 0;
+      }
+
       updateRatingUI(data.avgRating, data.totalVotes);
+      paintStars(currentRating);
       render();
     } catch(e) {}
   }
 
   function updateRatingUI(avg, total) {
-    document.getElementById("tc-avg-num").innerText    = avg;
+    document.getElementById("tc-avg-num").innerText     = avg;
     document.getElementById("tc-total-votes").innerText = total + " reviews";
     var stars   = "";
     var rounded = Math.round(parseFloat(avg));
@@ -215,8 +236,11 @@ window._tcInitFCM = async function() {
   }
 
   function renderCard(c, list) {
-    var isOwner = user && (user.e === ADMIN_EMAIL || user.e === c.email);
+    // Email HTML mein nahi — server se isAdmin aata hai
+    var isOwner = user && (c.isAdmin === false && user.e === c.email || c.isAdmin);
+    var canEdit = user && (user.e === c.email); // Sirf apna comment
     var starStr = c.userRating > 0 ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
+
     var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply" : "") + (c.pending ? " pending" : "") + '">'
       + '<div><img src="' + c.pic + '" class="tc-card-pfp">'
       + '<span style="font-weight:bold;font-size:14px;">' + c.name + '</span>'
@@ -226,8 +250,8 @@ window._tcInitFCM = async function() {
       + '<div style="margin:8px 0 0 42px;font-size:14px;color:#333;" id="body-' + c.rowId + '">' + c.comment + '</div>'
       + '<div class="tc-actions">'
       + '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</span>'
-      + (isOwner ? '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</span>' : '')
-      + (isOwner ? '<span style="color:#d93025" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</span>' : '')
+      + (canEdit ? '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</span>' : '')
+      + (canEdit ? '<span style="color:#d93025" onclick="deleteMsg(\'' + c.rowId + '\',\'' + (c.isAdmin ? '1' : '0') + '\')">Delete</span>' : '')
       + '</div>'
       + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div></div>';
 
@@ -258,7 +282,11 @@ window._tcInitFCM = async function() {
 
   window.deleteMsg = async function(id) {
     if (!confirm("Delete permanently?")) return;
-    await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      body  : JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }),
+      mode  : "no-cors"
+    });
     sync();
   };
 
