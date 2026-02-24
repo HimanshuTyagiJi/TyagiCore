@@ -29,7 +29,7 @@ messaging.onBackgroundMessage(function(payload) {
 
   return self.registration.showNotification(title, {
     body   : body,
-    icon   : "/favicon.ico",
+    icon   : "/assets/images/tyagi_core.png",
     tag    : "tc-notif-" + Date.now(), // Unique tag = no duplicate
     data   : { url: url },
     vibrate: [200, 100, 200]
