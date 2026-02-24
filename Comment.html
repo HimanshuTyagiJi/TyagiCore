@@ -37,11 +37,13 @@
   <div id="tc-main-editor" class="tc-editor-box">
     <textarea id="tc-input" placeholder="Join the discussion..."></textarea>
     <div style="text-align:right; margin-top:8px;">
-      <button onclick="handleAction('0')" class="tc-post-btn">Post Comment</button>
+      <button id="main-post-btn" onclick="handleAction('0')" class="tc-post-btn">Post Comment</button>
     </div>
   </div>
 
-  <div id="tc-feed" class="tc-feed"></div>
+  <div id="tc-feed" class="tc-feed">
+    <div style="padding:20px; text-align:center; color:#999;">Loading discussions...</div>
+  </div>
 </div>
 
 <style>
@@ -57,13 +59,14 @@
   .tc-u-name { font-size: 12px; font-weight: bold; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tc-logout-btn { border:none; background:none; color:#d93025; font-size:10px; cursor:pointer; font-weight:bold; }
   .tc-user-rate-box { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
-  .tc-stars-input { font-size: 28px; color: #ddd; cursor: pointer; }
+  .tc-stars-input { font-size: 28px; color: #ddd; cursor: pointer; user-select: none; }
   .tc-s.active { color: #f4b400; }
   .tc-editor-box { padding: 15px 20px; border-bottom: 1px solid #eee; }
-  textarea { width: 100%; height: 70px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; }
+  textarea { width: 100%; height: 70px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; resize: none; box-sizing: border-box; font-family: inherit; font-size: 14px; outline: none; transition: border 0.2s; }
   textarea:focus { border-color: #1a73e8; }
   .tc-post-btn { background: #1a73e8; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; }
+  .tc-post-btn:disabled { background: #ccc; cursor: not-allowed; }
+  .tc-card { padding: 15px 20px; border-bottom: 1px solid #f1f1f1; position: relative; }
   .tc-card.reply { margin-left: 45px; border-left: 2px solid #ddd; background: #fcfcfc; }
   .tc-card-pfp { width: 32px; height: 32px; border-radius: 50%; vertical-align: middle; margin-right: 10px; }
   .tc-admin-badge { background: #1a73e8; color: white; font-size: 9px; padding: 2px 5px; border-radius: 3px; margin-left: 5px; font-weight: bold; }
@@ -90,7 +93,7 @@
     const saved = localStorage.getItem("tc_rate_" + location.pathname);
     if (saved) { currentRating = parseInt(saved); paintStars(currentRating); }
     sync();
-    setInterval(() => { if (!isTyping) sync(); }, 5000);
+    setInterval(() => { if (!isTyping) sync(); }, 8000);
   }
 
   window.onGoogleAuth = function(res) {
@@ -105,71 +108,106 @@
   window.hoverStar = (n) => { if (!isTyping && currentRating === 0) paintStars(n); };
   window.resetStar = () => { paintStars(currentRating); };
   window.handleStar = (n) => {
-    if (!user) return alert("Login to rate!");
+    if (!user) return alert("Please Login to rate!");
     currentRating = n;
     localStorage.setItem("tc_rate_" + location.pathname, n);
     paintStars(n);
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }), mode: "no-cors" });
+    sendToScript({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" });
   };
 
-  function paintStars(n) { document.querySelectorAll(".tc-s").forEach((s, i) => { s.classList.toggle("active", i < n); }); }
+  function paintStars(n) { 
+    document.querySelectorAll(".tc-s").forEach((s, i) => { s.classList.toggle("active", i < n); }); 
+  }
 
-  window.handleAction = function(pid, mode, rowId) {
+  window.handleAction = async function(pid, mode, rowId) {
     if (!user) return alert("Please Login!");
+    const btn = event.target;
     const inputId = mode === "edit" ? "edit-in-" + rowId : (pid === "0" ? "tc-input" : "reply-in-" + pid);
     const inputEl = document.getElementById(inputId);
     const msg = inputEl.value.trim();
     if (!msg) return;
 
-    const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid, rating: currentRating };
+    btn.disabled = true;
+    btn.innerText = "Processing...";
+
+    const payload = { 
+      url: location.pathname, 
+      name: user.n, 
+      email: user.e, 
+      pic: user.p, 
+      comment: msg, 
+      parentId: pid, 
+      rating: currentRating 
+    };
     if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
     
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" });
+    await sendToScript(payload);
+    
     inputEl.value = "";
     isTyping = false;
-    setTimeout(sync, 1500);
+    btn.disabled = false;
+    btn.innerText = (mode === "edit") ? "Update" : "Post Comment";
+    if(mode !== "new" && document.getElementById("box-" + pid)) document.getElementById("box-" + pid).innerHTML = "";
+    
+    sync();
   };
+
+  async function sendToScript(payload) {
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      });
+    } catch(e) { console.error("Post Error", e); }
+  }
 
   async function sync() {
     try {
-      const r = await fetch(SCRIPT_URL + "?url=" + location.pathname);
+      const r = await fetch(SCRIPT_URL + "?url=" + encodeURIComponent(location.pathname));
       const data = await r.json();
-      serverData = data.comments;
-      updateRatingUI(data.avgRating, data.totalVotes);
+      serverData = data.comments || [];
+      updateRatingUI(data.avgRating || "0.0", data.totalVotes || 0);
       render();
-    } catch(e) {}
+    } catch(e) { console.error("Sync Error", e); }
   }
 
   function updateRatingUI(avg, total) {
     document.getElementById("tc-avg-num").innerText = avg;
     document.getElementById("tc-total-votes").innerText = total + " reviews";
-    var stars = "";
-    for (var i = 1; i <= 5; i++) stars += i <= Math.round(avg) ? "★" : "☆";
+    let stars = "";
+    for (let i = 1; i <= 5; i++) stars += i <= Math.round(parseFloat(avg)) ? "★" : "☆";
     document.getElementById("tc-avg-stars").innerText = stars;
   }
 
   function render() {
     const feed = document.getElementById("tc-feed");
+    if (serverData.length === 0) {
+      feed.innerHTML = '<div style="padding:20px; text-align:center; color:#999;">No comments yet. Be the first!</div>';
+      return;
+    }
     const mains = serverData.filter(c => c.parentId == "0").reverse();
     feed.innerHTML = mains.map(m => renderCard(m, serverData)).join("");
   }
 
   function renderCard(c, list) {
-    // Admin check GS se aa raha hai, aur ownership email se
     const isOwner = user && user.e === c.email;
     const canManage = c.isAdmin || isOwner;
+    const starStr = c.userRating > 0 ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
 
     let html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply" : "") + '">'
       + '<div><img src="' + c.pic + '" class="tc-card-pfp"><span style="font-weight:bold;font-size:14px;">' + c.name + '</span>'
       + (c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
-      + '<small style="float:right;color:#999;">' + c.date + '</small></div>'
-      + '<div style="margin:8px 0 0 42px;font-size:14px;color:#333;" id="body-' + c.rowId + '">' + c.comment + '</div>'
+      + starStr
+      + '<small style="float:right;color:#999;font-size:10px;">' + c.date + '</small></div>'
+      + '<div style="margin:8px 0 0 42px;font-size:14px;color:#333;line-height:1.4;" id="body-' + c.rowId + '">' + c.comment + '</div>'
       + '<div class="tc-actions"><span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</span>'
       + (canManage ? '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</span>' : '')
       + (canManage ? '<span style="color:#d93025" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</span>' : '')
       + '</div><div id="box-' + c.rowId + '" class="tc-inline-box"></div></div>';
     
-    list.filter(r => r.parentId == c.rowId).forEach(r => { html += renderCard(r, list); });
+    const replies = list.filter(r => r.parentId == c.rowId);
+    replies.forEach(r => { html += renderCard(r, list); });
     return html;
   }
 
@@ -190,11 +228,12 @@
         + '<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;">Cancel</button>'
         + '<button class="tc-post-btn" onclick="handleAction(\'0\',\'edit\',\'' + id + '\')">Update</button></div>';
     }
+    box.querySelector('textarea').focus();
   };
 
   window.deleteMsg = async (id) => {
     if (!confirm("Delete permanently?")) return;
-    await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
+    await sendToScript({ action: "delete", rowId: id, userEmail: user.e });
     sync();
   };
 
