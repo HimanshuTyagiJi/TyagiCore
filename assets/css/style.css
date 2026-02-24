@@ -202,7 +202,7 @@ svg.tyagi-progress-svg {border-radius:50%}
 
 /* Comment */
   #tc-root { max-width:800px; margin:20px auto; border:1px solid #ddd; border-radius:12px; background:var(--card-bg); font-family:sans-serif; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-  .tc-header { padding:15px 20px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:flex-start; background:var(--card-bg); }
+  .tc-header { padding:15px 20px; border-bottom:1px solid #eee;  justify-content:space-between; align-items:flex-start; background:var(--card-bg); }
   .tc-ps-rating { display:flex; align-items:center; gap:10px; margin-top:5px; }
   .tc-avg-big { font-size:32px; font-weight:bold; color:var(--text-color); }
   .tc-ps-stars-wrap { display:flex; flex-direction:column; }
