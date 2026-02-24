@@ -77,47 +77,48 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebas
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
 const firebaseConfig = {
-  apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
-  authDomain       : "appcomment.firebaseapp.com",
-  projectId        : "appcomment",
-  storageBucket    : "appcomment.firebasestorage.app",
+  apiKey: "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
+  authDomain: "appcomment.firebaseapp.com",
+  projectId: "appcomment",
+  storageBucket: "appcomment.firebasestorage.app",
   messagingSenderId: "156258808941",
-  appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
+  appId: "1:156258808941:web:04a1f7470ac43657c7fb64"
 };
 
-const VAPID_KEY  = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
+const VAPID_KEY = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPj-0DafHkGYbHyvsuB1DoL8OJDDP5hsq9oD29_2muavgDlJeX_PYENKjmX7q3j3ec/exec";
 
-const app       = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 window._tcInitFCM = async function() {
   const storedUser = JSON.parse(localStorage.getItem("tc_user"));
   if (!storedUser) return;
   try {
-    const sw   = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+    const sw = await navigator.serviceWorker.register('./sw.js', { scope: './' });
     const perm = await Notification.requestPermission();
     if (perm !== "granted") return;
     const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
     if (token) {
       fetch(SCRIPT_URL, {
-        method: "POST", mode: "no-cors",
+        method: "POST", 
+        mode: "no-cors",
         body: JSON.stringify({ action: "fcm_subscribe", fcmToken: token, email: storedUser.e, name: storedUser.n })
       });
     }
   } catch(err) { console.log("FCM Error:", err); }
+};
 
-  // Foreground notification — double prevent karo
- onMessage(messaging, function(payload) {
-  // Foreground mein bhi sirf ek notification
+onMessage(messaging, function(payload) {
   if (Notification.permission === "granted") {
     new Notification(
       payload.notification ? payload.notification.title : "TyagiCore",
       {
         body: payload.notification ? payload.notification.body : "",
         icon: "/favicon.ico",
-        tag : "tc-notif" // Same tag = purani replace ho jaayegi
-        });
+        tag : "tc-notif"
+      }
+    );
   }
 });
 </script>
