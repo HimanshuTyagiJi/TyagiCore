@@ -358,7 +358,7 @@ window._tcInitFCM = async function() {
       + (c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
       + starStr
       + '<small style="float:right;color:#999;">' + c.date + '</small></div>'
-      + '<div style="margin:8px 0 0 42px;font-size:14px;color:#333;" id="body-' + c.rowId + '">' + c.comment + '</div>'
+      + '<div style="margin:8px 0 0 42px;font-size:14px;color:var(--text-color);" id="body-' + c.rowId + '">' + c.comment + '</div>'
       + '<div class="tc-actions">'
       + '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</span>'
       + (canEdit ? '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</span>' : '')
