@@ -108,15 +108,19 @@ window._tcInitFCM = async function() {
   } catch(err) { console.log("FCM Error:", err); }
 
   // Foreground notification — double prevent karo
-  onMessage(messaging, function(payload) {
-    if (document.visibilityState === "hidden") return; // SW handle karega background mein
-    new Notification(payload.notification.title, {
-      body: payload.notification.body,
-      icon: "/favicon.ico",
-      tag : "tc-notif" // Same tag = double notification nahi aayegi
-    });
-  });
-};
+ onMessage(messaging, function(payload) {
+  // Foreground mein bhi sirf ek notification
+  if (Notification.permission === "granted") {
+    new Notification(
+      payload.notification ? payload.notification.title : "TyagiCore",
+      {
+        body: payload.notification ? payload.notification.body : "",
+        icon: "/favicon.ico",
+        tag : "tc-notif" // Same tag = purani replace ho jaayegi
+      }
+    );
+  }
+});
 </script>
 
 <script>
@@ -192,32 +196,24 @@ window._tcInitFCM = async function() {
   };
 
   async function sync() {
-    try {
-      var r    = await fetch(SCRIPT_URL + "?url=" + location.pathname);
-      var data = await r.json();
-      serverData = data.comments;
-      tempLocal  = [];
+  try {
+    var emailParam = user ? "&email=" + encodeURIComponent(user.e) : "";
+    var r    = await fetch(SCRIPT_URL + "?url=" + location.pathname + emailParam);
+    var data = await r.json();
+    serverData = data.comments;
+    tempLocal  = [];
 
-      // Rating server se lo — login ke hisaab se
-      if (user && data.comments) {
-        var myComment = data.comments.find(function(c) { return c.email === user.e || c.userRating > 0; });
-        // userRating server se milta hai
-      }
-      // Apni rating dhundo server data mein
-      if (user) {
-        var myRating = 0;
-        data.comments.forEach(function(c) {
-          if (c.userEmail === user.e && c.userRating > 0) myRating = c.userRating;
-        });
-        // GS se userRating already aata hai apne email ke hisaab se
-        currentRating = data.myRating || 0;
-      }
+    // Rating server se lo
+    if (user && data.myRating > 0) {
+      currentRating = data.myRating;
+    }
 
-      updateRatingUI(data.avgRating, data.totalVotes);
-      paintStars(currentRating);
-      render();
-    } catch(e) {}
-  }
+    updateRatingUI(data.avgRating, data.totalVotes);
+    paintStars(currentRating);
+    render();
+  } catch(e) {}
+}
+      
 
   function updateRatingUI(avg, total) {
     document.getElementById("tc-avg-num").innerText     = avg;
