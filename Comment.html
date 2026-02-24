@@ -72,74 +72,72 @@
   .tc-inline-box { margin: 10px 0 0 42px; }
 </style>
 
-<!-- Firebase FCM -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
 const firebaseConfig = {
-  apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
-  authDomain       : "appcomment.firebaseapp.com",
-  projectId        : "appcomment",
-  storageBucket    : "appcomment.firebasestorage.app",
+  apiKey: "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
+  authDomain: "appcomment.firebaseapp.com",
+  projectId: "appcomment",
+  storageBucket: "appcomment.firebasestorage.app",
   messagingSenderId: "156258808941",
-  appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
+  appId: "1:156258808941:web:04a1f7470ac43657c7fb64"
 };
 
-const VAPID_KEY  = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbye-nktMybJfbyYTMI2E2RXxPZdBkBCo91TvdW8923ztY683thSWZUojJplImlgiXcx/exec";
+const VAPID_KEY = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
+const SCRIPT_URL_NOTIF = "https://script.google.com/macros/s/AKfycbzwPLP1pA0eh7Eh5iAbxxAo7Q9OIiFAK1G9VvyS8FDMb198WMc5-eMAIkZBFYQzuaIPog/exec";
 
-const app       = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
 window._tcInitFCM = async function() {
-  const user = JSON.parse(localStorage.getItem("tc_user"));
-  if (!user) return;
+  const storedUser = JSON.parse(localStorage.getItem("tc_user"));
+  if (!storedUser) return;
   try {
-    const sw   = await navigator.serviceWorker.register("/sw.js");
+    // Register Service Worker with proper scope for GitHub Pages
+    const sw = await navigator.serviceWorker.register('./sw.js', { scope: './' });
     const perm = await Notification.requestPermission();
     if (perm !== "granted") return;
 
     const token = await getToken(messaging, {
-      vapidKey                 : VAPID_KEY,
+      vapidKey: VAPID_KEY,
       serviceWorkerRegistration: sw
     });
 
     if (token) {
-      fetch(SCRIPT_URL, {
+      fetch(SCRIPT_URL_NOTIF, {
         method: "POST",
-        mode  : "no-cors",
-        body  : JSON.stringify({
-          action  : "fcm_subscribe",
+        mode: "no-cors",
+        body: JSON.stringify({
+          action: "fcm_subscribe",
           fcmToken: token,
-          email   : user.e,
-          name    : user.n
+          email: storedUser.e,
+          name: storedUser.n
         })
       });
-      console.log("FCM token saved ✅");
+      console.log("FCM Subscribed ✅");
     }
-  } catch(err) { console.log("FCM error:", err); }
+  } catch(err) { console.log("FCM Registration Error:", err); }
 
-  // Foreground notification
-  onMessage(messaging, function(payload) {
-    if (Notification.permission === "granted") {
-      new Notification(payload.notification?.title || "TyagiCore", {
-        body: payload.notification?.body || "",
-        icon: "/favicon.ico"
-      });
-    }
+  onMessage(messaging, (payload) => {
+    new Notification(payload.notification.title, {
+      body: payload.notification.body,
+      icon: "https://cdn-icons-png.flaticon.com/512/1041/1041916.png"
+    });
   });
 };
 </script>
 
 <script>
 (function() {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-roa6v1Jf5Es4WPn8fpY8btDJWo1iw9LGXZ9Qfj7nCKW1QtscflCuFBdpY1qn7LCK0Q/exec";
+  // TERA NAYA GOOGLE SCRIPT URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwPLP1pA0eh7Eh5iAbxxAo7Q9OIiFAK1G9VvyS8FDMb198WMc5-eMAIkZBFYQzuaIPog/exec";
 
   let user = JSON.parse(localStorage.getItem("tc_user")) || null;
   let serverData = [];
-  let tempLocal  = [];
-  let isTyping   = false;
+  let tempLocal = [];
+  let isTyping = false;
   let currentRating = 0;
 
   function init() {
@@ -148,14 +146,13 @@ window._tcInitFCM = async function() {
       document.getElementById("tc-user-pill").style.display = "flex";
       document.getElementById("tc-user-name").innerText = user.n;
       document.getElementById("tc-user-pfp").src = user.p;
-      setTimeout(function() {
-        if (window._tcInitFCM) window._tcInitFCM();
-      }, 1000);
+      // Trigger FCM after Login
+      setTimeout(() => { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
     const saved = localStorage.getItem("tc_rate_" + location.pathname);
     if (saved) { currentRating = parseInt(saved); paintStars(currentRating); }
     sync();
-    setInterval(function() { if (!isTyping) sync(); }, 5000);
+    setInterval(() => { if (!isTyping) sync(); }, 5000);
   }
 
   window.onGoogleAuth = function(res) {
@@ -167,70 +164,69 @@ window._tcInitFCM = async function() {
 
   window.tcLogout = function() { localStorage.removeItem("tc_user"); location.reload(); };
 
-  window.hoverStar = function(n) { if (!isTyping && currentRating === 0) paintStars(n); };
-  window.resetStar = function() { paintStars(currentRating); };
-  window.handleStar = function(n) {
-    if (!user) return alert("Bhai, pehle Login karle tabhi rating de payega!");
+  window.hoverStar = (n) => { if (!isTyping && currentRating === 0) paintStars(n); };
+  window.resetStar = () => { paintStars(currentRating); };
+  window.handleStar = (n) => {
+    if (!user) return alert("Login required to rate!");
     currentRating = n;
     localStorage.setItem("tc_rate_" + location.pathname, n);
     paintStars(n);
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }), mode: "no-cors" });
   };
-  function paintStars(n) { document.querySelectorAll(".tc-s").forEach(function(s, i) { s.classList.toggle("active", i < n); }); }
+  function paintStars(n) { document.querySelectorAll(".tc-s").forEach((s, i) => { s.classList.toggle("active", i < n); }); }
 
   window.handleAction = function(pid, mode, rowId) {
     mode = mode || "new"; rowId = rowId || null;
-    if (!user) return alert("Please Login to continue!");
+    if (!user) return alert("Please Login!");
     const inputId = mode === "edit" ? "edit-in-" + rowId : (pid === "0" ? "tc-input" : "reply-in-" + pid);
     const inputEl = document.getElementById(inputId);
     const msg = inputEl.value.trim();
     if (!msg) return;
+
     if (mode === "new") {
       tempLocal.push({ rowId: "temp_" + Date.now(), name: user.n, comment: msg, parentId: pid, pic: user.p, date: "Saving...", pending: true });
-    } else {
-      const target = serverData.find(function(c) { return c.rowId == rowId; });
-      if (target) { target.comment = msg; target.date = "Updating..."; }
     }
     render();
     inputEl.value = "";
     isTyping = false;
+    
     const payload = { url: location.pathname, name: user.n, email: user.e, pic: user.p, comment: msg, parentId: pid, rating: currentRating };
     if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
+    
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" });
     setTimeout(sync, 1500);
   };
 
   async function sync() {
     try {
-      const r    = await fetch(SCRIPT_URL + "?url=" + location.pathname);
+      const r = await fetch(SCRIPT_URL + "?url=" + location.pathname);
       const data = await r.json();
       serverData = data.comments;
-      tempLocal  = [];
+      tempLocal = [];
       updateRatingUI(data.avgRating, data.totalVotes);
       render();
     } catch(e) {}
   }
 
   function updateRatingUI(avg, total) {
-    document.getElementById("tc-avg-num").innerText    = avg;
+    document.getElementById("tc-avg-num").innerText = avg;
     document.getElementById("tc-total-votes").innerText = total + " reviews";
-    var rounded = Math.round(parseFloat(avg));
-    var stars   = "";
-    for (var i = 1; i <= 5; i++) stars += i <= rounded ? "★" : "☆";
+    var stars = "";
+    for (var i = 1; i <= 5; i++) stars += i <= Math.round(avg) ? "★" : "☆";
     document.getElementById("tc-avg-stars").innerText = stars;
   }
 
   function render() {
-    const feed     = document.getElementById("tc-feed");
+    const feed = document.getElementById("tc-feed");
     const combined = serverData.concat(tempLocal);
-    const mains    = combined.filter(function(c) { return c.parentId == "0"; }).reverse();
-    feed.innerHTML = mains.map(function(m) { return renderCard(m, combined); }).join("");
+    const mains = combined.filter(c => c.parentId == "0").reverse();
+    feed.innerHTML = mains.map(m => renderCard(m, combined)).join("");
   }
 
   function renderCard(c, list) {
-    const isOwner = user && (user.e === "officialhimanshutyagi@gmail.com" || user.e === c.email || user.n === c.name);
+    const isOwner = user && (user.e === ADMIN_EMAIL || user.e === c.email);
     const starStr = c.userRating > 0 ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
-    var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply" : "") + " " + (c.pending ? "pending" : "") + '">'
+    let html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply" : "") + (c.pending ? " pending" : "") + '">'
       + '<div><img src="' + c.pic + '" class="tc-card-pfp">'
       + '<span style="font-weight:bold;font-size:14px;">' + c.name + '</span>'
       + (c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
@@ -243,15 +239,15 @@ window._tcInitFCM = async function() {
       + (isOwner ? '<span style="color:#d93025" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</span>' : '')
       + '</div>'
       + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div></div>';
-    list.filter(function(r) { return r.parentId == c.rowId; })
-        .forEach(function(r) { html += renderCard(r, list); });
+    
+    list.filter(r => r.parentId == c.rowId).forEach(r => { html += renderCard(r, list); });
     return html;
   }
 
   window.checkAuthAndOpen = function(id, type) {
-    if (!user) return alert("Bhai, bina login ke Reply/Edit nahi hoga!");
+    if (!user) return alert("Login to interact!");
     isTyping = true;
-    document.querySelectorAll(".tc-inline-box").forEach(function(b) { b.innerHTML = ""; });
+    document.querySelectorAll(".tc-inline-box").forEach(b => b.innerHTML = "");
     const box = document.getElementById("box-" + id);
     if (type === "reply") {
       box.innerHTML = '<textarea id="reply-in-' + id + '" placeholder="Write a reply..."></textarea>'
@@ -265,15 +261,15 @@ window._tcInitFCM = async function() {
         + '<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;">Cancel</button>'
         + '<button class="tc-post-btn" onclick="handleAction(\'0\',\'edit\',\'' + id + '\')">Update</button></div>';
     }
-    box.querySelector("textarea").focus();
   };
 
-  window.deleteMsg = async function(id) {
-    if (!confirm("Delete this permanent?")) return;
+  window.deleteMsg = async (id) => {
+    if (!confirm("Delete permanently?")) return;
     await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
     sync();
   };
 
+  const ADMIN_EMAIL = "officialhimanshutyagi@gmail.com";
   init();
 })();
 </script>
