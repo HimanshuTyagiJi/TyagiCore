@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════ */
 
 const CACHE_NAME = "tyagicore-v3";
-const STATIC_ASSETS = [
+const STATIC_ASSETS = [ 
   "/",
   "/assets/css/style.css",
   "/assets/js/main.js"
