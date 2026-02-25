@@ -407,177 +407,26 @@ window.tyagiPosts = [
 <script src="{{ '/assets/js/main.js' | absolute_url }}" defer></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-{% if page.is_post %}
+{% if page.is_post %} 
 <script type="module">
-    const SU =
-        "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
-    let user = JSON.parse(localStorage.getItem("tc_user")) || null,
-        serverData = [],
-        tempLocal = [],
-        isTyping = false,
-        currentRating = 0;
-    function init() {
-        if (user) {
-            document.getElementById("tc-auth-gate").style.display = "none";
-            document.getElementById("tc-user-pill").style.display = "flex";
-            document.getElementById("tc-user-name").innerText = user.n;
-            document.getElementById("tc-user-pfp").src = user.p;
-        }
-        sync();
-        setInterval(() => {
-            if (!isTyping) sync();
-        }, 5000);
-    }
-    window.onGoogleAuth = (r) => {
-        const p = JSON.parse(atob(r.credential.split(".")[1]));
-        user = { n: p.name, e: p.email, p: p.picture };
-        localStorage.setItem("tc_user", JSON.stringify(user));
-        location.reload();
-    };
-    window.tcLogout = () => {
-        localStorage.removeItem("tc_user");
-        location.reload();
-    };
-    window.hoverStar = (n) => {
-        if (!isTyping && currentRating === 0) paintStars(n);
-    };
-    window.resetStar = () => paintStars(currentRating);
-    window.handleStar = (n) => {
-        if (!user) return alert("Login required to rate!");
-        currentRating = n;
-        paintStars(n);
-        fetch(SU, {
-            method: "POST",
-            mode: "no-cors",
-            body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" }),
-        });
-    };
-    function paintStars(n) {
-        document.querySelectorAll(".tc-s").forEach((s, i) => s.classList.toggle("active", i < n));
-    }
-    window.handleAction = (pid, mode, rowId) => {
-        mode = mode || "new";
-        rowId = rowId || null;
-        if (!user) return alert("Please login first!");
-        const inId = mode === "edit" ? "edit-in-" + rowId : pid === "0" ? "tc-input" : "reply-in-" + pid;
-        const inEl = document.getElementById(inId);
-        const msg = inEl?.value.trim();
-        if (!msg) return;
-        if (mode === "new") {
-            tempLocal.push({
-                rowId: "tmp_" + Date.now(),
-                name: user.n,
-                comment: msg,
-                parentId: pid,
-                pic: user.p,
-                date: "Saving…",
-                pending: true,
-                isAdmin: false,
-                email: user.e,
-            });
-        } else {
-            const t = serverData.find((c) => c.rowId == rowId);
-            if (t) {
-                t.comment = msg;
-                t.date = "Updating…";
-            }
-        }
-        render();
-        if (inEl) inEl.value = "";
-        isTyping = false;
-        const payload = {
-            url: location.pathname,
-            name: user.n,
-            email: user.e,
-            pic: user.p,
-            comment: msg,
-            parentId: pid,
-            rating: currentRating,
-        };
-        if (mode === "edit") {
-            payload.action = "edit";
-            payload.rowId = rowId;
-        }
-        fetch(SU, { method: "POST", body: JSON.stringify(payload), mode: "no-cors" });
-        setTimeout(sync, 1500);
-    };
-    async function sync() {
-        try {
-            const ep = user ? "&email=" + encodeURIComponent(user.e) : "";
-            const r = await fetch(SU + "?url=" + location.pathname + ep);
-            const d = await r.json();
-            serverData = d.comments;
-            tempLocal = [];
-            if (user && d.myRating > 0) currentRating = d.myRating;
-            updateRating(d.avgRating, d.totalVotes);
-            paintStars(currentRating);
-            render();
-        } catch (e) {}
-    }
-    function updateRating(avg, total) {
-        document.getElementById("tc-avg-num").innerText = avg;
-        document.getElementById("tc-total-votes").innerText = total + " reviews";
-        let s = "",
-            r = Math.round(parseFloat(avg));
-        for (let i = 1; i <= 5; i++) s += i <= r ? "★" : "☆";
-        document.getElementById("tc-avg-stars").innerText = s;
-    }
-  
-
-
-function renderCard(c, list) {
-  // user apna edit/delete kar sake
-  // agar server se isAdmin:true aaye toh wo admin hai — email expose nahi hoti
-  var canEdit  = user && (user.e === c.email);
-  var isAdmin  = user && c.isAdmin === true; // Sheet se aata hai
-  var showEdit = canEdit || isAdmin;         // Admin sabka, user apna
-
-  var starStr = c.userRating > 0 
-    ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' 
-    : "";
-
-  var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply " : "") + (c.pending ? "pending" : "") + '">'
-    + '<div><img src="' + c.pic + '" class="tc-card-pfp">'
-    + '<span style="font-weight:bold;font-size:14px;">' + c.name + '</span>'
-    + (c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
-    + starStr
-    + '<small style="float:right;color:#999;">' + c.date + '</small></div>'
-    + '<div style="margin:8px 0 0 42px;font-size:14px;color:#333;" id="body-' + c.rowId + '">' + c.comment + '</div>'
-    + '<div class="tc-actions">'
-    + '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</span>'
-    + (showEdit ? '<span onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</span>' : '')
-    + (showEdit ? '<span style="color:#d93025" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</span>' : '')
-    + '</div><div id="box-' + c.rowId + '" class="tc-inline-box"></div></div>';
-
-  list.filter(function(r) { return r.parentId == c.rowId; })
-      .forEach(function(r) { html += renderCard(r, list); });
-  return html;
-}
-    window.openBox = (id, type) => {
-        if (!user) return alert("Login to interact!");
-        isTyping = true;
-        document.querySelectorAll(".tc-inline-box").forEach((b) => (b.innerHTML = ""));
-        const box = document.getElementById("box-" + id);
-        if (type === "reply") {
-            box.innerHTML = `<textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea><div style="text-align:right;margin-top:5px;"><button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=''" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:8px;color:var(--text-muted)">Cancel</button><button class="tc-post-btn" onclick="handleAction('${id}')">Reply</button></div>`;
-        } else {
-            const old = document.getElementById("body-" + id)?.innerText || "";
-            box.innerHTML = `<textarea id="edit-in-${id}">${old}</textarea><div style="text-align:right;margin-top:5px;"><button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=''" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:8px;color:var(--text-muted)">Cancel</button><button class="tc-post-btn" onclick="handleAction('0','edit','${id}')">Update</button></div>`;
-        }
-        box.querySelector("textarea")?.focus();
-    };
-    window.delMsg = async (id) => {
-        if (!confirm("Delete permanently?")) return;
-        await fetch(SU, {
-            method: "POST",
-            body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }),
-            mode: "no-cors",
-        });
-        sync();
-    };
-    init();
+const SU="https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
+let user=JSON.parse(localStorage.getItem("tc_user"))||null,serverData=[],tempLocal=[],isTyping=false,currentRating=0;
+function init(){if(user){document.getElementById("tc-auth-gate").style.display="none";document.getElementById("tc-user-pill").style.display="flex";document.getElementById("tc-user-name").innerText=user.n;document.getElementById("tc-user-pfp").src=user.p;}sync();setInterval(()=>{if(!isTyping)sync();},5000);}
+window.onGoogleAuth=r=>{const p=JSON.parse(atob(r.credential.split(".")[1]));user={n:p.name,e:p.email,p:p.picture};localStorage.setItem("tc_user",JSON.stringify(user));location.reload();};
+window.tcLogout=()=>{localStorage.removeItem("tc_user");location.reload();};
+window.hoverStar=n=>{if(!isTyping&&currentRating===0)paintStars(n);};
+window.resetStar=()=>paintStars(currentRating);
+window.handleStar=n=>{if(!user)return alert("Login required to rate!");currentRating=n;paintStars(n);fetch(SU,{method:"POST",mode:"no-cors",body:JSON.stringify({url:location.pathname,email:user.e,rating:n,comment:"__RATING_ONLY__"})});};
+function paintStars(n){document.querySelectorAll(".tc-s").forEach((s,i)=>s.classList.toggle("active",i<n));}
+window.handleAction=(pid,mode,rowId)=>{mode=mode||"new";rowId=rowId||null;if(!user)return alert("Please login first!");const inId=mode==="edit"?"edit-in-"+rowId:(pid==="0"?"tc-input":"reply-in-"+pid);const inEl=document.getElementById(inId);const msg=inEl?.value.trim();if(!msg)return;if(mode==="new"){tempLocal.push({rowId:"tmp_"+Date.now(),name:user.n,comment:msg,parentId:pid,pic:user.p,date:"Saving…",pending:true,isAdmin:false,email:user.e});}else{const t=serverData.find(c=>c.rowId==rowId);if(t){t.comment=msg;t.date="Updating…";}}render();if(inEl)inEl.value="";isTyping=false;const payload={url:location.pathname,name:user.n,email:user.e,pic:user.p,comment:msg,parentId:pid,rating:currentRating};if(mode==="edit"){payload.action="edit";payload.rowId=rowId;}fetch(SU,{method:"POST",body:JSON.stringify(payload),mode:"no-cors"});setTimeout(sync,1500);};
+async function sync(){try{const ep=user?"&email="+encodeURIComponent(user.e):"";const r=await fetch(SU+"?url="+location.pathname+ep);const d=await r.json();serverData=d.comments;tempLocal=[];if(user&&d.myRating>0)currentRating=d.myRating;updateRating(d.avgRating,d.totalVotes);paintStars(currentRating);render();}catch(e){}}
+function updateRating(avg,total){document.getElementById("tc-avg-num").innerText=avg;document.getElementById("tc-total-votes").innerText=total+" reviews";let s="",r=Math.round(parseFloat(avg));for(let i=1;i<=5;i++)s+=i<=r?"★":"☆";document.getElementById("tc-avg-stars").innerText=s;}
+function render(){const feed=document.getElementById("tc-feed");const all=serverData.concat(tempLocal);feed.innerHTML=all.filter(c=>c.parentId=="0").reverse().map(c=>card(c,all)).join("");}
+function card(c,list){const me=user&&user.e===c.email;const stars=c.userRating>0?`<span style="color:var(--yellow);font-size:11px;margin-left:6px;">${"★".repeat(c.userRating)}</span>`:"";let h=`<div class="tc-card ${c.parentId!="0"?"reply ":""}${c.pending?"pending":""}" role="listitem"><div class="tc-card-meta"><img src="${c.pic}" class="tc-card-pfp" alt="${c.name}" loading="lazy"><span class="tc-card-name">${c.name}</span>${c.isAdmin?'<span class="tc-admin-badge">ADMIN ⭐</span>':""}${stars}<span class="tc-card-time">${c.date}</span></div><div class="tc-card-body" id="body-${c.rowId}">${c.comment}</div><div class="tc-actions"><button onclick="openBox('${c.rowId}','reply')">Reply</button>${me?`<button onclick="openBox('${c.rowId}','edit')">Edit</button>`:""} ${me?`<button style="color:var(--red)" onclick="delMsg('${c.rowId}')">Delete</button>`:""}</div><div id="box-${c.rowId}" class="tc-inline-box"></div></div>`;list.filter(r=>r.parentId==c.rowId).forEach(r=>{h+=card(r,list);});return h;}
+window.openBox=(id,type)=>{if(!user)return alert("Login to interact!");isTyping=true;document.querySelectorAll(".tc-inline-box").forEach(b=>b.innerHTML="");const box=document.getElementById("box-"+id);if(type==="reply"){box.innerHTML=`<textarea id="reply-in-${id}" placeholder="Write a reply..."></textarea><div style="text-align:right;margin-top:5px;"><button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=''" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:8px;color:var(--text-muted)">Cancel</button><button class="tc-post-btn" onclick="handleAction('${id}')">Reply</button></div>`;}else{const old=document.getElementById("body-"+id)?.innerText||"";box.innerHTML=`<textarea id="edit-in-${id}">${old}</textarea><div style="text-align:right;margin-top:5px;"><button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=''" style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:8px;color:var(--text-muted)">Cancel</button><button class="tc-post-btn" onclick="handleAction('0','edit','${id}')">Update</button></div>`;}box.querySelector("textarea")?.focus();};
+window.delMsg=async id=>{if(!confirm("Delete permanently?"))return;await fetch(SU,{method:"POST",body:JSON.stringify({action:"delete",rowId:id,userEmail:user.e}),mode:"no-cors"});sync();};
+init();
 </script>
-
 {% endif %}
 
 </body>
