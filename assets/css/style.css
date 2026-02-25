@@ -710,3 +710,83 @@ textarea:focus { border-color:var(--accent); }
   .hero-btns { flex-direction:column; align-items:center; }
   .tc-comments-header { flex-direction:column; align-items:flex-start; }
 }
+
+/* ── NAV DISABLED ── */
+.nav-disabled {
+  display: block;
+  padding: 16px 18px;
+  color: var(--text-muted);
+  cursor: default;
+}
+.nav-disabled .nav-label { color: var(--text-muted); opacity: 0.5; }
+
+/* ── AUTO-GENERATED IMAGE (canvas fallback) ── */
+.auto-thumb-wrap {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.auto-thumb-wrap canvas {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── POST ARTICLE CONTENT STYLES ── */
+.post-content { font-size: 16px; line-height: 1.9; color: var(--text-color); }
+.post-content h2 { font-size: 22px; font-weight: 800; margin: 36px 0 14px; color: var(--text-color); border-left: 4px solid var(--accent); padding-left: 14px; }
+.post-content h3 { font-size: 18px; font-weight: 700; margin: 28px 0 12px; color: var(--text-color); }
+.post-content h4 { font-size: 16px; font-weight: 700; margin: 22px 0 10px; color: var(--accent); }
+.post-content p  { margin-bottom: 18px; }
+.post-content ul, .post-content ol { padding-left: 22px; margin-bottom: 18px; }
+.post-content li { margin-bottom: 8px; }
+.post-content ul { list-style: disc; }
+.post-content ol { list-style: decimal; }
+.post-content strong { font-weight: 700; color: var(--text-color); }
+.post-content em { font-style: italic; color: var(--text-muted); }
+.post-content blockquote {
+  border-left: 4px solid var(--orange);
+  padding: 14px 18px;
+  margin: 22px 0;
+  background: var(--accent-light);
+  border-radius: 0 10px 10px 0;
+  font-style: italic;
+}
+.post-content table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+.post-content th { background: var(--accent); color: #fff; padding: 10px 14px; text-align: left; }
+.post-content td { padding: 10px 14px; border-bottom: 1px solid var(--border-color); }
+.post-content tr:hover td { background: var(--accent-light); }
+
+/* Post hero image */
+.post-hero-img {
+  width: 100%; height: 380px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 28px;
+  border: 1px solid var(--border-color);
+}
+.post-hero-img img,
+.post-hero-img canvas {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+
+/* Tip boxes */
+.tip-box {
+  padding: 16px 18px;
+  border-radius: 10px;
+  margin: 22px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.tip-box.warning { background: #fef3c7; border-left: 4px solid #f59e0b; }
+.tip-box.danger  { background: #fee2e2; border-left: 4px solid var(--red); }
+.tip-box.info    { background: var(--accent-light); border-left: 4px solid var(--accent); }
+.tip-box.success { background: #dcfce7; border-left: 4px solid #22c55e; }
+.tip-box .tip-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.tip-box .tip-text { font-size: 14px; line-height: 1.7; }
+.dark-mode .tip-box.warning { background: #422006; }
+.dark-mode .tip-box.danger  { background: #450a0a; }
+.dark-mode .tip-box.info    { background: var(--accent-light); }
+.dark-mode .tip-box.success { background: #052e16; }
