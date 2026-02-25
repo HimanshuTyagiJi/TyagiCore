@@ -230,3 +230,133 @@ window.toggleLang = function(){
 if("serviceWorker" in navigator){
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(()=>{}));
 }
+
+/* ═══════════════════════════════════════════
+   AUTO THUMBNAIL GENERATOR
+   Jab post mein image: nahi ho ya load fail ho
+   Canvas se title-based image generate hoti hai
+   ═══════════════════════════════════════════ */
+function generateAutoThumb(title, targetEl, width, height) {
+  width  = width  || 1280;
+  height = height || 720;
+  const canvas = document.createElement("canvas");
+  canvas.width  = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+
+  // Gradient backgrounds — pick based on title hash
+  const gradients = [
+    ["#0f172a","#1e3a5f"],
+    ["#1a0533","#3b0764"],
+    ["#0c1a0c","#0f2d1a"],
+    ["#1a0a00","#3b1200"],
+    ["#00101a","#002244"],
+  ];
+  let hash = 0;
+  for(let i=0;i<title.length;i++) hash = title.charCodeAt(i) + ((hash<<5)-hash);
+  const gi = Math.abs(hash) % gradients.length;
+  const grad = ctx.createLinearGradient(0, 0, width, height);
+  grad.addColorStop(0, gradients[gi][0]);
+  grad.addColorStop(1, gradients[gi][1]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, width, height);
+
+  // Grid pattern
+  ctx.strokeStyle = "rgba(255,255,255,0.04)";
+  ctx.lineWidth = 1;
+  for(let x=0;x<width;x+=60){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke(); }
+  for(let y=0;y<height;y+=60){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke(); }
+
+  // Accent circle
+  const colors = ["#1a73e8","#ea4335","#f97316","#0ea5e9","#a855f7"];
+  const ci = Math.abs(hash >> 4) % colors.length;
+  ctx.beginPath();
+  ctx.arc(width*0.82, height*0.18, height*0.38, 0, Math.PI*2);
+  ctx.fillStyle = colors[ci] + "22";
+  ctx.fill();
+
+  // TYAGI CORE badge
+  ctx.font = "bold 28px 'Segoe UI', Arial, sans-serif";
+  ctx.fillStyle = colors[ci];
+  ctx.textAlign = "left";
+  ctx.fillText("TYAGI CORE", 60, 68);
+
+  // Divider line
+  ctx.strokeStyle = colors[ci] + "66";
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(60, 85); ctx.lineTo(340, 85); ctx.stroke();
+
+  // Title — wrap long titles
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign  = "left";
+  const maxW = width - 120;
+  const words = title.split(" ");
+  let lines = [], current = "";
+  const fSize = title.length > 40 ? 54 : (title.length > 25 ? 64 : 72);
+  ctx.font = `900 ${fSize}px 'Georgia', serif`;
+  for(const word of words){
+    const test = current ? current+" "+word : word;
+    if(ctx.measureText(test).width > maxW && current){ lines.push(current); current = word; }
+    else current = test;
+  }
+  if(current) lines.push(current);
+  const lineH   = fSize * 1.2;
+  const totalH  = lines.length * lineH;
+  const startY  = (height - totalH) / 2 + fSize * 0.4;
+  lines.forEach((line, i) => ctx.fillText(line, 60, startY + i * lineH));
+
+  // Tyagicore.gklearnstudy.in watermark
+  ctx.font = "16px 'Segoe UI', Arial, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.4)";
+  ctx.textAlign = "right";
+  ctx.fillText("tyagicore.gklearnstudy.in", width - 40, height - 30);
+
+  return canvas;
+}
+
+/* Apply auto-thumb to all images on the page that have no src or fail to load */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("img[data-autothumb]").forEach(img => {
+    const title  = img.getAttribute("data-title") || document.title;
+    const parent = img.parentElement;
+    const w = parent.offsetWidth  || 1280;
+    const h = parent.offsetHeight || 720;
+    function makeCanvas(){ const c = generateAutoThumb(title, img, w, h); img.replaceWith(c); c.setAttribute("aria-label", title); c.setAttribute("role","img"); }
+    if(!img.src || img.src.endsWith("/")) makeCanvas();
+    else img.addEventListener("error", makeCanvas);
+  });
+
+  // Post hero image auto-thumb
+  const heroWrap = document.getElementById("post-hero-wrap");
+  if(heroWrap){
+    const heroImg = heroWrap.querySelector("img");
+    if(heroImg){
+      const title = heroImg.getAttribute("data-title") || document.title;
+      function doHero(){
+        const c = generateAutoThumb(title, heroImg, 1280, 720);
+        heroImg.replaceWith(c);
+        c.style.width="100%"; c.style.height="100%"; c.style.objectFit="cover";
+      }
+      if(!heroImg.getAttribute("src") || heroImg.getAttribute("src") === "") doHero();
+      else heroImg.addEventListener("error", doHero);
+    }
+  }
+
+  // Also fix trending sidebar broken images
+  document.querySelectorAll(".trend-thumb[src=''],.trend-thumb:not([src])").forEach(img => {
+    const title = img.getAttribute("alt") || "Post";
+    const c = generateAutoThumb(title, img, 62, 44);
+    c.style.width="62px"; c.style.height="44px"; c.style.borderRadius="7px"; c.style.objectFit="cover";
+    img.replaceWith(c);
+  });
+
+  // Fix horizontal post card images
+  document.querySelectorAll(".post-img img[src=''],.post-img img[src='/assets/images/default-thumb.png']").forEach(img => {
+    const title = img.getAttribute("alt") || "Post";
+    const c = generateAutoThumb(title, img, 260, 188);
+    c.style.width="100%"; c.style.height="100%"; c.style.objectFit="cover";
+    img.replaceWith(c);
+  });
+});
+
+window.generateAutoThumb = generateAutoThumb;
