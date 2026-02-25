@@ -1,1264 +1,1038 @@
 ---
 layout: default
-title: "Online Fraud Se Kaise Bachen – 7 Warning Signs Jo Aapki Zindagi Bachayenge"
-description: "Online fraud, cyber scam aur digital dhokhe se bachne ke liye 7 warning signs. Puri detail mein samjhein phishing, UPI fraud, fake websites aur social engineering se kaise safe rahein."
+title: "ऑनलाइन फ्रॉड से कैसे बचें – 7 वॉर्निंग साइन जो आपको ज़रूर जाननी चाहिए"
+description: "ऑनलाइन फ्रॉड, UPI स्कैम, OTP धोखाधड़ी और फिशिंग से बचने के लिए 7 ज़रूरी वॉर्निंग साइन। हर भारतीय के लिए सम्पूर्ण हिंदी गाइड।"
 categories: [Security, Guide]
-tags: [online fraud, cyber scam, UPI fraud, phishing, internet safety, digital security]
+tags: [ऑनलाइन फ्रॉड, साइबर स्कैम, UPI फ्रॉड, OTP धोखाधड़ी, फिशिंग, इंटरनेट सुरक्षा]
 is_post: true
 ---
 
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online Fraud Se Kaise Bachen – 7 Warning Signs | TyagiCore</title>
-<meta name="description" content="Online fraud, cyber scam aur digital dhokhe se bachne ke liye 7 warning signs. Puri detail mein samjhein phishing, UPI fraud, fake websites aur social engineering se kaise safe rahein.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
-
 <style>
-/* ── VARIABLES ─────────────────────────────────── */
-:root {
-  --bg         : #0a0a0f;
-  --bg2        : #111118;
-  --bg3        : #1a1a24;
-  --card       : #16161f;
-  --border     : #2a2a38;
-  --accent     : #ff4757;
-  --accent2    : #ffa502;
-  --accent3    : #2ed573;
-  --accent4    : #1e90ff;
-  --text       : #e8e8f0;
-  --text2      : #9090a8;
-  --text3      : #5a5a72;
-  --glow-red   : rgba(255,71,87,0.15);
-  --glow-orange: rgba(255,165,2,0.12);
-  --glow-green : rgba(46,213,115,0.12);
-  --glow-blue  : rgba(30,144,255,0.12);
-  --font-head  : 'Syne', sans-serif;
-  --font-body  : 'DM Sans', sans-serif;
-  --radius     : 16px;
-  --shadow     : 0 8px 40px rgba(0,0,0,0.5);
+/* ── सिर्फ आर्टिकल के styles — site theme variables use हो रहे हैं ── */
+.fa {
+  font-family: inherit;
+  color: var(--text-color);
+  line-height: 1.85;
 }
 
-[data-theme="light"] {
-  --bg         : #f5f5fa;
-  --bg2        : #eeeef5;
-  --bg3        : #e5e5ef;
-  --card       : #ffffff;
-  --border     : #d0d0e0;
-  --text       : #1a1a2e;
-  --text2      : #4a4a6a;
-  --text3      : #8a8aaa;
-  --glow-red   : rgba(255,71,87,0.08);
-  --glow-orange: rgba(255,165,2,0.07);
-  --glow-green : rgba(46,213,115,0.07);
-  --glow-blue  : rgba(30,144,255,0.07);
-  --shadow     : 0 8px 40px rgba(0,0,0,0.1);
-}
-
-/* ── RESET ─────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.75;
-  transition: background 0.3s, color 0.3s;
-  overflow-x: hidden;
-}
-
-/* ── NOISE TEXTURE ─────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.4;
-}
-
-/* ── LAYOUT ─────────────────────────────────────── */
-.wrapper {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 20px 80px;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── THEME TOGGLE ───────────────────────────────── */
-.theme-btn {
-  position: fixed;
-  top: 20px; right: 20px;
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 20px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 100;
-  box-shadow: var(--shadow);
-  transition: transform 0.3s, background 0.3s;
-}
-.theme-btn:hover { transform: scale(1.1) rotate(20deg); }
-
-/* ── PROGRESS BAR ───────────────────────────────── */
-.progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  width: 0%;
-  z-index: 999;
-  transition: width 0.1s;
-  box-shadow: 0 0 10px var(--accent);
-}
-
-/* ── HERO ───────────────────────────────────────── */
-.hero {
-  padding: 80px 0 50px;
-  position: relative;
-}
-
-.hero-tag {
+/* Hero */
+.fa-tag {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--glow-red);
-  border: 1px solid rgba(255,71,87,0.3);
-  color: var(--accent);
-  font-family: var(--font-head);
+  background: rgba(239,68,68,0.10);
+  border: 1px solid rgba(239,68,68,0.28);
+  color: #ef4444;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  padding: 6px 14px;
+  padding: 5px 14px;
   border-radius: 100px;
-  margin-bottom: 24px;
-  animation: fadeUp 0.6s ease both;
+  margin-bottom: 20px;
+  display: inline-flex;
 }
-
-.hero-tag::before {
-  content: '';
+.fa-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 1.5s infinite;
+  background: #ef4444;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:0.25;transform:scale(1.7);}
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(1.5); }
-}
-
-h1 {
-  font-family: var(--font-head);
-  font-size: clamp(28px, 5vw, 48px);
+.fa h1 {
+  font-size: clamp(26px, 4.5vw, 44px);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.18;
   letter-spacing: -0.5px;
-  margin-bottom: 20px;
-  animation: fadeUp 0.6s 0.1s ease both;
+  margin: 0 0 16px;
+  color: var(--text-color);
 }
+.fa h1 em { font-style: normal; color: #ef4444; }
 
-h1 .highlight {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-desc {
+.fa-lead {
   font-size: 17px;
-  color: var(--text2);
-  max-width: 640px;
-  margin-bottom: 32px;
-  animation: fadeUp 0.6s 0.2s ease both;
+  color: var(--text-color);
+  opacity: 0.68;
+  max-width: 700px;
+  margin-bottom: 22px;
+  line-height: 1.75;
 }
 
-.hero-meta {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  animation: fadeUp 0.6s 0.3s ease both;
-}
-
-.meta-chip {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--text2);
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 5px 12px;
+.fa-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+.fa-chip {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.55;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 4px 12px;
   border-radius: 100px;
 }
 
-/* ── SVG HERO ILLUSTRATION ──────────────────────── */
-.hero-visual {
-  margin: 40px 0;
-  animation: fadeUp 0.6s 0.4s ease both;
-}
-
-/* ── STATS STRIP ────────────────────────────────── */
-.stats-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin: 40px 0;
-  animation: fadeUp 0.6s 0.5s ease both;
-}
-
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  text-align: center;
-  position: relative;
+/* SVG / Canvas wrapper */
+.fa-img {
+  margin: 28px 0;
+  border-radius: 14px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color);
 }
+.fa-img svg,
+.fa-img canvas { display: block; width: 100%; height: auto; }
 
-.stat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--glow-red);
-  opacity: 0;
-  transition: opacity 0.3s;
+/* Stats */
+.fa-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 14px;
+  margin: 32px 0;
 }
-
-.stat-card:hover { transform: translateY(-4px); }
-.stat-card:hover::before { opacity: 1; }
-
-.stat-num {
-  font-family: var(--font-head);
-  font-size: 32px;
+@media(max-width:580px){
+  .fa-stats{grid-template-columns:1fr 1fr;}
+  .fa-stats .fa-stat:last-child{grid-column:1/-1;}
+}
+.fa-stat {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 13px;
+  padding: 18px;
+  text-align: center;
+  transition: transform .3s;
+}
+.fa-stat:hover{transform:translateY(-3px);}
+.fa-stat b {
+  display: block;
+  font-size: 26px;
   font-weight: 800;
-  color: var(--accent);
+  color: #ef4444;
+}
+.fa-stat span {
+  font-size: 12px;
+  color: var(--text-color);
+  opacity: 0.6;
+  line-height: 1.5;
+  margin-top: 5px;
   display: block;
 }
 
-.stat-label {
-  font-size: 12px;
-  color: var(--text2);
-  margin-top: 4px;
+/* Intro box */
+.fa-intro {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #ef4444;
+  border-radius: 13px;
+  padding: 22px 26px;
+  margin: 32px 0;
 }
 
-/* ── INTRO BOX ──────────────────────────────────── */
-.intro-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 28px 32px;
-  margin: 40px 0;
-  animation: fadeUp 0.6s 0.6s ease both;
-}
-
-/* ── SECTION HEADINGS ───────────────────────────── */
-h2 {
-  font-family: var(--font-head);
-  font-size: clamp(20px, 3vw, 26px);
+/* Headings */
+.fa h2 {
+  font-size: clamp(18px,2.6vw,23px);
   font-weight: 700;
-  margin: 60px 0 20px;
+  margin: 52px 0 16px;
   display: flex;
   align-items: center;
   gap: 12px;
-  letter-spacing: -0.3px;
+  color: var(--text-color);
+  letter-spacing: -.3px;
 }
-
-h2 .section-num {
-  display: inline-flex;
-  align-items: center; justify-content: center;
-  width: 36px; height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: white;
-  font-size: 14px;
-  font-weight: 800;
-  flex-shrink: 0;
-}
-
-h3 {
-  font-family: var(--font-head);
-  font-size: 18px;
+.fa h3 {
+  font-size: 16px;
   font-weight: 700;
-  margin: 28px 0 12px;
-  color: var(--text);
+  margin: 22px 0 8px;
+  color: var(--text-color);
 }
-
-h4 {
-  font-family: var(--font-head);
-  font-size: 15px;
-  font-weight: 600;
-  margin: 20px 0 8px;
-  color: var(--accent2);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-p { margin-bottom: 16px; color: var(--text); }
-
-/* ── WARNING CARDS ──────────────────────────────── */
-.warning-cards {
-  display: grid;
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.warn-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-  animation: fadeUp 0.5s ease both;
-}
-
-.warn-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
-
-.warn-card.red   { border-top: 3px solid var(--accent);  }
-.warn-card.red:hover   { border-color: var(--accent); box-shadow: 0 8px 40px var(--glow-red); }
-.warn-card.orange{ border-top: 3px solid var(--accent2); }
-.warn-card.orange:hover{ border-color: var(--accent2); box-shadow: 0 8px 40px var(--glow-orange); }
-.warn-card.green { border-top: 3px solid var(--accent3); }
-.warn-card.green:hover { border-color: var(--accent3); box-shadow: 0 8px 40px var(--glow-green); }
-.warn-card.blue  { border-top: 3px solid var(--accent4); }
-.warn-card.blue:hover  { border-color: var(--accent4); box-shadow: 0 8px 40px var(--glow-blue); }
-
-.warn-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.warn-icon {
-  width: 52px; height: 52px;
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.warn-card.red    .warn-icon { background: var(--glow-red); }
-.warn-card.orange .warn-icon { background: var(--glow-orange); }
-.warn-card.green  .warn-icon { background: var(--glow-green); }
-.warn-card.blue   .warn-icon { background: var(--glow-blue); }
-
-.warn-title {
-  font-family: var(--font-head);
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.warn-subtitle {
-  font-size: 13px;
-  color: var(--text2);
-}
-
-.warn-danger {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.fa h4 {
   font-size: 11px;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 100px;
-  margin-bottom: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.45;
+  margin: 18px 0 8px;
 }
+.fa p { color: var(--text-color); margin-bottom: 13px; }
 
-.danger-high   { background: rgba(255,71,87,0.15);  color: var(--accent); }
-.danger-medium { background: rgba(255,165,2,0.15);  color: var(--accent2); }
-.danger-low    { background: rgba(46,213,115,0.15); color: var(--accent3); }
-
-/* ── DO / DONT BOX ──────────────────────────────── */
-.do-dont {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin: 16px 0;
-}
-
-@media(max-width: 600px) { .do-dont { grid-template-columns: 1fr; } }
-
-.do-box, .dont-box {
-  border-radius: 12px;
-  padding: 16px 18px;
-}
-
-.do-box   { background: rgba(46,213,115,0.08); border: 1px solid rgba(46,213,115,0.2); }
-.dont-box { background: rgba(255,71,87,0.08);  border: 1px solid rgba(255,71,87,0.2); }
-
-.do-box h4   { color: var(--accent3); margin: 0 0 10px; font-size: 13px; }
-.dont-box h4 { color: var(--accent);  margin: 0 0 10px; font-size: 13px; }
-
-.do-box ul, .dont-box ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.do-box li, .dont-box li {
-  font-size: 13px;
-  padding: 4px 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  color: var(--text2);
-}
-
-.do-box li::before   { content: '✓'; color: var(--accent3); font-weight: 700; flex-shrink: 0; }
-.dont-box li::before { content: '✗'; color: var(--accent);  font-weight: 700; flex-shrink: 0; }
-
-/* ── REAL EXAMPLE BOX ───────────────────────────── */
-.example-box {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin: 16px 0;
+.fa-badge-num {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 33px; height: 33px;
+  border-radius: 9px;
+  background: linear-gradient(135deg,#ef4444,#f97316);
+  color: #fff;
   font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* Warning card */
+.fa-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  padding: 26px;
+  margin: 14px 0 30px;
+  transition: box-shadow .3s;
+}
+.fa-card:hover{box-shadow:0 8px 30px rgba(0,0,0,.13);}
+.fa-card.r  { border-top: 3px solid #ef4444; }
+.fa-card.o  { border-top: 3px solid #f97316; }
+.fa-card.b  { border-top: 3px solid #3b82f6; }
+
+.fa-card-head { display:flex; align-items:flex-start; gap:14px; margin-bottom:16px; }
+.fa-card-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border-color);
+}
+.fa-card-title { font-size: 17px; font-weight: 700; color: var(--text-color); margin-bottom: 2px; }
+.fa-card-sub   { font-size: 13px; color: var(--text-color); opacity: .5; }
+
+.fa-lvl {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 100px; margin-bottom: 14px;
+}
+.fa-lvl.cr { background:rgba(239,68,68,.11); color:#ef4444; }
+.fa-lvl.hi { background:rgba(249,115,22,.11); color:#f97316; }
+
+/* Example */
+.fa-eg {
+  background: var(--bg);
+  border: 1px solid var(--border-color);
+  border-radius: 11px;
+  padding: 20px 18px 14px;
+  margin: 14px 0;
   position: relative;
 }
-
-.example-box::before {
-  content: 'Real Example';
-  position: absolute;
-  top: -10px; left: 16px;
-  background: var(--accent2);
-  color: #000;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  padding: 2px 10px;
-  border-radius: 100px;
-  text-transform: uppercase;
+.fa-eg::before {
+  content: 'असली उदाहरण';
+  position: absolute; top: -10px; left: 14px;
+  background: #f97316; color: #fff;
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  padding: 2px 10px; border-radius: 100px;
 }
-
-.example-msg {
-  background: var(--card);
-  border-radius: 10px;
-  padding: 14px 16px;
+.fa-msg {
+  background: var(--card-bg);
+  border-left: 3px solid #f97316;
+  border-radius: 7px;
+  padding: 11px 14px;
   margin: 8px 0;
-  border-left: 3px solid var(--accent2);
-  font-style: italic;
-  color: var(--text2);
-  font-size: 14px;
+  font-size: 14px; font-style: italic;
+  color: var(--text-color); opacity: .82;
   line-height: 1.6;
 }
 
-/* ── CHECKLIST ──────────────────────────────────── */
-.checklist {
-  list-style: none;
-  padding: 0;
-  margin: 16px 0;
+/* Do / Don't */
+.fa-dd { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+@media(max-width:520px){ .fa-dd{grid-template-columns:1fr;} }
+.fa-do, .fa-dn { border-radius: 11px; padding: 15px 16px; }
+.fa-do { background:rgba(34,197,94,.07); border:1px solid rgba(34,197,94,.22); }
+.fa-dn { background:rgba(239,68,68,.07); border:1px solid rgba(239,68,68,.22); }
+.fa-do h4 { color:#22c55e; margin:0 0 8px; }
+.fa-dn h4 { color:#ef4444; margin:0 0 8px; }
+.fa-do ul, .fa-dn ul { list-style:none; padding:0; margin:0; }
+.fa-do li, .fa-dn li {
+  font-size:13px; padding:3px 0;
+  display:flex; align-items:flex-start; gap:7px;
+  color:var(--text-color); opacity:.82;
+}
+.fa-do li::before { content:'✓'; color:#22c55e; font-weight:700; flex-shrink:0; }
+.fa-dn li::before { content:'✗'; color:#ef4444; font-weight:700; flex-shrink:0; }
+
+/* Alert */
+.fa-alert {
+  border-radius: 11px; padding: 15px 18px; margin: 15px 0;
+  display: flex; gap: 13px; align-items: flex-start;
+}
+.fa-alert.w { background:rgba(234,179,8,.08);  border:1px solid rgba(234,179,8,.23); }
+.fa-alert.d { background:rgba(239,68,68,.08);  border:1px solid rgba(239,68,68,.23); }
+.fa-alert.s { background:rgba(34,197,94,.08);  border:1px solid rgba(34,197,94,.23); }
+.fa-alert-ic { font-size:20px; flex-shrink:0; margin-top:2px; }
+.fa-alert-tx { font-size:14px; line-height:1.7; color:var(--text-color); }
+.fa-alert-tx strong { display:block; margin-bottom:3px; font-size:15px; }
+
+/* Checklist */
+.fa-cl { list-style:none; padding:0; margin:12px 0; }
+.fa-cl li {
+  display:flex; align-items:flex-start; gap:11px;
+  padding:9px 0; border-bottom:1px solid var(--border-color);
+  font-size:15px; color:var(--text-color);
+}
+.fa-cl li:last-child{border-bottom:none;}
+.fa-cl-dot {
+  width:22px; height:22px; border-radius:6px;
+  background:rgba(34,197,94,.1); border:1.5px solid rgba(34,197,94,.28);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; flex-shrink:0; margin-top:2px;
 }
 
-.checklist li {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 15px;
+/* Table */
+.fa-tbl { width:100%; border-collapse:collapse; margin:18px 0; font-size:14px; color:var(--text-color); }
+.fa-tbl th {
+  background:var(--bg); font-size:11px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase;
+  padding:11px 15px; text-align:left;
+  border-bottom:1px solid var(--border-color);
+  color:var(--text-color); opacity:.55;
 }
-
-.checklist li:last-child { border-bottom: none; }
-
-.check-icon {
-  width: 22px; height: 22px;
-  border-radius: 6px;
-  background: var(--glow-green);
-  border: 1.5px solid rgba(46,213,115,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  flex-shrink: 0;
-  margin-top: 2px;
+.fa-tbl td { padding:11px 15px; border-bottom:1px solid var(--border-color); vertical-align:top; }
+.fa-tbl tr:last-child td{border-bottom:none;}
+.fa-tbl tr:hover td{background:var(--bg);}
+.fa-lbl {
+  display:inline-block; font-size:11px; font-weight:700;
+  padding:2px 8px; border-radius:100px;
 }
+.fa-lbl.r{background:rgba(239,68,68,.12);color:#ef4444;}
+.fa-lbl.g{background:rgba(34,197,94,.12);color:#22c55e;}
+.fa-lbl.o{background:rgba(249,115,22,.12);color:#f97316;}
 
-/* ── ALERT BOX ──────────────────────────────────── */
-.alert {
-  border-radius: 12px;
-  padding: 18px 20px;
-  margin: 20px 0;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.alert-warn { background: rgba(255,165,2,0.08); border: 1px solid rgba(255,165,2,0.25); }
-.alert-danger { background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.25); }
-.alert-safe { background: rgba(46,213,115,0.08); border: 1px solid rgba(46,213,115,0.25); }
-
-.alert-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-.alert-text { font-size: 14px; line-height: 1.7; }
-.alert-text strong { display: block; margin-bottom: 4px; font-family: var(--font-head); font-size: 15px; }
-
-/* ── QUICK ACTIONS TABLE ────────────────────────── */
-.action-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 14px;
-}
-
-.action-table th {
-  background: var(--bg3);
-  color: var(--text2);
-  font-family: var(--font-head);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 12px 16px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-
-.action-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-.action-table tr:last-child td { border-bottom: none; }
-.action-table tr:hover td { background: var(--bg3); }
-
-.badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 100px;
-}
-
-.badge-red    { background: rgba(255,71,87,0.15);  color: var(--accent); }
-.badge-green  { background: rgba(46,213,115,0.15); color: var(--accent3); }
-.badge-orange { background: rgba(255,165,2,0.15);  color: var(--accent2); }
-
-/* ── CONCLUSION CARD ────────────────────────────── */
-.conclusion {
-  background: linear-gradient(135deg, var(--bg3), var(--card));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 36px;
-  margin: 60px 0 20px;
+/* End card */
+.fa-end {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  padding: 34px; margin: 52px 0 20px;
   text-align: center;
-  position: relative;
-  overflow: hidden;
 }
-
-.conclusion::before {
-  content: '';
-  position: absolute;
-  top: -50%; left: -50%;
-  width: 200%; height: 200%;
-  background: radial-gradient(circle at center, var(--glow-red), transparent 60%);
-  opacity: 0.5;
-}
-
-.conclusion h2 {
-  justify-content: center;
-  margin: 0 0 16px;
-}
-
-.conclusion p { color: var(--text2); max-width: 560px; margin: 0 auto 20px; }
-
-/* ── ANIMATIONS ─────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-@keyframes dash {
-  to { stroke-dashoffset: 0; }
-}
-
-@keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-.warn-card { animation-delay: calc(var(--i, 0) * 0.1s); }
+.fa-end h2{justify-content:center; margin:0 0 14px;}
+.fa-end p{opacity:.68; max-width:560px; margin:0 auto 12px;}
+.fa-rule{font-size:19px; font-weight:800; color:#f97316; margin:14px 0;}
 
 /* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── RESPONSIVE ─────────────────────────────────── */
-@media(max-width: 600px) {
-  .stats-strip { grid-template-columns: 1fr 1fr; }
-  .stats-strip .stat-card:last-child { grid-column: 1 / -1; }
-  .hero { padding: 60px 0 30px; }
-  h1 { font-size: 26px; }
-  .conclusion { padding: 24px; }
-  .intro-box { padding: 20px; }
-}
+.fa-r{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+.fa-r.on{opacity:1;transform:translateY(0);}
 </style>
-</head>
 
-<body>
+<article class="fa" itemscope itemtype="https://schema.org/Article">
+<meta itemprop="headline"    content="ऑनलाइन फ्रॉड से कैसे बचें – 7 वॉर्निंग साइन">
+<meta itemprop="description" content="ऑनलाइन फ्रॉड, UPI स्कैम, OTP धोखाधड़ी और फिशिंग से बचने के 7 ज़रूरी तरीके। सम्पूर्ण हिंदी गाइड।">
+<meta itemprop="inLanguage"  content="hi">
 
-<!-- Progress Bar -->
-<div class="progress-bar" id="progress"></div>
+<!-- ═══ HERO ═══ -->
+<header style="padding:44px 0 32px; border-bottom:1px solid var(--border-color); margin-bottom:36px;">
+  <div class="fa-tag"><span class="fa-dot"></span>साइबर सुरक्षा</div>
 
-<!-- Theme Toggle -->
-<button class="theme-btn" id="themeBtn" title="Theme toggle">🌙</button>
+  <h1>ऑनलाइन फ्रॉड से <em>कैसे बचें</em> —<br>
+  7 वॉर्निंग साइन जो आपको ज़रूर जाननी चाहिए</h1>
 
-<div class="wrapper">
+  <p class="fa-lead">
+    हर साल भारत में लाखों लोग ऑनलाइन ठगी का शिकार होते हैं — और अधिकतर मामलों में पीड़ित को पता ही नहीं चलता जब तक बहुत देर हो जाती है। यह गाइड आपको वो 7 वॉर्निंग साइन सिखाएगी जो ठग इस्तेमाल करते हैं।
+  </p>
 
-  <!-- ══ HERO ══ -->
-  <header class="hero">
-    <div class="hero-tag">⚠️ Cyber Security</div>
+  <div class="fa-chips">
+    <span class="fa-chip">🕐 8 मिनट पढ़ें</span>
+    <span class="fa-chip">🛡️ सुरक्षा गाइड</span>
+    <span class="fa-chip">📱 मोबाइल और डेस्कटॉप</span>
+  </div>
+</header>
 
-    <h1>Online Fraud Se <span class="highlight">Kaise Bachen</span> —<br>7 Warning Signs Jo Aap Miss Kar Rahe Hain</h1>
+<!-- ═══ HERO CANVAS IMAGE ═══ -->
+<div class="fa-img fa-r">
+  <canvas id="heroCanvas" width="860" height="260"
+    role="img"
+    aria-label="ऑनलाइन फ्रॉड: ठग बनाम सुरक्षित उपयोगकर्ता — एनिमेटेड चित्र">
+  </canvas>
+</div>
 
-    <p class="hero-desc">
-      Har saal India mein lakhs log online fraud ka shikar hote hain — aur zyaadatar cases mein victim khud hi ek step miss karta hai. Yeh guide aapko woh 7 warning signs sikhayegi jo fraudsters use karte hain.
-    </p>
+<!-- ═══ STATS ═══ -->
+<div class="fa-stats fa-r">
+  <div class="fa-stat">
+    <b>₹1,750Cr+</b>
+    <span>2023 में भारत में साइबर फ्रॉड से हुआ नुकसान</span>
+  </div>
+  <div class="fa-stat">
+    <b>11.3 लाख</b>
+    <span>एक साल में दर्ज साइबर क्राइम शिकायतें</span>
+  </div>
+  <div class="fa-stat">
+    <b>73%</b>
+    <span>पीड़ितों को पता नहीं चलता जब तक बहुत देर हो जाती है</span>
+  </div>
+</div>
 
-    <div class="hero-meta">
-      <span class="meta-chip">🕐 8 min read</span>
-      <span class="meta-chip">🛡️ Security Guide</span>
-      <span class="meta-chip">📱 Mobile & Desktop</span>
-    </div>
+<!-- ═══ INTRO ═══ -->
+<div class="fa-intro fa-r">
+  <h3 style="margin-top:0;">यह गाइड क्यों ज़रूरी है?</h3>
+  <p style="margin-bottom:0;">
+    ऑनलाइन फ्रॉड सिर्फ "अनपढ़" लोगों के साथ नहीं होता। IIT ग्रेजुएट्स, बैंकर्स, डॉक्टर — सब ठगी के शिकार हुए हैं। ठग <strong>मनोविज्ञान</strong> का इस्तेमाल करते हैं — <strong>जल्दबाज़ी, डर, लालच और भरोसा</strong>। जब तक आप समझें, पैसा जा चुका होता है। इसलिए ये 7 वॉर्निंग साइन याद रखें।
+  </p>
+</div>
 
-    <!-- SVG Hero Illustration -->
-    <div class="hero-visual">
-      <svg viewBox="0 0 860 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;border-radius:16px;overflow:visible;">
-        <defs>
-          <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#0d0d1a"/>
-            <stop offset="100%" style="stop-color:#1a0a0f"/>
-          </linearGradient>
-          <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#ff4757"/>
-            <stop offset="100%" style="stop-color:#ff6b81"/>
-          </linearGradient>
-          <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#2ed573"/>
-            <stop offset="100%" style="stop-color:#7bed9f"/>
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="glow2">
-            <feGaussianBlur stdDeviation="6" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 1 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">1</span> तुरंत कार्रवाई का दबाव — "अभी करो वरना..."</h2>
 
-        <!-- Background -->
-        <rect width="860" height="280" fill="url(#bgGrad)" rx="16"/>
-
-        <!-- Grid lines -->
-        <g opacity="0.08" stroke="#ff4757" stroke-width="0.5">
-          <line x1="0" y1="56" x2="860" y2="56"/>
-          <line x1="0" y1="112" x2="860" y2="112"/>
-          <line x1="0" y1="168" x2="860" y2="168"/>
-          <line x1="0" y1="224" x2="860" y2="224"/>
-          <line x1="172" y1="0" x2="172" y2="280"/>
-          <line x1="344" y1="0" x2="344" y2="280"/>
-          <line x1="516" y1="0" x2="516" y2="280"/>
-          <line x1="688" y1="0" x2="688" y2="280"/>
-        </g>
-
-        <!-- Scanline animation -->
-        <rect x="0" y="0" width="860" height="3" fill="rgba(255,71,87,0.15)" rx="2">
-          <animateTransform attributeName="transform" type="translate" from="0,0" to="0,280" dur="3s" repeatCount="indefinite"/>
-        </rect>
-
-        <!-- Left: Shield (Protected) -->
-        <g transform="translate(90,140)">
-          <!-- Shield body -->
-          <path d="M0,-70 L55,-45 L55,20 Q55,65 0,85 Q-55,65 -55,20 L-55,-45 Z" fill="rgba(46,213,115,0.15)" stroke="#2ed573" stroke-width="1.5" filter="url(#glow)"/>
-          <!-- Shield checkmark -->
-          <polyline points="-20,5 -5,25 25,-15" fill="none" stroke="#2ed573" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
-            <animate attributeName="stroke-dasharray" from="0 100" to="80 0" dur="1.5s" fill="freeze"/>
-          </polyline>
-          <!-- Label -->
-          <text y="108" text-anchor="middle" fill="#2ed573" font-family="'Syne',sans-serif" font-size="11" font-weight="700" opacity="0.9">PROTECTED</text>
-        </g>
-
-        <!-- Center: Danger Zone -->
-        <g transform="translate(430,140)">
-          <!-- Pulsing circle -->
-          <circle r="80" fill="rgba(255,71,87,0.05)" stroke="rgba(255,71,87,0.2)" stroke-width="1">
-            <animate attributeName="r" values="75;85;75" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
-          </circle>
-          <circle r="55" fill="rgba(255,71,87,0.08)" stroke="rgba(255,71,87,0.35)" stroke-width="1.5"/>
-          <!-- Warning triangle -->
-          <polygon points="0,-38 34,28 -34,28" fill="rgba(255,71,87,0.2)" stroke="#ff4757" stroke-width="2" stroke-linejoin="round" filter="url(#glow2)"/>
-          <text y="22" text-anchor="middle" fill="#ff4757" font-size="28" font-weight="700" filter="url(#glow)">!</text>
-          <!-- Orbiting dot -->
-          <circle r="5" fill="#ff4757" filter="url(#glow)">
-            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="4s" repeatCount="indefinite"/>
-            <animate attributeName="cx" values="55;0;-55;0;55" dur="4s" repeatCount="indefinite"/>
-            <animate attributeName="cy" values="0;55;0;-55;0" dur="4s" repeatCount="indefinite"/>
-          </circle>
-          <text y="90" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="11" font-weight="700">DANGER ZONE</text>
-        </g>
-
-        <!-- Right: Hacker Icon -->
-        <g transform="translate(740,140)">
-          <!-- Monitor shape -->
-          <rect x="-50" y="-55" width="100" height="75" rx="6" fill="rgba(255,71,87,0.1)" stroke="#ff4757" stroke-width="1.5" opacity="0.8"/>
-          <rect x="-15" y="22" width="30" height="8" fill="rgba(255,71,87,0.2)"/>
-          <rect x="-25" y="30" width="50" height="4" rx="2" fill="rgba(255,71,87,0.2)"/>
-          <!-- Skull on screen -->
-          <text x="0" y="-12" text-anchor="middle" font-size="32" fill="#ff4757" opacity="0.9" filter="url(#glow)">☠</text>
-          <!-- Typing animation -->
-          <text x="-35" y="-52" font-size="8" fill="#ff4757" opacity="0.6" font-family="monospace">
-            &gt;_hack
-            <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite"/>
-          </text>
-          <text y="68" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="11" font-weight="700">SCAMMER</text>
-        </g>
-
-        <!-- Connecting arrows -->
-        <!-- Scammer to center -->
-        <path d="M 660,140 Q 580,100 520,140" fill="none" stroke="#ff4757" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6">
-          <animate attributeName="stroke-dashoffset" from="20" to="0" dur="1s" repeatCount="indefinite"/>
-        </path>
-        <polygon points="520,135 520,145 510,140" fill="#ff4757" opacity="0.7"/>
-
-        <!-- Center to shield -->
-        <path d="M 340,140 Q 260,100 165,140" fill="none" stroke="#2ed573" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6">
-          <animate attributeName="stroke-dashoffset" from="20" to="0" dur="1s" repeatCount="indefinite"/>
-        </path>
-        <polygon points="165,135 165,145 175,140" fill="#2ed573" opacity="0.7"/>
-
-        <!-- Top labels -->
-        <text x="430" y="30" text-anchor="middle" fill="rgba(255,71,87,0.5)" font-family="'Syne',sans-serif" font-size="10" font-weight="700" letter-spacing="3">ONLINE FRAUD PROTECTION GUIDE</text>
-
-        <!-- Bottom decorative text -->
-        <text x="430" y="265" text-anchor="middle" fill="rgba(255,255,255,0.1)" font-family="monospace" font-size="9">
-          01001111 01001110 01001100 01001001 01001110 01000101
-        </text>
-      </svg>
-    </div>
-  </header>
-
-  <!-- ══ STATS ══ -->
-  <div class="stats-strip reveal">
-    <div class="stat-card">
-      <span class="stat-num">₹1,750Cr</span>
-      <div class="stat-label">2023 mein India mein cyber fraud ka nuksan</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-num">11.3L</span>
-      <div class="stat-label">Cyber crime complaints sirf ek saal mein</div>
-    </div>
-    <div class="stat-card">
-      <span class="stat-num">73%</span>
-      <div class="stat-label">Victims ko pata bhi nahi chalta — jab tak bahut der ho jaati hai</div>
+<div class="fa-card r fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">🚨</div>
+    <div>
+      <div class="fa-card-title">जल्दबाज़ी का हमला</div>
+      <div class="fa-card-sub">सबसे आम और सबसे ख़तरनाक वॉर्निंग साइन</div>
     </div>
   </div>
+  <div class="fa-lvl cr">🔴 ख़तरा: बहुत अधिक</div>
 
-  <!-- ══ INTRO ══ -->
-  <div class="intro-box reveal">
-    <h3 style="margin-top:0;">Yeh Guide Kyun Zaroori Hai?</h3>
-    <p style="margin-bottom:0;">
-      Online fraud sirf "bewakoofon" ke saath nahi hota. IIT graduates, bankers, doctors — sab fraud ka shikar hue hain. Fraudsters psychology use karte hain — <strong>urgency, fear, greed aur trust</strong>. Jab tak aap samjhein, paisa ja chuka hota hai. Isliye yeh 7 warning signs yaad rakhein — ek sign bhi dikhein toh ruk jaao.
-    </p>
+  <p>ठग का पहला हथियार है <strong>जल्दबाज़ी</strong> — वो आपको सोचने का समय ही नहीं देना चाहता। अगर किसी भी कॉल, मैसेज या ईमेल में ये शब्द हों — तो 100% स्कैम है।</p>
+
+  <div class="fa-eg">
+    <div class="fa-msg">📱 "आपका अकाउंट 2 घंटे में बंद हो जाएगा! अभी वेरिफाई करें।"</div>
+    <div class="fa-msg">🏆 "बधाई हो! आप लॉटरी जीत गए हैं — आज रात 12 बजे से पहले क्लेम करें।"</div>
+    <div class="fa-msg">⚠️ "इनकम टैक्स नोटिस आया है — तुरंत ₹15,000 भरो वरना FIR होगी।"</div>
   </div>
 
-  <!-- ══ WARNING SIGNS ══ -->
-  <h2 class="reveal"><span class="section-num">1</span> Urgent Call Ya Message — "Abhi Karo Warna..."</h2>
-
-  <div class="warning-cards">
-    <div class="warn-card red reveal" style="--i:0">
-      <div class="warn-header">
-        <div class="warn-icon">🚨</div>
-        <div>
-          <div class="warn-title">Urgency Attack</div>
-          <div class="warn-subtitle">Sabse common aur sabse dangerous warning sign</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-high">🔴 Danger Level: CRITICAL</div>
-
-      <p>Fraudster ka pehla weapon hai <strong>urgency</strong> — woh aapko sochne ka time hi nahi dena chahta. Agar koi bhi call, message ya email mein yeh words hain — toh 100% scam hai:</p>
-
-      <div class="example-box">
-        <div class="example-msg">
-          "Aapka account 2 ghante mein band ho jaayega! Abhi verify karein" 📱
-        </div>
-        <div class="example-msg">
-          "Congratulations! Aap lottery jeet gaye hain — aaj raat 12 baje se pehle claim karein"
-        </div>
-        <div class="example-msg">
-          "Income Tax notice aaya hai aapke naam — turant ₹15,000 bharo warna FIR hogi"
-        </div>
-      </div>
-
-      <div class="do-dont">
-        <div class="do-box">
-          <h4>✅ Yeh Karo</h4>
-          <ul>
-            <li>Phone rakho, khud call karo official number pe</li>
-            <li>Kisi trusted person se poocho pehle</li>
-            <li>Google karo company ka official number</li>
-            <li>1-2 din wait karo — real urgency kabhi nahi hoti</li>
-          </ul>
-        </div>
-        <div class="dont-box">
-          <h4>❌ Yeh Mat Karo</h4>
-          <ul>
-            <li>Same call pe koi bhi link click mat karo</li>
-            <li>OTP kabhi share mat karo</li>
-            <li>Screen share mat karo kisi ke liye bhi</li>
-            <li>Ghabrahat mein koi payment mat karo</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="alert alert-danger">
-        <div class="alert-icon">⚡</div>
-        <div class="alert-text">
-          <strong>Yaad Rakhein:</strong>
-          Koi bhi legitimate company — bank, IT department, TRAI, police — kabhi bhi phone pe OTP nahi maangti aur na hi turant payment ki demand karti hai. Yeh hamesha scam hai.
-        </div>
-      </div>
+  <div class="fa-dd">
+    <div class="fa-do">
+      <h4>✅ यह करें</h4>
+      <ul>
+        <li>फोन रखें, खुद ऑफिशियल नंबर पर कॉल करें</li>
+        <li>किसी भरोसेमंद व्यक्ति से पहले पूछें</li>
+        <li>गूगल से कंपनी का असली नंबर निकालें</li>
+        <li>1-2 दिन रुकें — असली ज़रूरी कभी नहीं होती</li>
+      </ul>
     </div>
-  </div>
-
-  <h2 class="reveal"><span class="section-num">2</span> Fake Website — Asli Jaisi Dikhti Hai, Par Hai Nahi</h2>
-
-  <div class="warning-cards">
-    <div class="warn-card orange reveal" style="--i:1">
-      <div class="warn-header">
-        <div class="warn-icon">🌐</div>
-        <div>
-          <div class="warn-title">Phishing Websites</div>
-          <div class="warn-subtitle">Ek letter ka fark — lakh rupaye ka nuksan</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-high">🔴 Danger Level: HIGH</div>
-
-      <p>Fraudsters ek-dum asli jaisi websites banate hain — logo, design, colors sab same. Fark sirf URL mein hota hai jo log usually nahi dekhte.</p>
-
-      <!-- SVG URL Comparison -->
-      <svg viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin:16px 0;border-radius:12px;">
-        <rect width="700" height="160" fill="#0d0d1a" rx="12"/>
-
-        <!-- Real URL -->
-        <rect x="20" y="20" width="300" height="55" rx="8" fill="rgba(46,213,115,0.08)" stroke="rgba(46,213,115,0.3)" stroke-width="1.5"/>
-        <circle cx="42" cy="47" r="8" fill="rgba(46,213,115,0.2)" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="42" y="51" text-anchor="middle" fill="#2ed573" font-size="10" font-weight="bold">🔒</text>
-        <text x="58" y="44" fill="#9090a8" font-family="monospace" font-size="12">https://</text>
-        <text x="108" y="44" fill="#2ed573" font-family="monospace" font-size="13" font-weight="bold">sbi.co.in</text>
-        <text x="58" y="62" fill="#5a5a72" font-family="monospace" font-size="10">/login</text>
-        <text x="150" y="92" text-anchor="middle" fill="#2ed573" font-family="'Syne',sans-serif" font-size="11" font-weight="700">✅ REAL SBI</text>
-
-        <!-- Fake URL -->
-        <rect x="380" y="20" width="300" height="55" rx="8" fill="rgba(255,71,87,0.08)" stroke="rgba(255,71,87,0.3)" stroke-width="1.5"/>
-        <circle cx="402" cy="47" r="8" fill="rgba(255,71,87,0.2)" stroke="#ff4757" stroke-width="1.5"/>
-        <text x="402" y="51" text-anchor="middle" fill="#ff4757" font-size="10">⚠</text>
-        <text x="418" y="44" fill="#9090a8" font-family="monospace" font-size="12">http://</text>
-        <text x="465" y="44" fill="#9090a8" font-family="monospace" font-size="13">sb</text>
-        <text x="483" y="44" fill="#ff4757" font-family="monospace" font-size="14" font-weight="bold">1</text>
-        <text x="493" y="44" fill="#9090a8" font-family="monospace" font-size="13">.co.in-login</text>
-        <text x="465" y="62" fill="#5a5a72" font-family="monospace" font-size="10">.xyz/verify</text>
-        <text x="530" y="92" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="11" font-weight="700">❌ FAKE SITE</text>
-
-        <!-- Arrows pointing difference -->
-        <text x="350" y="50" text-anchor="middle" fill="#5a5a72" font-size="20">→</text>
-        <line x1="483" y1="30" x2="483" y2="20" stroke="#ff4757" stroke-width="2">
-          <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
-        </line>
-        <text x="483" y="16" text-anchor="middle" fill="#ff4757" font-size="9" font-weight="bold">DIFFERENT!</text>
-
-        <text x="350" y="140" text-anchor="middle" fill="#5a5a72" font-family="'Syne',sans-serif" font-size="11">SBI kbhi .xyz ya -login domain use nahi karta</text>
-      </svg>
-
-      <h4>Check Karne Ke 3 Steps:</h4>
-      <ul class="checklist">
-        <li><span class="check-icon">🔒</span><span><strong>Lock icon check karo</strong> — HTTPS zaroori hai, but sirf HTTPS se safe nahi ho jaata</span></li>
-        <li><span class="check-icon">🔍</span><span><strong>Domain carefully padho</strong> — .co.in vs .co.in-verify.xyz — ye alag hai</span></li>
-        <li><span class="check-icon">📌</span><span><strong>Hamesha bookmark se kholo</strong> — ya Google mein official site search karo — link click mat karo</span></li>
+    <div class="fa-dn">
+      <h4>❌ यह न करें</h4>
+      <ul>
+        <li>उसी कॉल पर कोई लिंक क्लिक न करें</li>
+        <li>OTP कभी शेयर न करें</li>
+        <li>स्क्रीन शेयर किसी के लिए न करें</li>
+        <li>घबराहट में कोई पेमेंट न करें</li>
       </ul>
     </div>
   </div>
 
-  <h2 class="reveal"><span class="section-num">3</span> Too Good To Be True — Badi Scheme, Bada Jhooth</h2>
-
-  <div class="warning-cards">
-    <div class="warn-card orange reveal" style="--i:2">
-      <div class="warn-header">
-        <div class="warn-icon">💰</div>
-        <div>
-          <div class="warn-title">Lure / Baiting Scam</div>
-          <div class="warn-subtitle">Lobh dikhao — paisa lo</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-medium">🟠 Danger Level: MEDIUM-HIGH</div>
-
-      <p>Agar koi offer <strong>sunne mein bahut acha lage — toh woh scam hai</strong>. Simple rule hai: duniya mein koi bhi free mein itna nahi deta.</p>
-
-      <h4>Common Bait Types:</h4>
-
-      <!-- SVG Bait Cards -->
-      <svg viewBox="0 0 700 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin:12px 0;border-radius:12px;">
-        <rect width="700" height="140" fill="#0d0d1a" rx="12"/>
-
-        <!-- Lottery -->
-        <rect x="15" y="15" width="155" height="110" rx="10" fill="rgba(255,165,2,0.1)" stroke="rgba(255,165,2,0.3)" stroke-width="1.5"/>
-        <text x="92" y="55" text-anchor="middle" font-size="28">🎰</text>
-        <text x="92" y="80" text-anchor="middle" fill="#ffa502" font-family="'Syne',sans-serif" font-size="12" font-weight="700">LOTTERY</text>
-        <text x="92" y="97" text-anchor="middle" fill="#5a5a72" font-size="10">"Aap jeet gaye!"</text>
-        <text x="92" y="113" text-anchor="middle" fill="#ff4757" font-size="9" font-weight="bold">❌ SCAM</text>
-
-        <!-- Job -->
-        <rect x="188" y="15" width="155" height="110" rx="10" fill="rgba(255,71,87,0.1)" stroke="rgba(255,71,87,0.3)" stroke-width="1.5"/>
-        <text x="265" y="55" text-anchor="middle" font-size="28">💼</text>
-        <text x="265" y="80" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="12" font-weight="700">FAKE JOB</text>
-        <text x="265" y="97" text-anchor="middle" fill="#5a5a72" font-size="10">"₹50k ghar baith ke"</text>
-        <text x="265" y="113" text-anchor="middle" fill="#ff4757" font-size="9" font-weight="bold">❌ SCAM</text>
-
-        <!-- Investment -->
-        <rect x="361" y="15" width="155" height="110" rx="10" fill="rgba(46,213,115,0.08)" stroke="rgba(46,213,115,0.2)" stroke-width="1.5"/>
-        <text x="438" y="55" text-anchor="middle" font-size="28">📈</text>
-        <text x="438" y="80" text-anchor="middle" fill="#2ed573" font-family="'Syne',sans-serif" font-size="12" font-weight="700">INVEST SCAM</text>
-        <text x="438" y="97" text-anchor="middle" fill="#5a5a72" font-size="10">"300% returns"</text>
-        <text x="438" y="113" text-anchor="middle" fill="#ff4757" font-size="9" font-weight="bold">❌ SCAM</text>
-
-        <!-- Romance -->
-        <rect x="534" y="15" width="155" height="110" rx="10" fill="rgba(255,71,87,0.08)" stroke="rgba(255,71,87,0.2)" stroke-width="1.5"/>
-        <text x="611" y="55" text-anchor="middle" font-size="28">💌</text>
-        <text x="611" y="80" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="12" font-weight="700">ROMANCE</text>
-        <text x="611" y="97" text-anchor="middle" fill="#5a5a72" font-size="10">"Mujhe love hua"</text>
-        <text x="611" y="113" text-anchor="middle" fill="#ff4757" font-size="9" font-weight="bold">❌ SCAM</text>
-      </svg>
-
-      <div class="alert alert-warn">
-        <div class="alert-icon">💡</div>
-        <div class="alert-text">
-          <strong>Golden Rule:</strong>
-          Paise deke paise milenge — yeh Ponzi/Pyramid scheme hai. Koi bhi genuine company aapko pehle invest karne ke liye nahi kehti. SEBI registered hone ka claim bhi verify karo — SEBI ki official site pe.
-        </div>
-      </div>
+  <div class="fa-alert d">
+    <div class="fa-alert-ic">⚡</div>
+    <div class="fa-alert-tx">
+      <strong>याद रखें:</strong>
+      कोई भी असली कंपनी — बैंक, आयकर विभाग, TRAI, पुलिस — कभी भी फोन पर OTP नहीं मांगती और न ही तुरंत पेमेंट की मांग करती है। यह हमेशा स्कैम है।
     </div>
   </div>
+</div>
 
-  <h2 class="reveal"><span class="section-num">4</span> OTP Maangna — Bas Yahi Hai Unka Kaam</h2>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 2 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">2</span> नकली वेबसाइट — असली जैसी दिखती है, पर है नहीं</h2>
 
-  <div class="warning-cards">
-    <div class="warn-card red reveal" style="--i:3">
-      <div class="warn-header">
-        <div class="warn-icon">📲</div>
-        <div>
-          <div class="warn-title">OTP Fraud</div>
-          <div class="warn-subtitle">India ka #1 cyber crime</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-high">🔴 Danger Level: CRITICAL</div>
-
-      <p>OTP ka matlab hai <strong>One Time Password</strong> — aur yeh sirf aapke liye hai. Bank clearly kehta hai: <em>"Kisi ko OTP mat batao."</em> Phir bhi log share karte hain — kyunki fraudster bahut convincing hota hai.</p>
-
-      <h3>OTP Maangne Ke Tarike:</h3>
-
-      <div class="example-box">
-        <div class="example-msg">🎭 "Main SBI se bol raha hoon — aapka KYC update karna hai — OTP batao"</div>
-        <div class="example-msg">🎭 "Aapko ₹500 cashback aaya hai — verify karne ke liye OTP enter karein"</div>
-        <div class="example-msg">🎭 "Main aapka dost hoon — galti se mera OTP aapke number pe aaya — forward kar do"</div>
-      </div>
-
-      <div class="do-dont">
-        <div class="do-box">
-          <h4>✅ OTP Safety Rules</h4>
-          <ul>
-            <li>OTP sirf khud use karo</li>
-            <li>OTP screenshot mat lo</li>
-            <li>OTP aaya = koi try kar raha hai account access</li>
-            <li>Suspicious OTP aaye toh immediately password change karo</li>
-          </ul>
-        </div>
-        <div class="dont-box">
-          <h4>❌ Yeh Kabhi Mat Karo</h4>
-          <ul>
-            <li>Kisi ko bhi OTP mat batao — bank ko bhi nahi</li>
-            <li>OTP kisi ko message ya WhatsApp mat karo</li>
-            <li>Screen share pe OTP mat dikhao</li>
-            <li>OTP phone pe bolte waqt mat batao</li>
-          </ul>
-        </div>
-      </div>
+<div class="fa-card o fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">🌐</div>
+    <div>
+      <div class="fa-card-title">फिशिंग वेबसाइट</div>
+      <div class="fa-card-sub">एक अक्षर का फर्क — लाख रुपये का नुकसान</div>
     </div>
   </div>
+  <div class="fa-lvl hi">🟠 ख़तरा: अधिक</div>
 
-  <h2 class="reveal"><span class="section-num">5</span> Fake Customer Care — Sahi Number Lagta Hai, Par Nahi Hai</h2>
+  <p>ठग एकदम असली जैसी वेबसाइट बनाते हैं — लोगो, डिज़ाइन, रंग सब एक जैसे। फर्क सिर्फ URL में होता है जो लोग आमतौर पर नहीं देखते।</p>
 
-  <div class="warning-cards">
-    <div class="warn-card blue reveal" style="--i:4">
-      <div class="warn-header">
-        <div class="warn-icon">📞</div>
-        <div>
-          <div class="warn-title">Fake Customer Care / Helpline</div>
-          <div class="warn-subtitle">Google pe bhi fake numbers hote hain</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-high">🔴 Danger Level: HIGH</div>
+  <div class="fa-img">
+    <canvas id="urlCanvas" width="700" height="150"
+      role="img"
+      aria-label="असली SBI URL sbi.co.in और नकली फिशिंग URL sb1.co.in-login.xyz की तुलना">
+    </canvas>
+  </div>
 
-      <p>Fraudsters <strong>Google Ads</strong> ke zariye fake helpline numbers promote karte hain — jab aap "Amazon helpline number" search karte ho — top result scammer ka ho sakta hai.</p>
+  <h4>जाँचने के 3 तरीके:</h4>
+  <ul class="fa-cl">
+    <li><span class="fa-cl-dot">🔒</span><span><strong>लॉक आइकन देखें</strong> — HTTPS ज़रूरी है, लेकिन सिर्फ HTTPS से safe नहीं हो जाते — URL भी ध्यान से पढ़ें।</span></li>
+    <li><span class="fa-cl-dot">🔍</span><span><strong>डोमेन ध्यान से पढ़ें</strong> — sbi.co.in और sbi.co.in-verify.xyz बिल्कुल अलग हैं।</span></li>
+    <li><span class="fa-cl-dot">📌</span><span><strong>हमेशा Bookmark से खोलें</strong> — या गूगल में ऑफिशियल साइट सर्च करें — किसी के दिए लिंक पर क्लिक न करें।</span></li>
+  </ul>
+</div>
 
-      <h4>Kaise Identify Karein Fake Helpline:</h4>
-      <ul class="checklist">
-        <li><span class="check-icon">🔢</span><span><strong>Mobile number pe call aayi</strong> — genuine companies fixed lines use karti hain, +91 9876... nahi</span></li>
-        <li><span class="check-icon">💻</span><span><strong>Anydesk/TeamViewer download karwaya</strong> — yeh screen access scam hai, turant phone kaato</span></li>
-        <li><span class="check-icon">💳</span><span><strong>Gift card ya UPI se payment maangi</strong> — koi company aisa nahi karti kabhi</span></li>
-        <li><span class="check-icon">🌐</span><span><strong>Company ki official app se number lo</strong> — Google pe search mat karo</span></li>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 3 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">3</span> बड़ा लालच — "घर बैठे ₹50,000 कमाओ"</h2>
+
+<div class="fa-card o fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">💰</div>
+    <div>
+      <div class="fa-card-title">लालच का जाल</div>
+      <div class="fa-card-sub">लालच दिखाओ — पैसे लो</div>
+    </div>
+  </div>
+  <div class="fa-lvl hi">🟠 ख़तरा: अधिक</div>
+
+  <p>अगर कोई ऑफर <strong>सुनने में बहुत अच्छा लगे — तो वो स्कैम है</strong>। सीधा नियम: दुनिया में कोई भी मुफ्त में इतना नहीं देता।</p>
+
+  <div class="fa-img">
+    <canvas id="scamCanvas" width="700" height="130"
+      role="img"
+      aria-label="चार प्रकार के ऑनलाइन स्कैम: लॉटरी, नकली नौकरी, निवेश धोखा और रोमांस स्कैम">
+    </canvas>
+  </div>
+
+  <div class="fa-alert w">
+    <div class="fa-alert-ic">💡</div>
+    <div class="fa-alert-tx">
+      <strong>सोने का नियम:</strong>
+      पैसे देकर पैसे मिलेंगे — यह Ponzi Scheme है। कोई भी असली कंपनी पहले निवेश करने के लिए नहीं कहती। SEBI पंजीकरण का दावा भी SEBI की ऑफिशियल साइट पर जाँचें।
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 4 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">4</span> OTP मांगना — बस यही है उनका काम</h2>
+
+<div class="fa-card r fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">📲</div>
+    <div>
+      <div class="fa-card-title">OTP धोखाधड़ी</div>
+      <div class="fa-card-sub">भारत का नंबर एक साइबर अपराध</div>
+    </div>
+  </div>
+  <div class="fa-lvl cr">🔴 ख़तरा: बहुत अधिक</div>
+
+  <p>OTP का मतलब है <strong>One Time Password</strong> — और यह सिर्फ आपके लिए है। बैंक साफ कहता है: <em>"किसी को OTP न बताएं।"</em> फिर भी लोग शेयर करते हैं — क्योंकि ठग बहुत convincing होता है।</p>
+
+  <div class="fa-eg">
+    <div class="fa-msg">🎭 "मैं SBI से बोल रहा हूँ — आपका KYC अपडेट करना है — OTP बताइए।"</div>
+    <div class="fa-msg">🎭 "आपको ₹500 कैशबैक आया है — verify करने के लिए OTP enter करें।"</div>
+    <div class="fa-msg">🎭 "मैं आपका दोस्त हूँ — गलती से मेरा OTP आपके नंबर पर आया — forward कर दो।"</div>
+  </div>
+
+  <div class="fa-dd">
+    <div class="fa-do">
+      <h4>✅ OTP सुरक्षा नियम</h4>
+      <ul>
+        <li>OTP सिर्फ खुद इस्तेमाल करें</li>
+        <li>OTP का screenshot न लें</li>
+        <li>संदिग्ध OTP आए तो तुरंत पासवर्ड बदलें</li>
+        <li>OTP आया = कोई account access करने की कोशिश कर रहा है</li>
       </ul>
-
-      <div class="alert alert-danger">
-        <div class="alert-icon">🚫</div>
-        <div class="alert-text">
-          <strong>Screen Share = Game Over:</strong>
-          Agar koi bhi "help" ke liye Anydesk, TeamViewer ya Quick Support download karwata hai — toh woh aapka pura phone control le sakta hai. Bank apps, UPI, sab kuch. Kabhi bhi yeh apps kisi ke kehne pe mat install karo.
-        </div>
-      </div>
     </div>
-  </div>
-
-  <h2 class="reveal"><span class="section-num">6</span> Social Engineering — Aapki Information Se Aapko Thagein</h2>
-
-  <div class="warning-cards">
-    <div class="warn-card orange reveal" style="--i:5">
-      <div class="warn-header">
-        <div class="warn-icon">🧠</div>
-        <div>
-          <div class="warn-title">Social Engineering</div>
-          <div class="warn-subtitle">Psychology ka use karke trust banana</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-medium">🟠 Danger Level: HIGH</div>
-
-      <p>Social engineering mein fraudster aapki <strong>public information</strong> use karta hai — Facebook, Instagram, LinkedIn — taaki aap use genuine samjho.</p>
-
-      <h4>Kaise Karte Hain:</h4>
-      <div class="example-box">
-        <div class="example-msg">
-          🎭 "Arre bhai, main [city] se bol raha hoon — tumhare cousin [name] ne bola tha tumse baat karoon — urgent kaam hai — ₹5000 bhejo please"
-        </div>
-        <div class="example-msg">
-          🎭 "Sir, main [company name] HR se — aapka resume dekha — pehle ₹2000 registration fee bhejo"
-        </div>
-      </div>
-
-      <h3>Social Media Se Kya Information Protect Karein:</h3>
-      <ul class="checklist">
-        <li><span class="check-icon">📱</span><span>Phone number public mat rakho Facebook/Insta pe</span></li>
-        <li><span class="check-icon">🏠</span><span>Ghar ka address, city, locality share mat karo strangers se</span></li>
-        <li><span class="check-icon">👨‍👩‍👦</span><span>Family members ke naam aur details private rakho</span></li>
-        <li><span class="check-icon">✈️</span><span>Travel plans pehle se social media pe mat daalo — ghar khali hai yeh pata chal jaata hai</span></li>
-        <li><span class="check-icon">💼</span><span>Job change, salary, financial decisions public mat karo</span></li>
+    <div class="fa-dn">
+      <h4>❌ यह कभी न करें</h4>
+      <ul>
+        <li>किसी को भी OTP न बताएं — बैंक को भी नहीं</li>
+        <li>OTP किसी को message या WhatsApp न करें</li>
+        <li>Screen share पर OTP न दिखाएं</li>
+        <li>फोन पर बोलते वक्त OTP न बताएं</li>
       </ul>
     </div>
   </div>
+</div>
 
-  <h2 class="reveal"><span class="section-num">7</span> UPI / QR Code Scan Karo — "Receive" Karne Ke Liye?</h2>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 5 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">5</span> नकली कस्टमर केयर — गूगल पर भी नकली नंबर हैं</h2>
 
-  <div class="warning-cards">
-    <div class="warn-card red reveal" style="--i:6">
-      <div class="warn-header">
-        <div class="warn-icon">📱</div>
-        <div>
-          <div class="warn-title">UPI Scam — Receive Request Fraud</div>
-          <div class="warn-subtitle">India ka fastest growing scam</div>
-        </div>
-      </div>
-      <div class="warn-danger danger-high">🔴 Danger Level: CRITICAL</div>
-
-      <p>Yeh sabse naya aur sabse dangerous scam hai. Fraudster kehta hai: <em>"Main aapko paise bhej raha hoon — ek baar UPI PIN enter karo."</em> Aur aapke paise chale jaate hain.</p>
-
-      <!-- SVG UPI Explainer -->
-      <svg viewBox="0 0 700 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin:16px 0;border-radius:12px;">
-        <rect width="700" height="180" fill="#0d0d1a" rx="12"/>
-
-        <!-- How UPI works -->
-        <text x="350" y="25" text-anchor="middle" fill="#5a5a72" font-family="'Syne',sans-serif" font-size="11" font-weight="700" letter-spacing="2">UPI KI SACHCHI HAQEEQAT</text>
-
-        <!-- Send money flow -->
-        <rect x="20" y="40" width="180" height="60" rx="8" fill="rgba(46,213,115,0.1)" stroke="rgba(46,213,115,0.3)" stroke-width="1.5"/>
-        <text x="110" y="65" text-anchor="middle" fill="#9090a8" font-size="12">PIN enter karo</text>
-        <text x="110" y="82" text-anchor="middle" fill="#2ed573" font-family="'Syne',sans-serif" font-size="13" font-weight="700">= PAISA BHEJA</text>
-        <text x="110" y="118" text-anchor="middle" fill="#2ed573" font-size="10">Aap kisi ko paise bhej rahe ho</text>
-
-        <!-- Arrow -->
-        <text x="350" y="75" text-anchor="middle" fill="#5a5a72" font-size="24">⟷</text>
-
-        <!-- Receive money flow -->
-        <rect x="500" y="40" width="180" height="60" rx="8" fill="rgba(255,71,87,0.1)" stroke="rgba(255,71,87,0.3)" stroke-width="1.5"/>
-        <text x="590" y="65" text-anchor="middle" fill="#9090a8" font-size="12">Receive karne ke liye</text>
-        <text x="590" y="82" text-anchor="middle" fill="#ff4757" font-family="'Syne',sans-serif" font-size="13" font-weight="700">PIN NAHI CHAHIYE!</text>
-        <text x="590" y="118" text-anchor="middle" fill="#ff4757" font-size="10">Receive = sirf accept button</text>
-
-        <text x="350" y="155" text-anchor="middle" fill="#ffa502" font-family="'Syne',sans-serif" font-size="12" font-weight="700">⚠️ Agar "receive" ke liye PIN maange — 100% FRAUD hai</text>
-      </svg>
-
-      <div class="do-dont">
-        <div class="do-box">
-          <h4>✅ UPI Safe Use</h4>
-          <ul>
-            <li>Receive ke liye sirf "Accept" button</li>
-            <li>PIN sirf khud send karte waqt daalo</li>
-            <li>Sabse pehle amount check karo</li>
-            <li>Trusted contacts se hi transactions karo</li>
-          </ul>
-        </div>
-        <div class="dont-box">
-          <h4>❌ UPI Fraud Signs</h4>
-          <ul>
-            <li>Receive ke liye PIN maangna — FRAUD</li>
-            <li>QR code scan karke receive — FRAUD</li>
-            <li>Collect request aaye bina baat ke — FRAUD</li>
-            <li>"Test payment" ke liye PIN — FRAUD</li>
-          </ul>
-        </div>
-      </div>
+<div class="fa-card b fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">📞</div>
+    <div>
+      <div class="fa-card-title">नकली कस्टमर केयर स्कैम</div>
+      <div class="fa-card-sub">गूगल पर भी नकली हेल्पलाइन नंबर होते हैं</div>
     </div>
   </div>
+  <div class="fa-lvl hi">🟠 ख़तरा: अधिक</div>
 
-  <!-- ══ QUICK ACTION TABLE ══ -->
-  <h2 class="reveal"><span class="section-num">+</span> Fraud Ho Jaaye Toh — Turant Kya Karein?</h2>
+  <p>ठग <strong>गूगल विज्ञापनों</strong> के ज़रिए नकली हेल्पलाइन नंबर प्रचारित करते हैं। जब आप "Amazon helpline number" खोजते हो — पहला परिणाम ठग का हो सकता है।</p>
 
-  <div class="reveal">
-    <table class="action-table">
-      <thead>
-        <tr>
-          <th>Step</th>
-          <th>Kya Karein</th>
-          <th>Kitni Jaldi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>1</strong></td>
-          <td>Bank ko call karo — 1800 number pe — transaction freeze karwao</td>
-          <td><span class="badge badge-red">Turant</span></td>
-        </tr>
-        <tr>
-          <td><strong>2</strong></td>
-          <td>Cybercrime.gov.in pe complaint darj karo — ya 1930 pe call karo</td>
-          <td><span class="badge badge-red">1 ghante mein</span></td>
-        </tr>
-        <tr>
-          <td><strong>3</strong></td>
-          <td>UPI app mein jaake transaction report karo — "Report Fraud" option</td>
-          <td><span class="badge badge-orange">Aaj hi</span></td>
-        </tr>
-        <tr>
-          <td><strong>4</strong></td>
-          <td>Saare passwords change karo — email, bank, UPI apps</td>
-          <td><span class="badge badge-orange">Aaj hi</span></td>
-        </tr>
-        <tr>
-          <td><strong>5</strong></td>
-          <td>Nearest cyber crime police station mein written complaint</td>
-          <td><span class="badge badge-green">2-3 din mein</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h4>नकली हेल्पलाइन की पहचान:</h4>
+  <ul class="fa-cl">
+    <li><span class="fa-cl-dot">📱</span><span><strong>मोबाइल नंबर से कॉल आई</strong> — असली कंपनियाँ fixed lines इस्तेमाल करती हैं, +91-9876... नहीं।</span></li>
+    <li><span class="fa-cl-dot">💻</span><span><strong>Anydesk/TeamViewer download करवाया</strong> — यह screen access स्कैम है, तुरंत फोन काटें।</span></li>
+    <li><span class="fa-cl-dot">💳</span><span><strong>Gift card या UPI से payment माँगी</strong> — कोई भी कंपनी ऐसा कभी नहीं करती।</span></li>
+    <li><span class="fa-cl-dot">🌐</span><span><strong>कंपनी की ऑफिशियल app से नंबर लें</strong> — गूगल पर search न करें।</span></li>
+  </ul>
 
-  <div class="alert alert-safe reveal" style="margin-top:24px;">
-    <div class="alert-icon">✅</div>
-    <div class="alert-text">
-      <strong>Paisa Wapas Mil Sakta Hai!</strong>
-      Agar 24-48 ghante mein report karo toh bank merchant se money hold karwa sakta hai. Jitni jaldi complaint — utna zyaada chance paisa wapas milne ka. Sharmao mat — yeh crime hai, aapki galti nahi.
+  <div class="fa-alert d">
+    <div class="fa-alert-ic">🚫</div>
+    <div class="fa-alert-tx">
+      <strong>Screen Share = सब कुछ गया:</strong>
+      अगर कोई "मदद" के लिए Anydesk या TeamViewer download करवाता है — वो आपका पूरा फोन नियंत्रित कर सकता है। Bank apps, UPI सब कुछ। कभी भी ये apps किसी के कहने पर install न करें।
     </div>
   </div>
+</div>
 
-  <!-- ══ CONCLUSION ══ -->
-  <div class="conclusion reveal">
-    <h2 style="margin-top:0;"><span class="section-num">✓</span> Conclusion</h2>
-    <p>
-      Online fraud technology ka crime nahi hai — yeh psychology ka crime hai. Fraudster aapki <strong>ghabrahat, lobh, trust aur urgency</strong> ko target karta hai. Bas ek rule yaad rakho:
-    </p>
-    <p style="font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--accent2);">
-      "Ruko — Sochho — Verify Karo"
-    </p>
-    <p>
-      Koi bhi call, message ya email mein jab bhi "abhi karo" feel aaye — wahan ruk jaao. Ek phone call, ek Google search — aapke lakhs rupaye aur data bacha sakta hai.
-    </p>
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 6 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">6</span> सोशल इंजीनियरिंग — आपकी जानकारी से आपको ठगें</h2>
+
+<div class="fa-card o fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">🧠</div>
+    <div>
+      <div class="fa-card-title">मनोविज्ञान का हथियार</div>
+      <div class="fa-card-sub">सार्वजनिक जानकारी से भरोसा बनाना</div>
+    </div>
+  </div>
+  <div class="fa-lvl hi">🟠 ख़तरा: अधिक</div>
+
+  <p>सोशल इंजीनियरिंग में ठग आपकी <strong>सार्वजनिक जानकारी</strong> इस्तेमाल करता है — Facebook, Instagram, LinkedIn — ताकि आप उसे असली समझो।</p>
+
+  <div class="fa-eg">
+    <div class="fa-msg">🎭 "अरे भाई, मैं [शहर] से बोल रहा हूँ — तुम्हारे चचेरे भाई [नाम] ने बताया — urgent काम है — ₹5,000 भेजो please।"</div>
+    <div class="fa-msg">🎭 "Sir, मैं [कंपनी का नाम] HR से — आपका resume देखा — पहले ₹2,000 registration fee भेजें।"</div>
   </div>
 
-</div><!-- /wrapper -->
+  <h3>सोशल मीडिया पर क्या सुरक्षित रखें:</h3>
+  <ul class="fa-cl">
+    <li><span class="fa-cl-dot">📱</span><span>फोन नंबर Facebook/Instagram पर public न रखें।</span></li>
+    <li><span class="fa-cl-dot">🏠</span><span>घर का पता, शहर, मोहल्ला अजनबियों से share न करें।</span></li>
+    <li><span class="fa-cl-dot">👨‍👩‍👦</span><span>परिवार के सदस्यों के नाम और जानकारी private रखें।</span></li>
+    <li><span class="fa-cl-dot">✈️</span><span>यात्रा की योजनाएँ पहले से सोशल मीडिया पर न डालें।</span></li>
+    <li><span class="fa-cl-dot">💼</span><span>नौकरी बदलना, वेतन, वित्तीय निर्णय public न करें।</span></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SIGN 7 -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">7</span> UPI / QR कोड स्कैन करो — "पैसे receive करने के लिए?"</h2>
+
+<div class="fa-card r fa-r">
+  <div class="fa-card-head">
+    <div class="fa-card-icon">📱</div>
+    <div>
+      <div class="fa-card-title">UPI Receive Request फ्रॉड</div>
+      <div class="fa-card-sub">भारत का सबसे तेज़ी से बढ़ता स्कैम</div>
+    </div>
+  </div>
+  <div class="fa-lvl cr">🔴 ख़तरा: बहुत अधिक</div>
+
+  <p>ठग कहता है: <em>"मैं आपको पैसे भेज रहा हूँ — एक बार UPI PIN enter करो।"</em> और आपके पैसे चले जाते हैं।</p>
+
+  <div class="fa-img">
+    <canvas id="upiCanvas" width="700" height="165"
+      role="img"
+      aria-label="UPI PIN का सही उपयोग: पैसे भेजने के लिए PIN चाहिए, receive के लिए नहीं — यह स्कैम की पहचान है">
+    </canvas>
+  </div>
+
+  <div class="fa-dd">
+    <div class="fa-do">
+      <h4>✅ UPI सुरक्षित उपयोग</h4>
+      <ul>
+        <li>Receive के लिए सिर्फ "Accept" button</li>
+        <li>PIN सिर्फ खुद send करते वक्त डालें</li>
+        <li>पहले राशि जाँचें</li>
+        <li>सिर्फ जाने-पहचाने लोगों से लेनदेन</li>
+      </ul>
+    </div>
+    <div class="fa-dn">
+      <h4>❌ UPI फ्रॉड के संकेत</h4>
+      <ul>
+        <li>Receive के लिए PIN माँगना — फ्रॉड</li>
+        <li>QR code scan करके receive — फ्रॉड</li>
+        <li>बिना बात के Collect request — फ्रॉड</li>
+        <li>"Test payment" के लिए PIN — फ्रॉड</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ACTION TABLE -->
+<!-- ═══════════════════════════════════════════ -->
+<h2 class="fa-r"><span class="fa-badge-num">+</span> फ्रॉड हो जाए तो — तुरंत क्या करें?</h2>
+
+<div class="fa-r">
+  <table class="fa-tbl">
+    <thead>
+      <tr><th>क्रम</th><th>क्या करें</th><th>कब तक</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>बैंक को 1800 toll-free नंबर पर call करें — transaction freeze करवाएं</td>
+        <td><span class="fa-lbl r">तुरंत</span></td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Cybercrime.gov.in पर शिकायत दर्ज करें — या 1930 पर call करें</td>
+        <td><span class="fa-lbl r">1 घंटे में</span></td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>UPI app में "Report Fraud" option से transaction report करें</td>
+        <td><span class="fa-lbl o">आज ही</span></td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>सारे पासवर्ड बदलें — email, bank, UPI apps</td>
+        <td><span class="fa-lbl o">आज ही</span></td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>नज़दीकी साइबर क्राइम पुलिस थाने में written complaint दें</td>
+        <td><span class="fa-lbl g">2-3 दिन में</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="fa-alert s fa-r">
+  <div class="fa-alert-ic">✅</div>
+  <div class="fa-alert-tx">
+    <strong>पैसा वापस मिल सकता है!</strong>
+    अगर 24-48 घंटे में रिपोर्ट करें तो बैंक merchant से पैसे hold करवा सकता है। जितनी जल्दी शिकायत — उतना अधिक chance पैसा वापस मिलने का। शर्माएं नहीं — यह अपराध है, आपकी गलती नहीं।
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CONCLUSION -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="fa-end fa-r">
+  <h2 style="margin-top:0;"><span class="fa-badge-num">✓</span> निष्कर्ष</h2>
+  <p>ऑनलाइन फ्रॉड technology का अपराध नहीं है — यह <strong>मनोविज्ञान का अपराध</strong> है। ठग आपकी घबराहट, लालच, भरोसे और जल्दबाज़ी को निशाना बनाता है।</p>
+  <p class="fa-rule">"रुको — सोचो — जाँचो"</p>
+  <p>किसी भी call, message या email में जब भी "अभी करो" वाला feel आए — वहाँ रुक जाइए। एक phone call, एक Google search — आपके लाखों रुपये और डेटा बचा सकता है।</p>
+</div>
+
+</article>
 
 <script>
-// ── THEME TOGGLE ────────────────────────────────
-const btn = document.getElementById('themeBtn');
-const html = document.documentElement;
-const saved = localStorage.getItem('tc-theme') || 'dark';
-if (saved === 'light') { html.setAttribute('data-theme','light'); btn.textContent = '☀️'; }
+/* ── Canvas drawings ──────────────────────────── */
+(function(){
+  var darkMode = document.documentElement.classList.contains('dark-mode')
+    || document.body.classList.contains('dark-mode');
+  // detect dark dynamically
+  var testEl = document.createElement('div');
+  testEl.style.display = 'none';
+  document.body.appendChild(testEl);
+  var bg     = getComputedStyle(testEl).getPropertyValue('--bg')      || (darkMode ? '#0f172a' : '#f3f4f6');
+  var cardBg = getComputedStyle(testEl).getPropertyValue('--card-bg') || (darkMode ? '#1e293b' : '#ffffff');
+  var textC  = getComputedStyle(testEl).getPropertyValue('--text-color') || (darkMode ? '#f1f5f9' : '#111');
+  var border = getComputedStyle(testEl).getPropertyValue('--border-color') || (darkMode ? '#334155' : '#e5e7eb');
+  document.body.removeChild(testEl);
 
-btn.addEventListener('click', function() {
-  const isDark = html.getAttribute('data-theme') !== 'light';
-  if (isDark) {
-    html.setAttribute('data-theme','light');
-    btn.textContent = '☀️';
-    localStorage.setItem('tc-theme','light');
-  } else {
-    html.removeAttribute('data-theme');
-    btn.textContent = '🌙';
-    localStorage.setItem('tc-theme','dark');
+  // fallback via CSS variable read from :root
+  function getVar(v) {
+    return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   }
-});
+  bg     = getVar('--bg')           || bg;
+  cardBg = getVar('--card-bg')      || cardBg;
+  textC  = getVar('--text-color')   || textC;
+  border = getVar('--border-color') || border;
 
-// ── PROGRESS BAR ────────────────────────────────
-window.addEventListener('scroll', function() {
-  const bar = document.getElementById('progress');
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  bar.style.width = (scrollTop / docHeight * 100) + '%';
-});
+  var RED    = '#ef4444';
+  var ORANGE = '#f97316';
+  var GREEN  = '#22c55e';
+  var GREY   = '#6b7280';
+  var LGREY  = '#9ca3af';
 
-// ── SCROLL REVEAL ────────────────────────────────
-const observer = new IntersectionObserver(function(entries) {
-  entries.forEach(function(entry) {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
+  /* ─── HERO CANVAS ─── */
+  var hc = document.getElementById('heroCanvas');
+  if(hc){
+    var ctx = hc.getContext('2d');
+    var W=860, H=260;
+    // bg
+    var gbg = ctx.createLinearGradient(0,0,W,H);
+    gbg.addColorStop(0, bg);
+    gbg.addColorStop(1, darkMode?'#1a0810':'#fdf2f2');
+    ctx.fillStyle = gbg;
+    roundRect(ctx, 0,0,W,H,14); ctx.fill();
+
+    // grid
+    ctx.save(); ctx.globalAlpha=.07; ctx.strokeStyle=RED; ctx.lineWidth=.6;
+    [52,104,156,208].forEach(function(y){line(ctx,0,y,W,y);});
+    [172,344,516,688].forEach(function(x){line(ctx,x,0,x,H);});
+    ctx.restore();
+
+    // label
+    ctx.save(); ctx.globalAlpha=.13; ctx.fillStyle=textC;
+    ctx.font='700 10px inherit, sans-serif'; ctx.textAlign='center';
+    ctx.fillText('ऑनलाइन फ्रॉड प्रोटेक्शन गाइड', W/2, 26);
+    ctx.restore();
+
+    // LEFT: Shield
+    drawShield(ctx, 110, 130, GREEN);
+
+    // CENTER: Danger
+    drawDanger(ctx, 430, 130, RED);
+
+    // RIGHT: Monitor/Hacker
+    drawHacker(ctx, 730, 130, RED);
+
+    // Arrows
+    drawDashedArrow(ctx, 655,130, 510,130, RED, true);
+    drawDashedArrow(ctx, 348,130, 168,130, GREEN, false);
+
+    // bottom text
+    ctx.save(); ctx.globalAlpha=.06; ctx.fillStyle=textC;
+    ctx.font='9px monospace'; ctx.textAlign='center';
+    ctx.fillText('01001111 01001110 01001100 01001001 01001110 01000101', W/2, H-8);
+    ctx.restore();
+  }
+
+  /* ─── URL CANVAS ─── */
+  var uc = document.getElementById('urlCanvas');
+  if(uc){
+    var ctx2 = uc.getContext('2d');
+    var W2=700,H2=150;
+    ctx2.fillStyle = darkMode?'#0f172a':'#f8fafc';
+    roundRect(ctx2,0,0,W2,H2,12); ctx2.fill();
+
+    // Real box
+    drawUrlBox(ctx2, 20,18,290,62, GREEN, '✓ https://', 'sbi.co.in', '/online/login', '✅ असली SBI');
+    // VS
+    ctx2.fillStyle=GREY; ctx2.font='700 18px sans-serif'; ctx2.textAlign='center';
+    ctx2.fillText('VS', 350, 60);
+    // Fake box
+    drawUrlBoxFake(ctx2, 390,18,290,62, '✗ http://', 'sb', '1', '.co.in-login.xyz', '/verify-now', '❌ नकली साइट');
+
+    // pointer blink not possible in static — draw arrow
+    ctx2.save();
+    ctx2.strokeStyle=RED; ctx2.lineWidth=2;
+    ctx2.beginPath(); ctx2.moveTo(477,18); ctx2.lineTo(477,10); ctx2.stroke();
+    ctx2.fillStyle=RED; ctx2.font='700 9px sans-serif'; ctx2.textAlign='center';
+    ctx2.fillText('यहाँ देखो!', 477, 8);
+    ctx2.restore();
+
+    // bottom note
+    ctx2.fillStyle=GREY; ctx2.font='11px sans-serif'; ctx2.textAlign='center';
+    ctx2.fillText('SBI कभी .xyz या -login वाला डोमेन इस्तेमाल नहीं करता', 350, 140);
+  }
+
+  /* ─── SCAM TYPES CANVAS ─── */
+  var sc = document.getElementById('scamCanvas');
+  if(sc){
+    var ctx3 = sc.getContext('2d');
+    var W3=700,H3=130;
+    ctx3.fillStyle = darkMode?'#0f172a':'#f8fafc';
+    roundRect(ctx3,0,0,W3,H3,12); ctx3.fill();
+    var types=[
+      {x:14, emoji:'🎰', title:'लॉटरी स्कैम', sub:'"आप जीत गए!"', col:ORANGE},
+      {x:185,emoji:'💼', title:'नकली नौकरी',  sub:'"घर बैठे ₹50k"', col:RED},
+      {x:356,emoji:'📈', title:'निवेश धोखा',  sub:'"300% रिटर्न"', col:RED},
+      {x:527,emoji:'💌', title:'रोमांस स्कैम', sub:'"मुझे प्यार हुआ"', col:RED},
+    ];
+    types.forEach(function(t){
+      // box
+      ctx3.save();
+      ctx3.strokeStyle = t.col+'44'; ctx3.lineWidth=1.5;
+      ctx3.fillStyle   = t.col+'18';
+      roundRect(ctx3,t.x,12,153,98,10); ctx3.fill(); ctx3.stroke();
+      ctx3.restore();
+      // emoji
+      ctx3.font='26px serif'; ctx3.textAlign='center';
+      ctx3.fillText(t.emoji, t.x+76, 52);
+      // title
+      ctx3.fillStyle=t.col; ctx3.font='700 12px sans-serif';
+      ctx3.fillText(t.title, t.x+76, 74);
+      // sub
+      ctx3.fillStyle=GREY; ctx3.font='10px sans-serif';
+      ctx3.fillText(t.sub, t.x+76, 90);
+      // scam
+      ctx3.fillStyle=RED; ctx3.font='700 9px sans-serif';
+      ctx3.fillText('❌ स्कैम', t.x+76, 105);
+    });
+  }
+
+  /* ─── UPI CANVAS ─── */
+  var upc = document.getElementById('upiCanvas');
+  if(upc){
+    var ctx4 = upc.getContext('2d');
+    var W4=700,H4=165;
+    ctx4.fillStyle = darkMode?'#0f172a':'#f8fafc';
+    roundRect(ctx4,0,0,W4,H4,12); ctx4.fill();
+
+    // title
+    ctx4.fillStyle=GREY; ctx4.font='700 11px sans-serif'; ctx4.textAlign='center';
+    ctx4.fillText('UPI की सच्चाई', 350, 24);
+
+    // Send box
+    ctx4.save();
+    ctx4.fillStyle='rgba(34,197,94,0.1)'; ctx4.strokeStyle='rgba(34,197,94,0.35)'; ctx4.lineWidth=1.5;
+    roundRect(ctx4,20,36,280,70,8); ctx4.fill(); ctx4.stroke(); ctx4.restore();
+    ctx4.fillStyle=LGREY; ctx4.font='13px sans-serif'; ctx4.textAlign='center';
+    ctx4.fillText('PIN enter करो', 160, 64);
+    ctx4.fillStyle=GREEN; ctx4.font='700 14px sans-serif';
+    ctx4.fillText('= पैसे भेजे', 160, 88);
+    ctx4.fillStyle=GREEN; ctx4.font='11px sans-serif';
+    ctx4.fillText('✅ आप किसी को पैसे भेज रहे हो', 160, 126);
+
+    // VS
+    ctx4.fillStyle=GREY; ctx4.font='22px sans-serif'; ctx4.textAlign='center';
+    ctx4.fillText('⟷', 350, 80);
+
+    // Receive box
+    ctx4.save();
+    ctx4.fillStyle='rgba(239,68,68,0.1)'; ctx4.strokeStyle='rgba(239,68,68,0.35)'; ctx4.lineWidth=1.5;
+    roundRect(ctx4,400,36,280,70,8); ctx4.fill(); ctx4.stroke(); ctx4.restore();
+    ctx4.fillStyle=LGREY; ctx4.font='12px sans-serif'; ctx4.textAlign='center';
+    ctx4.fillText('Receive करने के लिए', 540, 64);
+    ctx4.fillStyle=RED; ctx4.font='700 14px sans-serif';
+    ctx4.fillText('PIN नहीं चाहिए!', 540, 88);
+    ctx4.fillStyle=RED; ctx4.font='11px sans-serif';
+    ctx4.fillText('❌ Receive = सिर्फ Accept button', 540, 126);
+
+    // bottom warning
+    ctx4.fillStyle=ORANGE; ctx4.font='700 12px sans-serif'; ctx4.textAlign='center';
+    ctx4.fillText('⚠️  अगर "receive" के लिए PIN माँगे — 100% FRAUD है', 350, 153);
+  }
+
+  /* ── helpers ── */
+  function roundRect(c,x,y,w,h,r){
+    c.beginPath();
+    c.moveTo(x+r,y);
+    c.lineTo(x+w-r,y); c.arcTo(x+w,y,x+w,y+r,r);
+    c.lineTo(x+w,y+h-r); c.arcTo(x+w,y+h,x+w-r,y+h,r);
+    c.lineTo(x+r,y+h); c.arcTo(x,y+h,x,y+h-r,r);
+    c.lineTo(x,y+r); c.arcTo(x,y,x+r,y,r);
+    c.closePath();
+  }
+  function line(c,x1,y1,x2,y2){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();}
+
+  function drawShield(c, cx, cy, col){
+    c.save();
+    c.translate(cx, cy);
+    // pulse ring
+    c.globalAlpha=.12; c.strokeStyle=col; c.lineWidth=1;
+    c.beginPath(); c.arc(0,0,72,0,Math.PI*2); c.stroke();
+    // shield body
+    c.globalAlpha=1;
+    c.beginPath();
+    c.moveTo(0,-62); c.lineTo(50,-40); c.lineTo(50,18);
+    c.quadraticCurveTo(50,58, 0,75);
+    c.quadraticCurveTo(-50,58,-50,18); c.lineTo(-50,-40); c.closePath();
+    c.fillStyle=col+'22'; c.fill();
+    c.strokeStyle=col; c.lineWidth=1.5;
+    c.shadowColor=col; c.shadowBlur=8; c.stroke();
+    // checkmark
+    c.shadowColor=col; c.shadowBlur=6;
+    c.strokeStyle=col; c.lineWidth=3;
+    c.lineCap='round'; c.lineJoin='round';
+    c.beginPath(); c.moveTo(-18,4); c.lineTo(-4,22); c.lineTo(22,-14); c.stroke();
+    // label
+    c.shadowBlur=0; c.fillStyle=col; c.font='700 11px sans-serif';
+    c.textAlign='center'; c.fillText('सुरक्षित उपयोगकर्ता', 0, 108);
+    c.restore();
+  }
+
+  function drawDanger(c, cx, cy, col){
+    c.save(); c.translate(cx,cy);
+    // outer ring
+    c.globalAlpha=.1; c.strokeStyle=col; c.lineWidth=1;
+    c.beginPath(); c.arc(0,0,72,0,Math.PI*2); c.stroke();
+    // inner circle
+    c.globalAlpha=1; c.fillStyle=col+'1a'; c.strokeStyle=col+'66'; c.lineWidth=1.5;
+    c.beginPath(); c.arc(0,0,50,0,Math.PI*2); c.fill(); c.stroke();
+    // triangle
+    c.beginPath(); c.moveTo(0,-34); c.lineTo(28,22); c.lineTo(-28,22); c.closePath();
+    c.fillStyle=col+'2e'; c.fill();
+    c.strokeStyle=col; c.lineWidth=2; c.shadowColor=col; c.shadowBlur=10; c.stroke();
+    // !
+    c.fillStyle=col; c.font='700 22px sans-serif'; c.textAlign='center';
+    c.fillText('!', 0, 18);
+    // orbiting dot - static position
+    c.shadowBlur=6; c.fillStyle=col;
+    c.beginPath(); c.arc(50,0,5,0,Math.PI*2); c.fill();
+    // label
+    c.shadowBlur=0; c.fillStyle=col; c.font='700 11px sans-serif';
+    c.fillText('ख़तरनाक ज़ोन', 0, 90);
+    c.restore();
+  }
+
+  function drawHacker(c, cx, cy, col){
+    c.save(); c.translate(cx,cy);
+    // monitor
+    c.fillStyle=col+'1a'; c.strokeStyle=col; c.lineWidth=1.5; c.globalAlpha=.88;
+    roundRect(c,-48,-52,96,72,6); c.fill(); c.stroke();
+    c.fillStyle=col+'33';
+    roundRect(c,-14,22,28,7,2); c.fill();
+    roundRect(c,-24,29,48,4,2); c.fill();
+    // skull
+    c.globalAlpha=1; c.fillStyle=col;
+    c.font='30px serif'; c.textAlign='center';
+    c.shadowColor=col; c.shadowBlur=8;
+    c.fillText('☠', 0, -8);
+    // blinking code
+    c.shadowBlur=0; c.globalAlpha=.65; c.fillStyle=col;
+    c.font='8px monospace'; c.textAlign='left';
+    c.fillText('>_fraud', -34, -50);
+    // label
+    c.globalAlpha=1; c.fillStyle=col; c.font='700 11px sans-serif'; c.textAlign='center';
+    c.fillText('ठग / स्कैमर', 0, 68);
+    c.restore();
+  }
+
+  function drawDashedArrow(c, x1,y1, x2,y2, col, arrowAtEnd){
+    c.save();
+    c.strokeStyle=col; c.lineWidth=1.5; c.globalAlpha=.55;
+    c.setLineDash([6,4]);
+    // simple curve using midpoint
+    c.beginPath();
+    var mx=(x1+x2)/2, my=Math.min(y1,y2)-38;
+    c.moveTo(x1,y1); c.quadraticCurveTo(mx,my,x2,y2);
+    c.stroke();
+    c.setLineDash([]);
+    // arrowhead
+    c.globalAlpha=.65; c.fillStyle=col;
+    c.beginPath();
+    if(arrowAtEnd){
+      c.moveTo(x2,y2-5); c.lineTo(x2,y2+5); c.lineTo(x2-10,y2);
+    } else {
+      c.moveTo(x2,y2-5); c.lineTo(x2,y2+5); c.lineTo(x2+10,y2);
     }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    c.fill();
+    c.restore();
+  }
 
-document.querySelectorAll('.reveal').forEach(function(el) {
-  observer.observe(el);
-});
+  function drawUrlBox(c,x,y,w,h,col,pre,domain,path,label){
+    c.save();
+    c.fillStyle=col+'1a'; c.strokeStyle=col+'55'; c.lineWidth=1.5;
+    roundRect(c,x,y,w,h,8); c.fill(); c.stroke();
+    var cx=x+w/2;
+    c.fillStyle=LGREY; c.font='12px monospace'; c.textAlign='left';
+    c.fillText('https://', x+18, y+34);
+    c.fillStyle=col; c.font='700 14px monospace';
+    c.fillText(domain, x+76, y+34);
+    c.fillStyle=GREY; c.font='11px monospace';
+    c.fillText(path, x+18, y+54);
+    c.fillStyle=col; c.font='700 12px sans-serif'; c.textAlign='center';
+    c.fillText(label, cx, y+h+28);
+    c.restore();
+  }
+
+  function drawUrlBoxFake(c,x,y,w,h,pre,p1,p2,p3,path,label){
+    c.save();
+    c.fillStyle=RED+'1a'; c.strokeStyle=RED+'55'; c.lineWidth=1.5;
+    roundRect(c,x,y,w,h,8); c.fill(); c.stroke();
+    var startX=x+18;
+    c.fillStyle=LGREY; c.font='12px monospace'; c.textAlign='left';
+    c.fillText('http://', startX, y+34);
+    var off=startX+54;
+    c.fillStyle=LGREY; c.fillText(p1, off, y+34); off+=13;
+    c.fillStyle=RED; c.font='700 16px monospace'; c.fillText(p2, off, y+34); off+=12;
+    c.fillStyle=LGREY; c.font='12px monospace'; c.fillText(p3, off, y+34);
+    c.fillStyle=GREY; c.font='11px monospace'; c.fillText(path, startX, y+54);
+    c.fillStyle=RED; c.font='700 12px sans-serif'; c.textAlign='center';
+    c.fillText(label, x+w/2, y+h+28);
+    c.restore();
+  }
+
+})();
+
+/* ── Scroll reveal ── */
+(function(){
+  var els=document.querySelectorAll('.fa-r');
+  if(!els.length)return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}
+    });
+  },{threshold:.08,rootMargin:'0px 0px -28px 0px'});
+  els.forEach(function(el){io.observe(el);});
+})();
 </script>
-
-</body>
-</html>
