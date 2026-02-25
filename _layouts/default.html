@@ -301,11 +301,12 @@
 
 <!-- ═══════════════ COMMENTS ═══════════════ -->
 {% if page.is_post %}
-<div id="tc-root">
-  <div  style="display: flex;" class="tc-header">
+<div id="tc-root" role="region" aria-label="Comments">
+
+  <div class="tc-comments-header">
     <div class="tc-header-left">
-      <h2 style="margin:0; font-size:18px;">Discussion & Reviews</h2>
-      <div id="tc-rating-summary" class="tc-ps-rating">
+      <h2 style="margin:0;font-size:17px;">Discussion &amp; Reviews</h2>
+      <div class="tc-ps-rating">
         <span id="tc-avg-num" class="tc-avg-big">0.0</span>
         <div class="tc-ps-stars-wrap">
           <div id="tc-avg-stars" class="tc-stars-fs">★★★★★</div>
@@ -313,13 +314,21 @@
         </div>
       </div>
     </div>
+
     <div id="tc-auth-zone">
+      <!-- Login button — sirf tab dikhe jab logged out ho -->
       <div id="tc-auth-gate">
-        <div id="g_id_onload" data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com" data-callback="onGoogleAuth"></div>
+        <div id="g_id_onload"
+          data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
+          data-callback="onGoogleAuth"
+          data-auto_select="true"
+          data-skip_prompt_cookie="tc_logged_in">
+        </div>
         <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
       </div>
+      <!-- User pill — login ke baad dikhe -->
       <div id="tc-user-pill" style="display:none" class="tc-user-pill">
-        <img id="tc-user-pfp" src="" class="tc-pfp-small">
+        <img id="tc-user-pfp" src="" class="tc-pfp-small" alt="Profile">
         <span id="tc-user-name" class="tc-u-name"></span>
         <button onclick="tcLogout()" class="tc-logout-btn">Logout</button>
       </div>
@@ -327,8 +336,8 @@
   </div>
 
   <div class="tc-user-rate-box">
-    <p style="margin:0 0 5px 0; font-size:12px; color:#666;">Tap stars to rate:</p>
-    <div id="tc-star-row" class="tc-stars-input">
+    <p style="margin:0 0 5px;font-size:12px;color:var(--text-muted)">Tap stars to rate:</p>
+    <div id="tc-star-row" class="tc-stars-input" role="group">
       <span class="tc-s" onclick="handleStar(1)" onmouseover="hoverStar(1)" onmouseout="resetStar()">★</span>
       <span class="tc-s" onclick="handleStar(2)" onmouseover="hoverStar(2)" onmouseout="resetStar()">★</span>
       <span class="tc-s" onclick="handleStar(3)" onmouseover="hoverStar(3)" onmouseout="resetStar()">★</span>
@@ -339,14 +348,13 @@
 
   <div id="tc-main-editor" class="tc-editor-box">
     <textarea id="tc-input" placeholder="Join the discussion..."></textarea>
-    <div style="text-align:right; margin-top:8px;">
+    <div style="text-align:right;margin-top:8px;">
       <button onclick="handleAction('0')" class="tc-post-btn">Post Comment</button>
     </div>
   </div>
 
-  <div id="tc-feed" class="tc-feed"></div>
+  <div id="tc-feed" class="tc-feed" role="list"></div>
 </div>
-
 {% endif %}
 
 <!-- ═══════════════ FOOTER ═══════════════ -->
