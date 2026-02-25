@@ -1,199 +1,280 @@
-/* ===== THEME WHEEL & DARK MODE ===== */
+/* ============================================================
+   TYAGI CORE — main.js
+   ============================================================ */
+
+/* [1] DARK MODE */
+(function() {
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+  }
+})();
+
 const themeBtn = document.getElementById("dark-mode-toggle");
-const iconWrap = themeBtn ? themeBtn.querySelector(".wheel-icon-wrap") : null;
-
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark-mode");
-}
-
 if (themeBtn) {
+  const iconWrap = themeBtn.querySelector(".wheel-icon-wrap");
   themeBtn.addEventListener("click", () => {
-    iconWrap.classList.add("wheel-spin");
+    if (iconWrap) iconWrap.classList.add("wheel-spin");
     document.body.classList.toggle("dark-mode");
-    const isDark = document.body.classList.contains("dark-mode");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-    setTimeout(() => { iconWrap.classList.remove("wheel-spin"); }, 800);
+    localStorage.setItem("theme", document.body.classList.contains("dark-mode") ? "dark" : "light");
+    setTimeout(() => { if (iconWrap) iconWrap.classList.remove("wheel-spin"); }, 700);
   });
 }
 
-/* ===== TOC GENERATOR ===== */
-document.addEventListener("DOMContentLoaded", function() {
-  const tocList = document.getElementById("toc-list");
-  const tocBox = document.getElementById("toc-box");
-  const contentArea = document.querySelector(".post-content") || document.body;
-  const headings = contentArea.querySelectorAll("h2, h3, h4");
+/* [2] SEARCH */
+function toggleSearch(state) {
+  const modal = document.getElementById("searchModal");
+  if (!modal) return;
+  modal.style.display = state ? "flex" : "none";
+  if (state) {
+    const inp = document.getElementById("searchInput");
+    if (inp) inp.focus();
+  }
+}
+function closeOnOverlay(e) {
+  if (e.target.id === "searchModal") toggleSearch(false);
+}
+function globalSearch() {
+  const query = (document.getElementById("searchInput") || {}).value || "";
+  const resCont = document.getElementById("searchResults");
+  if (!resCont) return;
+  if (query.length < 2) {
+    resCont.innerHTML = '<p style="text-align:center;padding:20px;color:#94a3b8;">Type 2+ letters to search...</p>';
+    return;
+  }
+  const q = query.toLowerCase();
+  const posts = window.tyagiPosts || [];
+  const filtered = posts.filter(p =>
+    (p.title || "").toLowerCase().includes(q) ||
+    (p.excerpt || "").toLowerCase().includes(q)
+  );
+  if (!filtered.length) {
+    resCont.innerHTML = '<p style="text-align:center;padding:20px;">No results found.</p>';
+    return;
+  }
+  resCont.innerHTML = filtered.slice(0, 8).map(p => {
+    const img = p.image ? `<img src="${p.image}" alt="${p.title}" loading="lazy">` : "";
+    return `<a href="${p.url}" class="result-item">
+      ${img}
+      <div><h4>${p.title}</h4><p>${p.excerpt}</p></div>
+    </a>`;
+  }).join("");
+}
 
-  if (headings.length > 0 && tocList) {
-    if(tocBox) tocBox.style.display = "block";
-    headings.forEach((heading, index) => {
-      const id = "section-" + index;
-      heading.setAttribute("id", id);
+/* [3] MOBILE MENU */
+function toggleMenu(state) {
+  const menu = document.querySelector(".mobile-menu");
+  const overlay = document.querySelector(".mobile-overlay");
+  const btn = document.querySelector(".hamburger");
+  if (menu) menu.classList.toggle("active", state);
+  if (overlay) overlay.classList.toggle("active", state);
+  if (btn) btn.setAttribute("aria-expanded", state ? "true" : "false");
+  document.body.style.overflow = state ? "hidden" : "";
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    toggleMenu(false);
+    toggleSearch(false);
+  }
+});
+
+/* [4] READING PROGRESS BAR */
+window.addEventListener("scroll", () => {
+  const scrolled = document.documentElement.scrollTop || document.body.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const pct = height > 0 ? (scrolled / height) * 100 : 0;
+  const bar = document.getElementById("reading-progress-bar");
+  if (bar) bar.style.width = pct + "%";
+  const progressContainer = document.getElementById("reading-progress-container");
+  if (progressContainer) progressContainer.setAttribute("aria-valuenow", Math.round(pct));
+}, { passive: true });
+
+/* [5] SCROLL TO TOP */
+document.addEventListener("DOMContentLoaded", () => {
+  const wrap = document.getElementById("tyagi-top-wrap");
+  const progressPath = wrap ? wrap.querySelector("path") : null;
+
+  if (progressPath) {
+    const pathLen = progressPath.getTotalLength();
+    progressPath.style.strokeDasharray = pathLen + " " + pathLen;
+    progressPath.style.strokeDashoffset = pathLen;
+
+    const updateProgress = () => {
+      const scroll = window.pageYOffset;
+      const height = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = height > 0 ? pathLen - (scroll * pathLen / height) : pathLen;
+      progressPath.style.strokeDashoffset = progress;
+      if (wrap) {
+        scroll > 200 ? wrap.classList.add("active-progress") : wrap.classList.remove("active-progress");
+      }
+    };
+    window.addEventListener("scroll", updateProgress, { passive: true });
+  }
+
+  if (wrap) {
+    wrap.addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+});
+
+/* [6] TOC GENERATOR */
+document.addEventListener("DOMContentLoaded", () => {
+  const tocList = document.getElementById("toc-list");
+  const tocBox  = document.getElementById("toc-box");
+  if (!tocList) return;
+
+  const headings = document.querySelectorAll(".tc-left h2, .tc-left h3, .tc-left h4");
+  if (headings.length > 2) {
+    if (tocBox) tocBox.style.display = "block";
+    headings.forEach((h, i) => {
+      const id = "tc-section-" + i;
+      h.setAttribute("id", id);
       const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.textContent = heading.textContent;
-      a.setAttribute("href", "#" + id);
-      if (heading.tagName === "H3") { li.style.marginLeft = "20px"; li.style.fontSize = "0.9em"; }
-      if (heading.tagName === "H4") { li.style.marginLeft = "40px"; li.style.fontSize = "0.9em"; }
+      const a  = document.createElement("a");
+      a.textContent = h.textContent.replace(/[0-9]+/, "").trim();
+      a.href = "#" + id;
+      if (h.tagName === "H3") { li.style.marginLeft = "18px"; li.style.fontSize = "0.9em"; }
+      if (h.tagName === "H4") { li.style.marginLeft = "36px"; li.style.fontSize = "0.85em"; }
       li.appendChild(a);
       tocList.appendChild(li);
     });
   }
+
+  const tocBtn = document.getElementById("toc-toggle-btn");
+  if (tocBtn) {
+    tocBtn.addEventListener("click", () => {
+      const expanded = tocList.classList.toggle("expanded");
+      tocBtn.setAttribute("aria-expanded", expanded);
+      tocBtn.innerHTML = expanded
+        ? 'See Less <i class="fas fa-chevron-up" aria-hidden="true"></i>'
+        : 'See More <i class="fas fa-chevron-down" aria-hidden="true"></i>';
+      if (!expanded && tocBox) tocBox.scrollIntoView({ behavior: "smooth" });
+    });
+  }
 });
 
-/* ===== SHARE FUNCTION ===== */
+/* [7] SHARE */
 function tyagiShare() {
   if (navigator.share) {
     navigator.share({
       title: document.title,
-      text: 'Check out this awesome tech post on Tyagi Core:',
-      url: window.location.href
-    }).then(() => console.log('Shared!')).catch((err) => console.log('Share failed:', err));
+      text: "Check this out on Tyagi Core:",
+      url: window.location.href,
+    }).catch(() => {});
   } else {
-    navigator.clipboard.writeText(window.location.href);
-    const btn = document.querySelector('.tyagi-share-btn');
-    if(btn) {
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-check"></i> LINK COPIED';
-      setTimeout(() => { btn.innerHTML = originalText; }, 2000);
-    }
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      const btn = document.querySelector(".tyagi-share-btn");
+      if (btn) {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> LINK COPIED!';
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      }
+    });
+  }
+}
+function nativeShare(title, url) {
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied!")).catch(() => {});
   }
 }
 
-
-/* ===== SEARCH LOGIC ===== */
-function globalSearch() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const resCont = document.getElementById("searchResults");
-  if (query.length < 2) { resCont.innerHTML = '<p style="text-align:center;padding:20px;color:#999;">Type 2+ letters...</p>'; return; }
-  const filtered = window.tyagiPosts.filter(p => p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(query));
-  resCont.innerHTML = filtered.length ? "" : '<p style="text-align:center;padding:20px;">No results found.</p>';
-  filtered.forEach(p => {
-    resCont.innerHTML += `<a href="${p.url}" class="result-item"><img src="${p.image}"><div><h4>${p.title}</h4><p>${p.excerpt}</p></div></a>`;
-  });
-}
-
-function toggleSearch(s) {
-  document.getElementById("searchModal").style.display = s ? "flex" : "none";
-  if(s) document.getElementById("searchInput").focus();
-}
-
-function toggleMenu(s) {
-  document.querySelector(".mobile-menu").classList.toggle("active", s);
-  document.querySelector(".mobile-overlay").classList.toggle("active", s);
-}
-
-function closeOnOverlay(e) { if(e.target.id === "searchModal") toggleSearch(false); }
-
-/* ===== PROGRESS BARS ===== */
-window.addEventListener('scroll', () => {
-  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = (winScroll / height) * 100;
-  const progressBar = document.getElementById("reading-progress-bar");
-  if (progressBar) { progressBar.style.width = scrolled + "%"; }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const progressPath = document.querySelector('#tyagi-top-wrap path');
-    if(progressPath) {
-        const pathLength = progressPath.getTotalLength();
-        progressPath.style.strokeDasharray = pathLength + ' ' + pathLength;
-        progressPath.style.strokeDashoffset = pathLength;
-        const updateProgress = () => {
-            const scroll = window.pageYOffset;
-            const height = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = pathLength - (scroll * pathLength / height);
-            progressPath.style.strokeDashoffset = progress;
-            scroll > 200 ? document.querySelector('#tyagi-top-wrap').classList.add('active-progress') : document.querySelector('#tyagi-top-wrap').classList.remove('active-progress');
-        };
-        window.addEventListener('scroll', updateProgress);
-    }
-    document.querySelector('#tyagi-top-wrap')?.addEventListener('click', (e) => {
-        e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-});
-
-/* ===== COPY CODE BUTTON ===== */
-document.addEventListener("DOMContentLoaded", function() {
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((block) => {
-      const button = document.createElement("button");
-      button.innerText = "Copy";
-      button.className = "copy-btn";
-      block.appendChild(button);
-      button.addEventListener("click", () => {
-        const codeText = block.querySelector("code").innerText.trim();
-        navigator.clipboard.writeText(codeText).then(() => {
-          button.innerText = "COPIED!";
-          button.style.background = "#22c55e";
-          setTimeout(() => {
-            button.innerText = "COPY";
-            button.style.background = "#166534";
-          }, 2000);
-        });
+/* [8] COPY CODE BUTTON */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("pre").forEach((block) => {
+    if (block.querySelector(".copy-btn")) return;
+    const btn = document.createElement("button");
+    btn.innerText = "Copy";
+    btn.className = "copy-btn";
+    btn.setAttribute("aria-label", "Copy code");
+    block.appendChild(btn);
+    btn.addEventListener("click", () => {
+      const code = block.querySelector("code");
+      const text = code ? code.innerText : block.innerText;
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        btn.innerText = "Copied!";
+        btn.style.background = "#22c55e";
+        setTimeout(() => { btn.innerText = "Copy"; btn.style.background = ""; }, 2000);
       });
     });
+  });
 });
-document.addEventListener("wheel", function(e) {
-    if (window.innerWidth < 901) return; // Mobile par normal rakho
 
-    const left = document.querySelector(".post-content-area");
-    const right = document.querySelector(".tc-sidebar");
-    
-    // Safety Check: Agar dono elements page par nahi hain, toh scroll logic skip karo
-    if (!left || !right) return; 
+/* [9] TRENDING SIDEBAR */
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("trending-sidebar-items");
+  if (!container || !window.tyagiPosts || !window.tyagiPosts.length) return;
 
-    // Ab niche ka logic safe hai kyunki left aur right 'null' nahi hain
-    const isOverLeft = left.matches(':hover');
-    const isOverRight = right.matches(':hover');
+  const seed = Math.floor(Date.now() / (1000 * 60 * 60 * 6));
+  const shuffled = [...window.tyagiPosts].sort((a, b) =>
+    Math.sin(seed + a.title.length) - Math.sin(seed + b.title.length)
+  ).slice(0, 5);
 
-    if (isOverLeft) {
-        const isAtBottom = left.scrollHeight - left.scrollTop <= left.clientHeight + 1;
-        const isAtTop = left.scrollTop === 0;
+  const defaultImg = "https://tyagicore.gklearnstudy.in/assets/images/thumbnail-online-fraud.png";
+  container.innerHTML = shuffled.map(post => `
+    <a href="${post.url}" class="trend-card">
+      <img src="${post.image || defaultImg}" class="trend-thumb" alt="${post.title}" loading="lazy" width="64" height="46">
+      <span class="trend-title">${post.title}</span>
+    </a>
+  `).join("");
+});
 
-        if (e.deltaY > 0 && isAtBottom) {
-            right.scrollTop += e.deltaY;
-            e.preventDefault();
-        } else if (e.deltaY < 0 && isAtTop) {
-            return;
-        }
-    } 
-    else if (isOverRight) {
-        const isAtBottom = right.scrollHeight - right.scrollTop <= right.clientHeight + 1;
-        const isAtTop = right.scrollTop === 0;
+/* [10] CATEGORY FILTER & PAGINATION (index) */
+document.addEventListener("DOMContentLoaded", () => {
+  const sourceCatNav = document.getElementById("source-category-nav");
+  const targetCatNav = document.getElementById("index-category-nav");
+  if (sourceCatNav && targetCatNav) {
+    targetCatNav.innerHTML = sourceCatNav.innerHTML;
+    sourceCatNav.remove();
+  }
 
-        if (e.deltaY > 0 && isAtBottom) {
-            left.scrollTop += e.deltaY;
-            e.preventDefault();
-        } else if (e.deltaY < 0 && isAtTop) {
-            return;
-        }
-    }
-}, { passive: false });
+  const postsPerPage = 20;
+  let currentFilteredPosts = Array.from(document.querySelectorAll(".js-post"));
+  const paginationNav = document.getElementById("pagination-nav");
 
-
-
-const tocBtn = document.getElementById('toc-toggle-btn');
-
-// Check karo ki kya button page par exist karta hai
-if (tocBtn) {
-    tocBtn.addEventListener('click', function() {
-        const list = document.getElementById('toc-list');
-        const btn = this;
-
-        if (list && list.classList.contains('expanded')) {
-            list.classList.remove('expanded');
-            btn.innerHTML = 'See More <i class="fas fa-chevron-down"></i>';
-            const tocBox = document.getElementById('toc-box');
-            if (tocBox) tocBox.scrollIntoView({ behavior: 'smooth' });
-        } else if (list) {
-            list.classList.add('expanded');
-            btn.innerHTML = 'See Less <i class="fas fa-chevron-up"></i>';
-            btn.style.background = "none";
-        }
+  function renderPage(pageNum) {
+    const start = (pageNum - 1) * postsPerPage;
+    const end   = start + postsPerPage;
+    document.querySelectorAll(".js-post").forEach(p => { p.style.display = "none"; });
+    currentFilteredPosts.forEach((post, i) => {
+      if (i >= start && i < end) post.style.display = "flex";
     });
+    renderPaginationBtns(pageNum);
+  }
+
+  function renderPaginationBtns(active) {
+    if (!paginationNav) return;
+    paginationNav.innerHTML = "";
+    const total = Math.ceil(currentFilteredPosts.length / postsPerPage);
+    if (total <= 1) return;
+    for (let i = 1; i <= total; i++) {
+      const btn = document.createElement("button");
+      btn.innerText = i;
+      btn.className = "page-btn" + (i === active ? " active" : "");
+      btn.setAttribute("aria-label", "Page " + i);
+      btn.onclick = () => { renderPage(i); window.scrollTo({ top: 0, behavior: "smooth" }); };
+      paginationNav.appendChild(btn);
+    }
+  }
+
+  window.filterCategory = function(cat, btn) {
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const all = Array.from(document.querySelectorAll(".js-post"));
+    currentFilteredPosts = cat === "all"
+      ? all
+      : all.filter(p => (p.getAttribute("data-categories") || "").split(",").map(c => c.trim()).includes(cat));
+    renderPage(1);
+  };
+
+  if (currentFilteredPosts.length) renderPage(1);
+});
+
+/* [11] SERVICE WORKER */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
 }
-
-
-
-
