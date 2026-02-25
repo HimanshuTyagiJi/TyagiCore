@@ -92,12 +92,17 @@
 </style>
    <nav class="nav">
   <a href="{{ '' | absolute_url }}">Home</a>
+       <a href="{{ 'about' | absolute_url }}">About</a>
+       <a href="{{ 'privacy' | absolute_url }}">Privacy</a>
+       <a href="{{ 'terms' | absolute_url }}">Terms</a>
+     
+     <div style="display:none">
   <a href="{{ 'networking' | absolute_url }}">Networking</a>
   <a href="{{ 'cyber' | absolute_url }}">Cyber</a>
   <a href="{{ 'ai' | absolute_url }}">AI</a>
   <a href="{{ 'linux' | absolute_url }}">Linux</a>
   <a href="{{ 'privacy' | absolute_url }}">Privacy</a>
-  <a href="{{ 'cloud' | absolute_url }}">Cloud</a>
+  <a href="{{ 'cloud' | absolute_url }}">Cloud</a></div>
 </nav>
     <div class="right-icons">
       <svg class="icon-btn" onclick="toggleSearch(true)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
@@ -130,11 +135,17 @@
   <div class="mobile-nav">
 
   <a href="{{ '' | absolute_url }}">Home</a>
+    
+      <a href="{{ 'about' | absolute_url }}">About</a>
+       <a href="{{ 'privacy' | absolute_url }}">Privacy</a>
+       <a href="{{ 'terms' | absolute_url }}">Terms</a>
+    
+    <div style="display:none">
   <a href="{{ 'networking' | absolute_url }}">Networking</a>
   <a href="{{ 'cyber' | absolute_url }}">Cyber</a>
   <a href="{{ 'ai' | absolute_url }}">AI</a>
   <a href="{{ 'linux' | absolute_url }}">Linux</a>
-  <a href="{{ 'privacy' | absolute_url }}">Privacy</a>
+  <a href="{{ 'privacy' | absolute_url }}">Privacy</a></div>
 
   </div>
 </div>
