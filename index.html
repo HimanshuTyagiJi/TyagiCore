@@ -1,38 +1,36 @@
 ---
 layout: default
 title: "Tyagi Core — Tech, Cyber Security & AI"
-description: "Deep Technology, Cyber Intelligence & Innovation Hub. Practical guides to master the tech world."
+description: "Deep Technology, Cyber Intelligence & Innovation Hub. Practical guides to master the digital world."
 ---
 
-<div id="source-category-nav" style="display:none;">
+<div id="source-category-nav" style="display:none">
   <div class="cat-full-width-scroll">
     <div class="cat-inner-scroll">
       {% assign all_posts = site.pages | where: "is_post", true %}
-      <button class="cat-btn active" onclick="filterCategory('all', this)">All Posts <span>({{ all_posts.size }})</span></button>
+      <button class="cat-btn active" onclick="filterCategory('all',this)">All <span>({{ all_posts.size }})</span></button>
       {% assign my_cats = "Cyber Security,Networking,AI,Linux,Privacy,Cloud Computing,Guide" | split: "," %}
       {% for cat in my_cats %}
-        {% assign count = 0 %}
-        {% for p in all_posts %}{% if p.categories contains cat %}{% assign count = count | plus: 1 %}{% endif %}{% endfor %}
-        {% if count > 0 %}
-        <button class="cat-btn" onclick="filterCategory('{{ cat }}', this)">{{ cat }} <span>({{ count }})</span></button>
+        {% assign cnt = 0 %}
+        {% for p in all_posts %}{% if p.categories contains cat %}{% assign cnt = cnt | plus: 1 %}{% endif %}{% endfor %}
+        {% if cnt > 0 %}
+        <button class="cat-btn" onclick="filterCategory('{{ cat }}',this)">{{ cat }} <span>({{ cnt }})</span></button>
         {% endif %}
       {% endfor %}
     </div>
   </div>
 </div>
 
-<div class="post-container-fixed" id="posts">
+<div id="posts">
   <div id="post-wrapper">
-    {% assign sorted_posts = site.pages | where: "is_post", true | sort: "date" | reverse %}
-    {% for p in sorted_posts %}
+    {% assign sorted = site.pages | where: "is_post", true | sort: "date" | reverse %}
+    {% for p in sorted %}
     <div class="horizontal-post-card js-post" data-categories="{{ p.categories | join: ',' }}">
       <div class="post-img">
         <img
           src="{{ p.image | default: '/assets/images/default-thumb.png' }}"
           alt="{{ p.title }}"
-          loading="lazy"
-          width="260"
-          height="188"
+          loading="lazy" width="260" height="188"
         >
       </div>
       <div class="post-info">
@@ -41,14 +39,16 @@ description: "Deep Technology, Cyber Intelligence & Innovation Hub. Practical gu
           <p>{{ p.description | default: p.excerpt | strip_html | truncate: 110 }}</p>
         </div>
         <div class="post-footer">
-          <button class="native-share-btn" onclick="nativeShare('{{ p.title | escape }}', '{{ p.url | absolute_url }}')" aria-label="Share {{ p.title }}">
+          <button class="native-share-btn"
+            onclick="nativeShare('{{ p.title | escape }}','{{ p.url | absolute_url }}')"
+            aria-label="Share {{ p.title | escape }}">
             <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Share
           </button>
-          <a href="{{ p.url | relative_url }}" class="read-link" aria-label="Read {{ p.title }}">Read More →</a>
+          <a href="{{ p.url | relative_url }}" class="read-link">Read More →</a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
-  <nav id="pagination-nav" class="pagination-center" aria-label="Pagination"></nav>
+  <nav id="pagination-nav" class="pagination-center" aria-label="Posts pagination"></nav>
 </div>
