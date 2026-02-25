@@ -1,139 +1,104 @@
-/* ═══════════════════════════════════════════
-   TYAGI CORE — Service Worker v3
-   ✅ Push notifications fixed for browsers
-   ═══════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   TYAGI CORE — sw.js (Complete Merged Version)
+   Firebase Messaging + Cache + Notification Click
+   ═══════════════════════════════════════════════════════ */
 
-const CACHE_NAME = "tyagicore-v3";
-const STATIC_ASSETS = [ 
-  "/",
-  "/assets/css/style.css",
-  "/assets/js/main.js"
-];
+importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js");
 
-/* INSTALL */
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
-      .catch(err => console.log("[SW] Install error:", err))
+/* ── FIREBASE INIT ── */
+firebase.initializeApp({
+  apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
+  authDomain       : "appcomment.firebaseapp.com",
+  projectId        : "appcomment",
+  storageBucket    : "appcomment.firebasestorage.app",
+  messagingSenderId: "156258808941",
+  appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
+});
+
+const messaging = firebase.messaging();
+
+/* ── BACKGROUND MESSAGE ── */
+messaging.onBackgroundMessage(function(payload) {
+  self.registration.getNotifications().then(function(notifications) {
+    notifications.forEach(function(n) { n.close(); });
+  });
+
+  var title = payload.notification
+    ? payload.notification.title
+    : (payload.data ? payload.data.title : "TyagiCore 🔔");
+
+  var body = payload.notification
+    ? payload.notification.body
+    : (payload.data ? payload.data.body : "Nayi post aa gayi!");
+
+  var url = (payload.data && payload.data.url) ? payload.data.url : "/";
+  if (url.startsWith("/")) url = "https://tyagicore.gklearnstudy.in" + url;
+
+  return self.registration.showNotification(title, {
+    body   : body,
+    icon   : "/assets/images/tyagi_core.png",
+    badge  : "/assets/images/tyagi_core.png",
+    tag    : "tc-notif-" + Date.now(),
+    data   : { url: url },
+    vibrate: [200, 100, 200]
+  });
+});
+
+/* ── NOTIFICATION CLICK ── */
+self.addEventListener("notificationclick", function(e) {
+  e.notification.close();
+  var url = (e.notification.data && e.notification.data.url)
+    ? e.notification.data.url
+    : "https://tyagicore.gklearnstudy.in";
+
+  e.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then(function(wins) {
+      for (var i = 0; i < wins.length; i++) {
+        if (wins[i].url === url && "focus" in wins[i]) return wins[i].focus();
+      }
+      if (clients.openWindow) return clients.openWindow(url);
+    })
   );
 });
 
-/* ACTIVATE */
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
+/* ── CACHE (CSS/JS offline support) ── */
+var CACHE = "tyagicore-v3";
+var STATIC = ["/", "/assets/css/style.css", "/assets/js/main.js"];
+
+self.addEventListener("install", function(e) {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(function(cache) { return cache.addAll(STATIC); })
+      .then(function() { return self.skipWaiting(); })
   );
 });
 
-/* FETCH — Cache First with Network Fallback */
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  const url = new URL(event.request.url);
-  // Don't cache API calls or external scripts
+self.addEventListener("activate", function(e) {
+  e.waitUntil(
+    caches.keys().then(function(keys) {
+      return Promise.all(
+        keys.filter(function(k) { return k !== CACHE; }).map(function(k) { return caches.delete(k); })
+      );
+    }).then(function() { return self.clients.claim(); })
+  );
+});
+
+self.addEventListener("fetch", function(e) {
+  if (e.request.method !== "GET") return;
+  var url = new URL(e.request.url);
   if (url.hostname !== location.hostname) return;
 
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      const networkFetch = fetch(event.request).then(response => {
-        if (response && response.status === 200 && response.type === "basic") {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+  e.respondWith(
+    caches.match(e.request).then(function(cached) {
+      var net = fetch(e.request).then(function(res) {
+        if (res && res.status === 200 && res.type === "basic") {
+          var clone = res.clone();
+          caches.open(CACHE).then(function(c) { c.put(e.request, clone); });
         }
-        return response;
-      }).catch(() => cached);
-      return cached || networkFetch;
+        return res;
+      }).catch(function() { return cached; });
+      return cached || net;
     })
   );
-});
-
-/* ═══════════════════════════════════════════
-   PUSH NOTIFICATIONS — Fixed for Chrome/Firefox
-   ═══════════════════════════════════════════ */
-self.addEventListener("push", event => {
-  let title = "Tyagi Core 🚀";
-  let body  = "Nayi post aa gayi!";
-  let url   = "https://tyagicore.gklearnstudy.in/";
-  let icon  = "/assets/images/tyagi_core.png";
-  let badge = "/assets/images/tyagi_core.png";
-
-  if (event.data) {
-    try {
-      const data = event.data.json();
-      // Support both {title, body, url} and {notification: {title, body}, data: {url}}
-      if (data.notification) {
-        title = data.notification.title || title;
-        body  = data.notification.body  || body;
-        icon  = data.notification.icon  || icon;
-      } else {
-        title = data.title || title;
-        body  = data.body  || body;
-      }
-      url = (data.data && data.data.url) || data.url || url;
-    } catch (e) {
-      // If not JSON, use text directly as body
-      body = event.data.text();
-    }
-  }
-
-  const options = {
-    body,
-    icon,
-    badge,
-    vibrate: [200, 100, 200, 100, 200],
-    tag: "tyagi-notification",
-    renotify: true,
-    data: { url },
-    actions: [
-      { action: "open",    title: "Read Now 📖" },
-      { action: "dismiss", title: "Close"       }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
-});
-
-/* NOTIFICATION CLICK */
-self.addEventListener("notificationclick", event => {
-  event.notification.close();
-
-  if (event.action === "dismiss") return;
-
-  const targetUrl = event.notification.data?.url || "https://tyagicore.gklearnstudy.in/";
-
-  event.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true }).then(clientList => {
-      // If site already open, focus that tab
-      for (const client of clientList) {
-        if (client.url.includes("tyagicore.gklearnstudy.in") && "focus" in client) {
-          client.navigate(targetUrl);
-          return client.focus();
-        }
-      }
-      // Otherwise open new tab
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
-  );
-});
-
-/* NOTIFICATION CLOSE */
-self.addEventListener("notificationclose", event => {
-  // Optional: track dismissed notifications
-  console.log("[SW] Notification dismissed:", event.notification.tag);
-});
-
-/* MESSAGE from page — for programmatic control */
-self.addEventListener("message", event => {
-  if (event.data === "skipWaiting") {
-    self.skipWaiting();
-  }
 });
