@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <title>{{ page.title }} | {{ site.title }}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://www.gstatic.com">
 {% seo %}
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css' rel='stylesheet'/>
 <link rel="stylesheet" href="{{ 'assets/css/style.css' | absolute_url }}">
@@ -13,7 +16,7 @@
 <header class="header">
   <div class="header-inner">
 <a href="{{ '/' | relative_url }}" class="logo">
-<img src="{{ 'assets/images/tyagi_core.png' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle;">
+<img src="{{ 'assets/images/tyagi_core.png' | relative_url }}" alt="Tyagi Core">
 <span><svg width="220" height="60" viewBox="0 0 500 150"
      xmlns="http://www.w3.org/2000/svg">
 
@@ -189,34 +192,42 @@
   </button>
 </div>
 
-
+{% assign all_posts = site.pages | where: "is_post", true | sort: "date" | reverse %}
+{% for p in all_posts %}
+  {% if p.url == page.url %}
+    {% assign current_index = forloop.index0 %}
+    {% assign prev_index = current_index | plus: 1 %}
+    {% assign next_index = current_index | minus: 1 %}
+    {% if next_index >= 0 %}
+      {% assign next_post = all_posts[next_index] %}
+    {% endif %}
+    {% if prev_index < all_posts.size %}
+      {% assign prev_post = all_posts[prev_index] %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
 
 <div class="post-nav-container">
-  
   <div class="post-nav-link prev">
-    {% if page.previous %}
-      <a href="{{ page.previous.url | relative_url }}">
-        <span class="nav-label"><i class="fas fa-arrow-left"></i> Privious</span>
-        <div class="nav-post-title">{{ page.previous.title }}</div>
+    {% if prev_post %}
+      <a href="{{ prev_post.url | relative_url }}">
+        <span class="nav-label"><i class="fas fa-arrow-left"></i> Previous</span>
+        <div class="nav-post-title">{{ prev_post.title }}</div>
       </a>
     {% endif %}
   </div>
 
   <div class="post-nav-link next">
-    {% if page.next %}
-      <a href="{{ page.next.url | relative_url }}">
+    {% if next_post %}
+      <a href="{{ next_post.url | relative_url }}">
         <span class="nav-label">Next <i class="fas fa-arrow-right"></i></span>
-        <div class="nav-post-title">{{ page.next.title }}</div>
+        <div class="nav-post-title">{{ next_post.title }}</div>
       </a>
     {% endif %}
   </div>
-  
 </div>
 
-<hr style="margin: 50px 0;">
-
-  
-
+<hr style="margin: 50px 0; border: 0; border-top: 1px solid var(--border-color);">
 {% endunless %}
   </div>
 
