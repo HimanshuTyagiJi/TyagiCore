@@ -1,30 +1,13 @@
-# ==================================================
-# TYAGI CORE - SIMPLE PAGE-BASED CONFIG
-# ==================================================
-
-  
 title: "Tyagi Core"
 description: "Deep Technology, Cyber Intelligence & Innovation Hub."
 author: "Himanshu Tyagi"
-
 url: "https://tyagicore.gklearnstudy.in"
 baseurl: ""
-
-# Date hatane ke liye simple permalink
 permalink: /:title
-
 markdown: kramdown
 highlighter: rouge
-
-# Pagination settings (Ab ye Pages par kaam karega)
-paginate: 2
-paginate_path: "/page/:num/"
-
 plugins:
-  - jekyll-paginate
   - jekyll-seo-tag
-
-# Default layout pages ke liye
 defaults:
   - scope:
       path: ""
