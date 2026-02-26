@@ -387,7 +387,7 @@ const FB_CONFIG = {
   appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
 };
 const VAPID      = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCmbUuSQmhp_a1995XMvvNUdLn7oS8L5VZ3cOx2uj50FUqQ7FTqaEqnvrVDff98mQm/exec";
 
 const messaging  = getMessaging(initializeApp(FB_CONFIG));
 
@@ -438,33 +438,31 @@ window._tcInitFCM = async function() {
   });
 };
 
-/* Bell toggle — real browser permission */
 window.tcToggleBell = async function() {
-  var u = JSON.parse(localStorage.getItem("tc_user"));
-  if (!u) return alert("Pehle login karo!");
+  if (!user) return alert("Pehle login karo!");
 
-  var enabled = localStorage.getItem("tc_notif_enabled") === "1"
-                && Notification.permission === "granted";
+  let status = Notification.permission;
 
-  if (enabled) {
-    /* Unsubscribe */
-    try {
-      var token = localStorage.getItem("tc_fcm_token");
-      if (token) {
-        await deleteToken(messaging);
-        fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-          body: JSON.stringify({ action:"fcm_unsubscribe", fcmToken:token, email:u.e }) });
-      }
-    } catch(e) {}
-    localStorage.removeItem("tc_notif_enabled");
-    localStorage.removeItem("tc_fcm_token");
-    updateBell(false);
-  } else if (Notification.permission === "denied") {
-    alert("Browser ne notifications block ki hain.\n\nEnable karne ke liye:\nAddress bar mein 🔒 icon click karo → Notifications → Allow");
-  } else {
-    /* Subscribe */
-    await window._tcInitFCM();
+  if (status === "default") {
+    status = await Notification.requestPermission();
   }
+
+  if (status === "granted") {
+    let currentlyOn = localStorage.getItem("tc_notif_enabled") === "1";
+    if (currentlyOn) {
+      localStorage.setItem("tc_notif_enabled", "0");
+      alert("Notifications OFF (Paused)");
+    } else {
+      localStorage.setItem("tc_notif_enabled", "1");
+      await window._tcInitFCM(); // Asli FCM register
+      alert("Notifications ON (Active)");
+    }
+  } else {
+    alert("Browser settings mein notifications blocked hain!");
+  }
+  
+  // Bell icon update karne ke liye
+  if (window._updateBell) window._updateBell(localStorage.getItem("tc_notif_enabled") === "1" && Notification.permission === "granted");
 };
 
 /* Page load — restore bell state */
@@ -482,7 +480,7 @@ window.addEventListener("load", function() {
 <!-- ═══ COMMENT LOGIC ═══ -->
 <script>
 (function() {
-  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCmbUuSQmhp_a1995XMvvNUdLn7oS8L5VZ3cOx2uj50FUqQ7FTqaEqnvrVDff98mQm/exec";
 
   var user          = JSON.parse(localStorage.getItem("tc_user")) || null;
   var serverData    = [];
@@ -613,27 +611,19 @@ window.addEventListener("load", function() {
       .reverse().map(function(c){ return renderCard(c, all); }).join("");
   }
 
-  function renderCard(c, list) {
-    /*
-      LOGIC:
-      - c.isAdmin  → Sheet script return karta hai: agar current logged-in user admin hai
-                     toh HAR comment pe isAdmin:true aata hai
-                     (email HTML mein nahi hai, Sheet mein check hota hai)
-      - isMine     → current user ka apna comment
-      - canEdit    → sirf apna comment (isMine)
-      - canDelete  → apna ya admin dono
-    */
+function renderCard(c, list) {
+    // Backend (GS) khud bata raha hai ki 'c.isAdmin' true hai ya false
     var isMine    = user && (user.e === c.email);
-    var amIAdmin  = c.isAdmin === true; /* Sheet se current user ka flag */
-    var canEdit   = isMine;             /* Sirf user apna edit kare */
-    var canDelete = isMine || amIAdmin; /* User apna, Admin sabka */
+    var canEdit   = isMine;
+    var canDelete = isMine || c.isAdmin; // Admin ko power backend se mil rahi hai
 
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
 
-    var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply " : "") + (c.pending ? "pending" : "") + '" role="listitem">'
+    // HTML Structure - Yahan kahin bhi email print nahi ho rahi
+    var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply " : "") + (c.pending ? "pending" : "") + '">'
       + '<div class="tc-card-meta">'
-      + '<img src="' + c.pic + '" class="tc-card-pfp" alt="' + c.name + '" loading="lazy">'
+      + '<img src="' + c.pic + '" class="tc-card-pfp">'
       + '<span class="tc-card-name">' + c.name + '</span>'
       + (c.isAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
       + starStr
@@ -642,8 +632,8 @@ window.addEventListener("load", function() {
       + '<div class="tc-card-body" id="body-' + c.rowId + '">' + c.comment + '</div>'
       + '<div class="tc-actions">'
       + '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</button>'
-      + (canEdit   ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
-      + (canDelete ? '<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
+      + (canEdit ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
+      + (canDelete ? '<button style="color:#ef4444" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
       + '</div>'
       + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div>'
       + '</div>';
@@ -651,7 +641,7 @@ window.addEventListener("load", function() {
     list.filter(function(r){ return r.parentId == c.rowId; })
         .forEach(function(r){ html += renderCard(r, list); });
     return html;
-  }
+}
 
   /* ── REPLY / EDIT BOX ── */
   window.checkAuthAndOpen = function(id, type) {
