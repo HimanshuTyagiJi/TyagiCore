@@ -303,6 +303,8 @@
 {% if page.is_post %}
 
 <div id="tc-root" role="region" aria-label="Comments">
+
+  <!-- HEADER -->
   <div class="tc-comments-header">
     <div class="tc-header-left">
       <h2 style="margin:0;font-size:17px;">Discussion &amp; Reviews</h2>
@@ -317,15 +319,15 @@
 
     <div id="tc-auth-zone" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
 
-      <!-- Bell Notification Button -->
-      <button id="tc-bell-btn" onclick="tcToggleBell()" title="Notifications"
-        style="background:none;border:1px solid var(--border-color,#ddd);border-radius:50%;
-               width:36px;height:36px;cursor:pointer;font-size:17px;display:none;
-               align-items:center;justify-content:center;transition:all 0.2s;">
-        🔔
-      </button>
+      <!-- BELL ICON — sirf login ke baad dikhega -->
+      <button id="tc-bell-btn"
+        onclick="tcToggleBell()"
+        style="display:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-color,#ddd);
+               background:none;cursor:pointer;font-size:17px;align-items:center;justify-content:center;
+               transition:all 0.2s;flex-shrink:0;"
+        title="Notifications">🔕</button>
 
-      <!-- Google Login -->
+      <!-- GOOGLE LOGIN -->
       <div id="tc-auth-gate">
         <div id="g_id_onload"
           data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
@@ -336,8 +338,8 @@
         <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
       </div>
 
-      <!-- User Pill -->
-      <div id="tc-user-pill" style="display:none" class="tc-user-pill">
+      <!-- USER PILL -->
+      <div id="tc-user-pill" style="display:none;" class="tc-user-pill">
         <img id="tc-user-pfp" src="" class="tc-pfp-small" alt="Profile">
         <span id="tc-user-name" class="tc-u-name"></span>
         <button onclick="tcLogout()" class="tc-logout-btn">Logout</button>
@@ -346,6 +348,7 @@
     </div>
   </div>
 
+  <!-- STARS -->
   <div class="tc-user-rate-box">
     <p style="margin:0 0 5px;font-size:12px;color:var(--text-muted,#666)">Tap stars to rate:</p>
     <div id="tc-star-row" class="tc-stars-input">
@@ -357,6 +360,7 @@
     </div>
   </div>
 
+  <!-- EDITOR -->
   <div id="tc-main-editor" class="tc-editor-box">
     <textarea id="tc-input" placeholder="Join the discussion..."></textarea>
     <div style="text-align:right;margin-top:8px;">
@@ -364,15 +368,17 @@
     </div>
   </div>
 
+  <!-- FEED -->
   <div id="tc-feed" class="tc-feed" role="list"></div>
+
 </div>
 
-<!-- Firebase -->
+<!-- ═══ FIREBASE — Foreground Notifications ═══ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getMessaging, getToken, onMessage, deleteToken } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
-const firebaseConfig = {
+const FB_CONFIG = {
   apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
   authDomain       : "appcomment.firebaseapp.com",
   projectId        : "appcomment",
@@ -380,112 +386,100 @@ const firebaseConfig = {
   messagingSenderId: "156258808941",
   appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
 };
-const VAPID_KEY  = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
+const VAPID      = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
 
-const app       = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+const messaging  = getMessaging(initializeApp(FB_CONFIG));
 
-// Bell button update
-function updateBell(state) {
+/* Bell UI update */
+function updateBell(on) {
   var btn = document.getElementById("tc-bell-btn");
   if (!btn) return;
-  btn.style.display      = "flex";
-  btn.title              = state ? "Notifications ON — click to turn OFF" : "Notifications OFF — click to turn ON";
-  btn.style.background   = state ? "var(--accent-light,#e8f0fe)" : "none";
-  btn.style.borderColor  = state ? "var(--accent,#1a73e8)" : "var(--border-color,#ddd)";
-  btn.innerHTML          = state ? "🔔" : "🔕";
+  btn.style.display    = "flex";
+  btn.innerHTML        = on ? "🔔" : "🔕";
+  btn.title            = on ? "Notifications ON — band karne ke liye click karo"
+                            : "Notifications OFF — allow karne ke liye click karo";
+  btn.style.background = on ? "var(--accent-light,#e8f0fe)" : "none";
+  btn.style.borderColor= on ? "var(--accent,#1a73e8)"       : "var(--border-color,#ddd)";
 }
+window._updateBell = updateBell;
 
-// FCM subscribe
+/* Subscribe — called on login or bell click */
 window._tcInitFCM = async function() {
-  var storedUser = JSON.parse(localStorage.getItem("tc_user"));
-  if (!storedUser) return;
+  var u = JSON.parse(localStorage.getItem("tc_user"));
+  if (!u) return;
   try {
-    var sw   = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    var sw   = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
     await navigator.serviceWorker.ready;
     var perm = await Notification.requestPermission();
     if (perm !== "granted") { updateBell(false); return; }
-    var token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
+    var token = await getToken(messaging, { vapidKey: VAPID, serviceWorkerRegistration: sw });
     if (token) {
-      localStorage.setItem("tc_fcm_token", token);
+      localStorage.setItem("tc_fcm_token",    token);
       localStorage.setItem("tc_notif_enabled", "1");
       fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-        body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:storedUser.e, name:storedUser.n }) });
+        body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:u.e, name:u.n }) });
       updateBell(true);
     }
-  } catch(err) { console.log("FCM Error:", err); updateBell(false); }
+  } catch(e) { console.log("FCM:", e); updateBell(false); }
 
+  /* Foreground message handler */
   onMessage(messaging, function(payload) {
-    var title = payload.notification ? payload.notification.title : "TyagiCore 🔔";
-    var body  = payload.notification ? payload.notification.body  : "";
-    var url   = (payload.data && payload.data.url) ? payload.data.url : "https://tyagicore.gklearnstudy.in";
+    var title = (payload.notification || {}).title || "TyagiCore 🔔";
+    var body  = (payload.notification || {}).body  || "";
+    var url   = (payload.data && payload.data.url) || "https://tyagicore.gklearnstudy.in";
     if (url.startsWith("/")) url = "https://tyagicore.gklearnstudy.in" + url;
     navigator.serviceWorker.ready.then(function(reg) {
       reg.showNotification(title, {
         body: body, icon: "/assets/images/tyagi_core.png",
-        tag: "tc-notif", data: { url: url }, vibrate: [200,100,200]
+        tag: "tc-notif-" + Date.now(), data: { url: url }, vibrate: [200,100,200]
       });
     });
   });
 };
 
+/* Bell toggle — real browser permission */
 window.tcToggleBell = async function() {
-  var storedUser = JSON.parse(localStorage.getItem("tc_user"));
-  if (!storedUser) return alert("Pehle login karo!");
+  var u = JSON.parse(localStorage.getItem("tc_user"));
+  if (!u) return alert("Pehle login karo!");
 
-  var currentPerm = Notification.permission;
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1"
+                && Notification.permission === "granted";
 
-  if (currentPerm === "granted" && localStorage.getItem("tc_notif_enabled") === "1") {
-    // ✅ REAL BLOCK — token delete karo server se bhi
+  if (enabled) {
+    /* Unsubscribe */
     try {
       var token = localStorage.getItem("tc_fcm_token");
       if (token) {
         await deleteToken(messaging);
         fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-          body: JSON.stringify({ action:"fcm_unsubscribe", fcmToken:token, email:storedUser.e }) });
+          body: JSON.stringify({ action:"fcm_unsubscribe", fcmToken:token, email:u.e }) });
       }
     } catch(e) {}
     localStorage.removeItem("tc_notif_enabled");
     localStorage.removeItem("tc_fcm_token");
     updateBell(false);
-    alert("Notifications band kar diye ✅\n\nPoori tarah block karne ke liye browser settings mein jaao.");
-
-  } else if (currentPerm === "denied") {
-    // Browser ne block kiya hua hai — settings dikhao
-    alert("Browser ne notifications block ki hain.\n\nEnable karne ke liye:\nChrome → Address bar mein 🔒 icon → Notifications → Allow");
-
+  } else if (Notification.permission === "denied") {
+    alert("Browser ne notifications block ki hain.\n\nEnable karne ke liye:\nAddress bar mein 🔒 icon click karo → Notifications → Allow");
   } else {
-    // Permission nahi li — lo
+    /* Subscribe */
     await window._tcInitFCM();
   }
 };
 
-function updateBell(state) {
-  var btn = document.getElementById("tc-bell-btn");
-  if (!btn) return;
-  btn.style.display    = "flex";
-  btn.innerHTML        = state ? "🔔" : "🔕";
-  btn.title            = state ? "Notifications ON — band karne ke liye click karo" 
-                                : "Notifications OFF — allow karne ke liye click karo";
-  btn.style.background = state ? "var(--accent-light,#e8f0fe)" : "none";
-  btn.style.borderColor= state ? "var(--accent,#1a73e8)" : "var(--border-color,#ddd)";
-}
-
-
-  
+/* Page load — restore bell state */
 window.addEventListener("load", function() {
-  var user    = JSON.parse(localStorage.getItem("tc_user"));
-  var enabled = localStorage.getItem("tc_notif_enabled") === "1" 
-                && Notification.permission === "granted"; // REAL check
-  if (user) {
+  var u       = JSON.parse(localStorage.getItem("tc_user"));
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1"
+                && Notification.permission === "granted";
+  if (u) {
     updateBell(enabled);
     if (enabled) window._tcInitFCM();
   }
 });
 </script>
 
-<!-- Comment Script -->
+<!-- ═══ COMMENT LOGIC ═══ -->
 <script>
 (function() {
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
@@ -496,46 +490,63 @@ window.addEventListener("load", function() {
   var isTyping      = false;
   var currentRating = 0;
 
+  /* ── INIT ── */
   function init() {
     if (user) {
-      document.getElementById("tc-auth-gate").style.display = "none";
-      document.getElementById("tc-user-pill").style.display = "flex";
-      document.getElementById("tc-user-name").innerText     = user.n;
-      document.getElementById("tc-user-pfp").src            = user.p;
-      // Login ho chuka — Google popup dobara na aaye
+      document.getElementById("tc-auth-gate").style.display  = "none";
+      document.getElementById("tc-user-pill").style.display  = "flex";
+      document.getElementById("tc-user-name").innerText      = user.n;
+      document.getElementById("tc-user-pfp").src             = user.p;
+
+      /* Bell dikhao */
+      var bell = document.getElementById("tc-bell-btn");
+      if (bell) bell.style.display = "flex";
+
+      /* Google popup dobara na aaye */
       document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+
+      /* FCM */
       setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
     sync();
     setInterval(function() { if (!isTyping) sync(); }, 5000);
   }
 
+  /* ── GOOGLE LOGIN ── */
   window.onGoogleAuth = function(r) {
-    if (user) return; // Already logged in — ignore
-    var p = JSON.parse(atob(r.credential.split('.')[1]));
+    if (user) return; /* Already logged in — ignore */
+    var p = JSON.parse(atob(r.credential.split(".")[1]));
     user  = { n: p.name, e: p.email, p: p.picture };
     localStorage.setItem("tc_user", JSON.stringify(user));
     document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
-    // Reload nahi — directly UI update
-    document.getElementById("tc-auth-gate").style.display = "none";
-    document.getElementById("tc-user-pill").style.display = "flex";
-    document.getElementById("tc-user-name").innerText     = user.n;
-    document.getElementById("tc-user-pfp").src            = user.p;
-    if (window.updateBell) updateBell(false);
-    document.getElementById("tc-bell-btn").style.display = "flex";
+
+    /* UI update — no reload */
+    document.getElementById("tc-auth-gate").style.display  = "none";
+    document.getElementById("tc-user-pill").style.display  = "flex";
+    document.getElementById("tc-user-name").innerText      = user.n;
+    document.getElementById("tc-user-pfp").src             = user.p;
+
+    /* Bell dikhao */
+    var bell = document.getElementById("tc-bell-btn");
+    if (bell) {
+      bell.style.display = "flex";
+      if (window._updateBell) window._updateBell(false);
+    }
+
     setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 800);
     sync();
   };
 
+  /* ── LOGOUT ── */
   window.tcLogout = function() {
     localStorage.removeItem("tc_user");
     localStorage.removeItem("tc_notif_enabled");
     localStorage.removeItem("tc_fcm_token");
-    // Cookie hatao — next visit pe login milega
     document.cookie = "tc_skip_prompt=; path=/; max-age=0";
     location.reload();
   };
 
+  /* ── STARS ── */
   window.hoverStar = function(n) { if (!isTyping && currentRating === 0) paintStars(n); };
   window.resetStar = function()  { paintStars(currentRating); };
   window.handleStar = function(n) {
@@ -548,6 +559,7 @@ window.addEventListener("load", function() {
     document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active", i < n); });
   }
 
+  /* ── POST / REPLY / EDIT ── */
   window.handleAction = function(pid, mode, rowId) {
     mode = mode || "new"; rowId = rowId || null;
     if (!user) return alert("Please Login!");
@@ -555,6 +567,7 @@ window.addEventListener("load", function() {
     var inputEl = document.getElementById(inputId);
     var msg     = inputEl ? inputEl.value.trim() : "";
     if (!msg) return;
+
     if (mode === "new") {
       tempLocal.push({ rowId:"temp_"+Date.now(), name:user.n, comment:msg,
         parentId:pid, pic:user.p, date:"Saving...", pending:true, isAdmin:false, email:user.e });
@@ -563,6 +576,7 @@ window.addEventListener("load", function() {
       if (t) { t.comment = msg; t.date = "Updating..."; }
     }
     render(); inputEl.value = ""; isTyping = false;
+
     var payload = { url:location.pathname, name:user.n, email:user.e,
       pic:user.p, comment:msg, parentId:pid, rating:currentRating };
     if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
@@ -570,6 +584,7 @@ window.addEventListener("load", function() {
     setTimeout(sync, 1500);
   };
 
+  /* ── SYNC ── */
   async function sync() {
     try {
       var ep   = user ? "&email=" + encodeURIComponent(user.e) : "";
@@ -590,6 +605,7 @@ window.addEventListener("load", function() {
     document.getElementById("tc-avg-stars").innerText = s;
   }
 
+  /* ── RENDER ── */
   function render() {
     var feed = document.getElementById("tc-feed");
     var all  = serverData.concat(tempLocal);
@@ -598,11 +614,20 @@ window.addEventListener("load", function() {
   }
 
   function renderCard(c, list) {
-    // ✅ Admin (c.isAdmin Sheet se aata hai) — sabka edit/delete
-    // ✅ User — sirf apna edit/delete
-  var isMine  = user && user.e === c.email;
-  var isAdmin = c.isAdmin === true; // Sheet se aata hai current user ka flag
-  var canEdit = isMine || isAdmin;
+    /*
+      LOGIC:
+      - c.isAdmin  → Sheet script return karta hai: agar current logged-in user admin hai
+                     toh HAR comment pe isAdmin:true aata hai
+                     (email HTML mein nahi hai, Sheet mein check hota hai)
+      - isMine     → current user ka apna comment
+      - canEdit    → sirf apna comment (isMine)
+      - canDelete  → apna ya admin dono
+    */
+    var isMine    = user && (user.e === c.email);
+    var amIAdmin  = c.isAdmin === true; /* Sheet se current user ka flag */
+    var canEdit   = isMine;             /* Sirf user apna edit kare */
+    var canDelete = isMine || amIAdmin; /* User apna, Admin sabka */
+
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
 
@@ -617,8 +642,8 @@ window.addEventListener("load", function() {
       + '<div class="tc-card-body" id="body-' + c.rowId + '">' + c.comment + '</div>'
       + '<div class="tc-actions">'
       + '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</button>'
-      + (canEdit ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
-      + (canEdit ? '<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
+      + (canEdit   ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
+      + (canDelete ? '<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
       + '</div>'
       + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div>'
       + '</div>';
@@ -628,6 +653,7 @@ window.addEventListener("load", function() {
     return html;
   }
 
+  /* ── REPLY / EDIT BOX ── */
   window.checkAuthAndOpen = function(id, type) {
     if (!user) return alert("Login to interact!");
     isTyping = true;
@@ -651,6 +677,7 @@ window.addEventListener("load", function() {
     if (ta) ta.focus();
   };
 
+  /* ── DELETE ── */
   window.deleteMsg = async function(id) {
     if (!confirm("Delete permanently?")) return;
     await fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
