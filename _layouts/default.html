@@ -430,16 +430,15 @@ window._tcInitFCM = async function() {
   });
 };
 
-// Manual bell toggle
 window.tcToggleBell = async function() {
   var storedUser = JSON.parse(localStorage.getItem("tc_user"));
   if (!storedUser) return alert("Pehle login karo!");
-  var enabled = localStorage.getItem("tc_notif_enabled") === "1";
 
-  if (enabled) {
-    // Unsubscribe
+  var currentPerm = Notification.permission;
+
+  if (currentPerm === "granted" && localStorage.getItem("tc_notif_enabled") === "1") {
+    // ✅ REAL BLOCK — token delete karo server se bhi
     try {
-      var sw    = await navigator.serviceWorker.ready;
       var token = localStorage.getItem("tc_fcm_token");
       if (token) {
         await deleteToken(messaging);
@@ -450,19 +449,37 @@ window.tcToggleBell = async function() {
     localStorage.removeItem("tc_notif_enabled");
     localStorage.removeItem("tc_fcm_token");
     updateBell(false);
+    alert("Notifications band kar diye ✅\n\nPoori tarah block karne ke liye browser settings mein jaao.");
+
+  } else if (currentPerm === "denied") {
+    // Browser ne block kiya hua hai — settings dikhao
+    alert("Browser ne notifications block ki hain.\n\nEnable karne ke liye:\nChrome → Address bar mein 🔒 icon → Notifications → Allow");
+
   } else {
-    // Subscribe
+    // Permission nahi li — lo
     await window._tcInitFCM();
   }
 };
 
-// Page load pe bell state restore karo
+function updateBell(state) {
+  var btn = document.getElementById("tc-bell-btn");
+  if (!btn) return;
+  btn.style.display    = "flex";
+  btn.innerHTML        = state ? "🔔" : "🔕";
+  btn.title            = state ? "Notifications ON — band karne ke liye click karo" 
+                                : "Notifications OFF — allow karne ke liye click karo";
+  btn.style.background = state ? "var(--accent-light,#e8f0fe)" : "none";
+  btn.style.borderColor= state ? "var(--accent,#1a73e8)" : "var(--border-color,#ddd)";
+}
+
+
+  
 window.addEventListener("load", function() {
   var user    = JSON.parse(localStorage.getItem("tc_user"));
-  var enabled = localStorage.getItem("tc_notif_enabled") === "1";
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1" 
+                && Notification.permission === "granted"; // REAL check
   if (user) {
     updateBell(enabled);
-    // Foreground listener re-attach
     if (enabled) window._tcInitFCM();
   }
 });
@@ -583,7 +600,9 @@ window.addEventListener("load", function() {
   function renderCard(c, list) {
     // ✅ Admin (c.isAdmin Sheet se aata hai) — sabka edit/delete
     // ✅ User — sirf apna edit/delete
-    var canEdit = user && (user.e === c.email || c.isAdmin === true);
+  var isMine  = user && user.e === c.email;
+  var isAdmin = c.isAdmin === true; // Sheet se aata hai current user ka flag
+  var canEdit = isMine || isAdmin;
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
 
