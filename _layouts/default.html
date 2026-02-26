@@ -611,25 +611,31 @@ window.addEventListener("load", function() {
       .reverse().map(function(c){ return renderCard(c, all); }).join("");
   }
 
+/* --- 1. RENDER FUNCTION (Isme pehle check karenge ki aap admin ho ya nahi) --- */
+function render() {
+    var feed = document.getElementById("tc-feed");
+    var all = serverData.concat(tempLocal);
+
+    // Pehle pure data mein check karo: Kya current login user ka koi comment 'isAdmin' hai?
+    window.iAmAdminGlobal = all.some(function(c) {
+        return (user && user.e === c.email && c.isAdmin === true);
+    });
+
+    feed.innerHTML = all.filter(function(c){ return c.parentId == "0"; })
+      .reverse().map(function(c){ return renderCard(c, all); }).join("");
+}
+
+/* --- 2. RENDERCARD (Isme Badge aur Power ko alag kar diya) --- */
 function renderCard(c, list) {
-    // 1. Current user check
     var isMine = user && (user.e === c.email);
     
-    // 2. Badge Logic: 
-    // Backend se 'c.isAdmin' sirf asli admin ke comments ke liye true aata hai.
-    // Isliye ye sirf Admin ke naam ke aage badge dikhayega.
-    var showBadge = (c.isAdmin === true);
-
-    // 3. Power Logic: 
-    // Hum ek global variable set karenge agar kisi EK bhi comment mein 
-    // 'c.isAdmin' true hai AUR wo aapka (isMine) hai.
-    if (isMine && showBadge) {
-        window.tc_is_admin_mode = true;
-    }
-
-    // Power check: Agar aap admin mode mein ho ya ye aapka apna comment hai
+    // POWER: Agar aap admin ho (global check se pata chala) ya ye aapka comment hai
+    var canDelete = isMine || window.iAmAdminGlobal; 
     var canEdit = isMine;
-    var canDelete = isMine || window.tc_is_admin_mode;
+
+    // BADGE: Badge sirf tab dikhega jab backend se us comment ke liye isAdmin:true aaya ho
+    // Iska canDelete se koi lena dena nahi hai
+    var showBadge = (c.isAdmin === true);
 
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
@@ -639,8 +645,7 @@ function renderCard(c, list) {
       + '<img src="' + c.pic + '" class="tc-card-pfp">'
       + '<span class="tc-card-name">' + c.name + '</span>'
       
-      // FIX: Yahan 'showBadge' use kiya hai, 'canDelete' nahi. 
-      // Isliye badge sirf asli admin comments pe dikhega.
+      // FIXED: Badge sirf asli admin comment par dikhega
       + (showBadge ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
       
       + starStr
