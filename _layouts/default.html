@@ -6,23 +6,19 @@
 
 {% seo %}
 
-
-<!-- Robots & Author (not covered by seo tag) --> 
 <meta name="author"  content="{{ site.author }}">
 <meta name="robots" content="index, follow">
 
-<!-- OG Image — only if page has image (seo tag does NOT set og:image automatically) -->
 {% if page.image %}
-<meta property="og:image"       content="{{ page.image | absolute_url }}">
+<meta property="og:image"        content="{{ page.image | absolute_url }}">
 <meta property="og:image:width"  content="1280">
 <meta property="og:image:height" content="720">
-<meta name="twitter:image"      content="{{ page.image | absolute_url }}">
-<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:image"       content="{{ page.image | absolute_url }}">
+<meta name="twitter:card"        content="summary_large_image">
 {% else %}
 <meta name="twitter:card" content="summary">
 {% endif %}
 
-<!-- Schema.org Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -44,7 +40,6 @@
 }
 </script>
 
-<!-- Resources -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
@@ -52,7 +47,7 @@
 </head>
 <body>
 
-<!-- ═══════════════ HEADER ═══════════════ -->
+<!-- HEADER -->
 <header class="tc-header-bar" role="banner">
   <div class="header-inner">
     <a href="{{ '/' | absolute_url }}" class="logo" aria-label="{{ site.title }} Home">
@@ -75,19 +70,12 @@
         </text>
       </svg>
     </a>
-
     <nav class="nav" role="navigation" aria-label="Main navigation">
       <a href="{{ '/' | absolute_url }}">Home</a>
       <a href="{{ '/about' | absolute_url }}">About</a>
       <a href="{{ '/privacy' | absolute_url }}">Privacy</a>
       <a href="{{ '/terms' | absolute_url }}">Terms</a>
-      <span style="display:none" aria-hidden="true">
-        <a href="{{ '/networking' | absolute_url }}">Networking</a>
-        <a href="{{ '/cyber' | absolute_url }}">Cyber</a>
-        <a href="{{ '/ai' | absolute_url }}">AI</a>
-      </span>
     </nav>
-
     <div class="right-icons">
       <button class="icon-btn" onclick="toggleSearch(true)" aria-label="Search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
@@ -99,12 +87,11 @@
   </div>
 </header>
 
-<!-- Reading Progress -->
 <div id="reading-progress-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress">
   <div id="reading-progress-bar"></div>
 </div>
 
-<!-- ═══════════════ SEARCH MODAL ═══════════════ -->
+<!-- SEARCH MODAL -->
 <div id="searchModal" role="dialog" aria-modal="true" aria-label="Search" onclick="closeOnOverlay(event)" style="display:none">
   <div class="search-box">
     <div class="search-input-area">
@@ -118,7 +105,7 @@
   </div>
 </div>
 
-<!-- ═══════════════ MOBILE MENU ═══════════════ -->
+<!-- MOBILE MENU -->
 <div class="mobile-overlay" onclick="toggleMenu(false)" aria-hidden="true"></div>
 <nav class="mobile-menu" role="navigation" aria-label="Mobile menu">
   <div class="mobile-header">
@@ -133,7 +120,6 @@
   </div>
 </nav>
 
-<!-- ═══════════════ HERO (homepage only) ═══════════════ -->
 {% if page.url == "/" or page.url == "/index.html" %}
 <section class="tc-hero" aria-label="Welcome">
   <div class="hero-content">
@@ -150,11 +136,10 @@
 
 <div id="index-category-nav"></div>
 
-<!-- ═══════════════ MAIN LAYOUT ═══════════════ -->
+<!-- MAIN LAYOUT -->
 <main class="tc-wrapper" id="main-content">
   <div class="tc-left">
 
-    <!-- TOC (post pages only) -->
     {% unless page.url == "/" or page.url == "/index.html" %}
     <div class="toc-container" id="toc-box" style="display:none;" aria-label="Table of contents">
       <div class="toc-title"><i class="fas fa-list-ul" aria-hidden="true"></i>&nbsp; Topics</div>
@@ -167,10 +152,8 @@
 
     {{ content }}
 
-    <!-- Share + Prev/Next (post pages only) -->
     {% unless page.url == "/" or page.url == "/index.html" %}
     {% if page.is_post %}
-
     <div class="share-wrapper">
       <p class="share-label">Share With Friends 🚀</p>
       <button onclick="tyagiShare()" class="tyagi-share-btn" aria-label="Share this article">
@@ -178,20 +161,16 @@
       </button>
     </div>
 
-    <!-- ✅ FIXED PREV/NEXT — uses _posts collection, guaranteed to work -->
     {% assign all_posts = site.pages | where: "is_post", true | sort: "date" %}
     {% assign post_count = all_posts | size %}
     {% assign current_index = nil %}
     {% for p in all_posts %}
-      {% if p.url == page.url %}
-        {% assign current_index = forloop.index0 %}
-      {% endif %}
+      {% if p.url == page.url %}{% assign current_index = forloop.index0 %}{% endif %}
     {% endfor %}
 
     {% if current_index != nil %}
     {% assign prev_index = current_index | minus: 1 %}
     {% assign next_index = current_index | plus: 1 %}
-
     <nav class="post-nav-container" aria-label="Post navigation">
       <div class="post-nav-link prev">
         {% if current_index > 0 %}
@@ -201,13 +180,9 @@
             <div class="nav-post-title">{{ prev_post.title }}</div>
           </a>
         {% else %}
-          <span class="nav-disabled">
-            <span class="nav-label">Previous Post</span>
-            <div class="nav-post-title" style="opacity:0.4;">No previous post</div>
-          </span>
+          <span class="nav-disabled"><span class="nav-label">Previous Post</span><div class="nav-post-title" style="opacity:0.4;">No previous post</div></span>
         {% endif %}
       </div>
-
       <div class="post-nav-link next">
         {% if next_index < post_count %}
           {% assign next_post = all_posts[next_index] %}
@@ -216,25 +191,20 @@
             <div class="nav-post-title">{{ next_post.title }}</div>
           </a>
         {% else %}
-          <span class="nav-disabled">
-            <span class="nav-label">Next Post</span>
-            <div class="nav-post-title" style="opacity:0.4;">No next post</div>
-          </span>
+          <span class="nav-disabled"><span class="nav-label">Next Post</span><div class="nav-post-title" style="opacity:0.4;">No next post</div></span>
         {% endif %}
       </div>
     </nav>
     {% endif %}
-
     <hr style="margin:44px 0;border:none;border-top:1px solid var(--border-color)">
     {% endif %}
     {% endunless %}
   </div>
 
-  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <!-- SIDEBAR -->
   <aside class="tc-sidebar" aria-label="Sidebar">
     <div class="box">🔥 Trending Now</div>
     <div id="trending-sidebar-items"></div>
-
     <div class="box" style="margin-top:18px;">📡 Follow Us</div>
     <div class="tyagi-social-hub">
       <a class="hub-card yt-main"    href="https://youtube.com/@tyagicore"      target="_blank" rel="noopener noreferrer"><div class="hub-icon"><i class="fab fa-youtube"></i></div><div class="hub-info"><span class="hub-name">TyagiCore</span><span class="hub-desc">Tech & Systems</span></div><div class="hub-action">Join</div></a>
@@ -243,7 +213,6 @@
       <a class="hub-card fb-card"    href="https://facebook.com/himanshutyagie" target="_blank" rel="noopener noreferrer"><div class="hub-icon"><i class="fab fa-facebook-f"></i></div><div class="hub-info"><span class="hub-name">Facebook</span><span class="hub-desc">Community</span></div><div class="hub-action">Like</div></a>
       <a class="hub-card tg-card"    href="https://t.me/TyagiCore"              target="_blank" rel="noopener noreferrer"><div class="hub-icon"><i class="fab fa-telegram-plane"></i></div><div class="hub-info"><span class="hub-name">Telegram</span><span class="hub-desc">Files & Updates</span></div><div class="hub-action">Join</div></a>
     </div>
-
     <div class="box" style="margin-top:18px;">📱 Our Apps</div>
     <div class="tyagi-app-container">
       <div class="app-card">
@@ -260,7 +229,6 @@
   </aside>
 </main>
 
-<!-- Bottom Section (homepage only) -->
 {% if page.url == "/" or page.url == "/index.html" %}
 <section class="tc-bottom-section" aria-label="About Tyagi Core">
   <div class="tc-ultra-final">
@@ -291,7 +259,6 @@
 </section>
 {% endif %}
 
-<!-- Theme Toggle -->
 <button id="dark-mode-toggle" class="theme-wheel" aria-label="Toggle dark/light mode">
   <div class="wheel-icon-wrap">
     <i class="fas fa-moon moon-icon" aria-hidden="true"></i>
@@ -301,10 +268,8 @@
 
 <!-- ═══════════════ COMMENTS ═══════════════ -->
 {% if page.is_post %}
-
 <div id="tc-root" role="region" aria-label="Comments">
 
-  <!-- HEADER -->
   <div class="tc-comments-header">
     <div class="tc-header-left">
       <h2 style="margin:0;font-size:17px;">Discussion &amp; Reviews</h2>
@@ -316,11 +281,7 @@
         </div>
       </div>
     </div>
-
     <div id="tc-auth-zone" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-
-
-      <!-- GOOGLE LOGIN -->
       <div id="tc-auth-gate">
         <div id="g_id_onload"
           data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
@@ -330,18 +291,14 @@
         </div>
         <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
       </div>
-
-      <!-- USER PILL -->
       <div id="tc-user-pill" style="display:none;" class="tc-user-pill">
         <img id="tc-user-pfp" src="" class="tc-pfp-small" alt="Profile">
         <span id="tc-user-name" class="tc-u-name"></span>
         <button onclick="tcLogout()" class="tc-logout-btn">Logout</button>
       </div>
-
     </div>
   </div>
 
-  <!-- STARS -->
   <div class="tc-user-rate-box">
     <p style="margin:0 0 5px;font-size:12px;color:var(--text-muted,#666)">Tap stars to rate:</p>
     <div id="tc-star-row" class="tc-stars-input">
@@ -353,7 +310,6 @@
     </div>
   </div>
 
-  <!-- EDITOR -->
   <div id="tc-main-editor" class="tc-editor-box">
     <textarea id="tc-input" placeholder="Join the discussion..."></textarea>
     <div style="text-align:right;margin-top:8px;">
@@ -361,38 +317,29 @@
     </div>
   </div>
 
-  <!-- FEED -->
   <div id="tc-feed" class="tc-feed" role="list"></div>
-
 </div>
 
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
-
 const FB_CONFIG = {
-  apiKey: "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
-  authDomain: "appcomment.firebaseapp.com",
-  projectId: "appcomment",
-  storageBucket: "appcomment.firebasestorage.app",
-  messagingSenderId: "156258808941",
-  appId: "1:156258808941:web:04a1f7470ac43657c7fb64"
+  apiKey:"AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw", authDomain:"appcomment.firebaseapp.com",
+  projectId:"appcomment", storageBucket:"appcomment.firebasestorage.app",
+  messagingSenderId:"156258808941", appId:"1:156258808941:web:04a1f7470ac43657c7fb64"
 };
-const VAPID = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMkH5Y4I3HsJkQaCoTCS0gSzBq2FCZ0qaA2GvEefG266MSYqK-/exec";
+const VAPID      = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzN_IpDncCGpgAWzLph8EqtDGfjed1C-Xr3ItHNYWFnyp0J7z6B-oh4fGG3FWXD9tHq/exec";
+const messaging  = getMessaging(initializeApp(FB_CONFIG));
 
-const messaging = getMessaging(initializeApp(FB_CONFIG));
-
-/* Subscribe — called on login */
 window._tcInitFCM = async function() {
-  var u = JSON.parse(localStorage.getItem("tc_user"));
-  if (!u) return;
+  var u = JSON.parse(localStorage.getItem("tc_user")); if (!u) return;
   try {
-    var sw = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+    var sw = await navigator.serviceWorker.register("/sw.js", { scope:"/" });
     await navigator.serviceWorker.ready;
-    var perm = await Notification.requestPermission();
-    if (perm !== "granted") return;
-    var token = await getToken(messaging, { vapidKey: VAPID, serviceWorkerRegistration: sw });
+    var perm = await Notification.requestPermission(); if (perm !== "granted") return;
+    var token = await getToken(messaging, { vapidKey:VAPID, serviceWorkerRegistration:sw });
     if (token) {
       localStorage.setItem("tc_fcm_token", token);
       localStorage.setItem("tc_notif_enabled", "1");
@@ -400,187 +347,212 @@ window._tcInitFCM = async function() {
         body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:u.e, name:u.n }) });
     }
   } catch(e) { console.log("FCM:", e); }
-
   onMessage(messaging, function(payload) {
-    var title = (payload.notification || {}).title || "TyagiCore 🔔";
-    var body  = (payload.notification || {}).body  || "";
+    var title = (payload.notification||{}).title || "TyagiCore 🔔";
+    var body  = (payload.notification||{}).body  || "";
     var url   = (payload.data && payload.data.url) || "https://tyagicore.gklearnstudy.in";
     navigator.serviceWorker.ready.then(function(reg) {
-      reg.showNotification(title, {
-        body: body, icon: "/assets/images/tyagi_core.png",
-        tag: "tc-notif-" + Date.now(), data: { url: url }, vibrate: [200,100,200]
-      });
+      reg.showNotification(title, { body:body, icon:"/assets/images/tyagi_core.png",
+        tag:"tc-notif-"+Date.now(), data:{url:url}, vibrate:[200,100,200] });
     });
   });
 };
-
 window.addEventListener("load", function() {
   var u = JSON.parse(localStorage.getItem("tc_user"));
   if (u && localStorage.getItem("tc_notif_enabled") === "1") window._tcInitFCM();
 });
 </script>
 
+<!-- Comment Logic -->
 <script>
 (function() {
-  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMkH5Y4I3HsJkQaCoTCS0gSzBq2FCZ0qaA2GvEefG266MSYqK-/exec";
-
-  var user = JSON.parse(localStorage.getItem("tc_user")) || null;
-  var serverData = [];
-  var tempLocal = [];
-  var isTyping = false;
-  var currentRating = 0;
+  var SU = "https://script.google.com/macros/s/AKfycbzN_IpDncCGpgAWzLph8EqtDGfjed1C-Xr3ItHNYWFnyp0J7z6B-oh4fGG3FWXD9tHq/exec";
+  var user=JSON.parse(localStorage.getItem("tc_user"))||null;
+  var serverData=[],tempLocal=[],isTyping=false,currentRating=0;
 
   function init() {
     if (user) {
-      document.getElementById("tc-auth-gate").style.display = "none";
-      document.getElementById("tc-user-pill").style.display = "flex";
-      document.getElementById("tc-user-name").innerText = user.n;
-      document.getElementById("tc-user-pfp").src = user.p;
-      document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
-      setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
+      document.getElementById("tc-auth-gate").style.display="none";
+      document.getElementById("tc-user-pill").style.display="flex";
+      document.getElementById("tc-user-name").innerText=user.n;
+      document.getElementById("tc-user-pfp").src=user.p;
+      document.cookie="tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+      setTimeout(function(){ if(window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
     sync();
-    setInterval(function() { if (!isTyping) sync(); }, 5000);
+    setInterval(function(){ if(!isTyping) sync(); }, 5000);
   }
 
   window.onGoogleAuth = function(r) {
     if (user) return;
     var p = JSON.parse(atob(r.credential.split(".")[1]));
-    user = { n: p.name, e: p.email, p: p.picture };
+    user = { n:p.name, e:p.email, p:p.picture };
     localStorage.setItem("tc_user", JSON.stringify(user));
-    location.reload();
+    document.cookie="tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+    document.getElementById("tc-auth-gate").style.display="none";
+    document.getElementById("tc-user-pill").style.display="flex";
+    document.getElementById("tc-user-name").innerText=user.n;
+    document.getElementById("tc-user-pfp").src=user.p;
+    setTimeout(function(){ if(window._tcInitFCM) window._tcInitFCM(); }, 800);
+    sync();
   };
 
   window.tcLogout = function() {
-    localStorage.clear();
-    document.cookie = "tc_skip_prompt=; path=/; max-age=0";
+    localStorage.removeItem("tc_user");
+    localStorage.removeItem("tc_notif_enabled");
+    localStorage.removeItem("tc_fcm_token");
+    document.cookie="tc_skip_prompt=; path=/; max-age=0";
     location.reload();
   };
 
+  window.hoverStar = function(n){ if(!isTyping&&currentRating===0) paintStars(n); };
+  window.resetStar = function()  { paintStars(currentRating); };
   window.handleStar = function(n) {
     if (!user) return alert("Login required!");
-    currentRating = n; paintStars(n);
-    fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-      body: JSON.stringify({ url:location.pathname, email:user.e, rating:n, comment:"__RATING_ONLY__" }) });
+    currentRating=n; paintStars(n);
+    fetch(SU,{method:"POST",mode:"no-cors",
+      body:JSON.stringify({url:location.pathname,email:user.e,rating:n,comment:"__RATING_ONLY__"})});
   };
-
   function paintStars(n) {
-    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active", i < n); });
+    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active",i<n); });
   }
 
-  /* ── LIKE LOGIC ── */
-  window.handleLike = async function(rowId) {
-    if (!user) return alert("Login to like!");
-    
-    // UI update for speed
-    var btn = document.getElementById("like-btn-" + rowId);
-    var countEl = document.getElementById("like-count-" + rowId);
-    if(btn) btn.style.transform = "scale(1.3)";
-    
-    await fetch(SCRIPT_URL, { 
-      method:"POST", mode:"no-cors",
-      body: JSON.stringify({ action:"like", rowId:rowId, email:user.e }) 
-    });
-    
-    setTimeout(sync, 800);
+  /* ── LIKE ── */
+  window.handleLike = function(rowId) {
+    if (!user) return alert("Like karne ke liye login karo!");
+    // Optimistic UI
+    var btn     = document.getElementById("like-btn-"+rowId);
+    var countEl = document.getElementById("like-count-"+rowId);
+    if (btn) {
+      var isLiked  = btn.getAttribute("data-liked") === "1";
+      var count    = parseInt(countEl ? countEl.innerText : "0") || 0;
+      btn.setAttribute("data-liked", isLiked ? "0" : "1");
+      btn.innerHTML = isLiked ? "🤍" : "❤️";
+      btn.style.transform = "scale(1.3)";
+      setTimeout(function(){ btn.style.transform = "scale(1)"; }, 250);
+      if (countEl) countEl.innerText = isLiked ? Math.max(0,count-1) : count+1;
+    }
+    fetch(SU,{method:"POST",mode:"no-cors",
+      body:JSON.stringify({action:"like",rowId:rowId,email:user.e})});
+    setTimeout(sync, 1500);
   };
 
   window.handleAction = function(pid, mode, rowId) {
-    mode = mode || "new"; rowId = rowId || null;
+    mode=mode||"new"; rowId=rowId||null;
     if (!user) return alert("Please Login!");
-    var inputId = mode === "edit" ? "edit-in-"+rowId : (pid === "0" ? "tc-input" : "reply-in-"+pid);
-    var inputEl = document.getElementById(inputId);
-    var msg = inputEl ? inputEl.value.trim() : "";
+    var inputId=mode==="edit"?"edit-in-"+rowId:(pid==="0"?"tc-input":"reply-in-"+pid);
+    var inputEl=document.getElementById(inputId);
+    var msg=inputEl?inputEl.value.trim():"";
     if (!msg) return;
-
-    if (mode === "new") {
-      tempLocal.push({ rowId:"temp_"+Date.now(), name:user.n, comment:msg,
-        parentId:pid, pic:user.p, date:"Saving...", pending:true, isAdmin:false, email:user.e, likesCount:0 });
+    if (mode==="new") {
+      tempLocal.push({rowId:"temp_"+Date.now(),name:user.n,comment:msg,
+        parentId:pid,pic:user.p,date:"Saving...",pending:true,
+        isAdmin:false,isPostAdmin:false,email:user.e,likesCount:0,isLiked:false});
+    } else {
+      var t=serverData.find(function(c){return c.rowId==rowId;});
+      if (t){t.comment=msg;t.date="Updating...";}
     }
-    render(); inputEl.value = ""; isTyping = false;
-    
-    var payload = { url:location.pathname, name:user.n, email:user.e, pic:user.p, comment:msg, parentId:pid, rating:currentRating };
-    if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
-    fetch(SCRIPT_URL, { method:"POST", body:JSON.stringify(payload), mode:"no-cors" });
-    setTimeout(sync, 1500);
+    render(); inputEl.value=""; isTyping=false;
+    var pl={url:location.pathname,name:user.n,email:user.e,pic:user.p,comment:msg,parentId:pid,rating:currentRating};
+    if (mode==="edit"){pl.action="edit";pl.rowId=rowId;}
+    fetch(SU,{method:"POST",body:JSON.stringify(pl),mode:"no-cors"});
+    setTimeout(sync,1500);
   };
 
   async function sync() {
     try {
-      var ep = user ? "&email=" + encodeURIComponent(user.e) : "";
-      var r = await fetch(SCRIPT_URL + "?url=" + location.pathname + ep);
-      var data = await r.json();
-      serverData = data.comments || []; tempLocal = [];
-      if (user && data.myRating > 0) currentRating = data.myRating;
-      updateRatingUI(data.avgRating, data.totalVotes);
+      var ep=user?"&email="+encodeURIComponent(user.e):"";
+      var r=await fetch(SU+"?url="+location.pathname+ep);
+      var data=await r.json();
+      serverData=data.comments||[]; tempLocal=[];
+      if (user&&data.myRating>0) currentRating=data.myRating;
+      updateRatingUI(data.avgRating,data.totalVotes);
       paintStars(currentRating); render();
-    } catch(e) {}
+    } catch(e){}
   }
 
-  function updateRatingUI(avg, total) {
-    document.getElementById("tc-avg-num").innerText = avg;
-    document.getElementById("tc-total-votes").innerText = total + " reviews";
+  function updateRatingUI(avg,total) {
+    document.getElementById("tc-avg-num").innerText=avg;
+    document.getElementById("tc-total-votes").innerText=(total||0)+" reviews";
+    var s="",r=Math.round(parseFloat(avg)||0);
+    for (var i=1;i<=5;i++) s+=i<=r?"★":"☆";
+    document.getElementById("tc-avg-stars").innerText=s;
   }
 
   function render() {
-    var feed = document.getElementById("tc-feed");
-    var all = serverData.concat(tempLocal);
-    feed.innerHTML = all.filter(function(c){ return c.parentId == "0"; })
-      .reverse().map(function(c){ return renderCard(c, all); }).join("");
+    var feed=document.getElementById("tc-feed");
+    var all=serverData.concat(tempLocal);
+    feed.innerHTML=all.filter(function(c){return c.parentId=="0";})
+      .reverse().map(function(c){return renderCard(c,all);}).join("");
   }
 
-  function renderCard(c, list) {
-    var isMine = user && (user.e === c.email);
-    var canDelete = isMine || c.isAdmin; 
-    var canEdit = isMine;
-    var starStr = c.userRating > 0 ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
-    var likeIcon = c.isLiked ? "❤️" : "🤍";
+  function renderCard(c,list) {
+    var isMine   =user&&(user.e===c.email);
+    var amIAdmin =(c.isAdmin===true);   // Sheet: current user admin hai
+    var canEdit  =isMine||amIAdmin;     // User apna, Admin sabka
+    var canDelete=isMine||amIAdmin;
 
-    var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply " : "") + (c.pending ? "pending" : "") + '">'
-      + '<div class="tc-card-meta">'
-      + '<img src="' + c.pic + '" class="tc-card-pfp">'
-      + '<span class="tc-card-name">' + c.name + '</span>'
-      + (c.isPostAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
-      + starStr
-      + '<span class="tc-card-time">' + c.date + '</span>'
-      + '</div>'
-      + '<div class="tc-card-body">' + c.comment + '</div>'
-      + '<div class="tc-actions">'
-      // LIKE BUTTON
-      + '<button onclick="handleLike(\''+c.rowId+'\')" style="background:none; border:none; cursor:pointer; font-size:14px;">'
-      + '<span id="like-btn-'+c.rowId+'">'+likeIcon+'</span> <span id="like-count-'+c.rowId+'">'+(c.likesCount || 0)+'</span>'
-      + '</button>'
-      + '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</button>'
-      + (canEdit ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
-      + (canDelete ? '<button style="color:#ef4444" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
-      + '</div>'
-      + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div>'
-      + '</div>';
+    var starStr=c.userRating>0
+      ?'<span style="color:#f4b400;font-size:10px;margin-left:8px;">'+"★".repeat(c.userRating)+'</span>':"";
+    var likeCount=c.likesCount||0;
+    var isLiked  =c.isLiked||false;
 
-    list.filter(function(r){ return r.parentId == c.rowId; })
-        .forEach(function(r){ html += renderCard(r, list); });
+    var html='<div class="tc-card '+(c.parentId!=="0"?"reply ":"")+(c.pending?"pending":"")+'" role="listitem">'
+      +'<div class="tc-card-meta">'
+      +'<img src="'+c.pic+'" class="tc-card-pfp" alt="'+c.name+'" loading="lazy">'
+      +'<span class="tc-card-name">'+c.name+'</span>'
+      +(c.isPostAdmin?'<span class="tc-admin-badge">ADMIN ⭐</span>':"")
+      +starStr
+      +'<span class="tc-card-time">'+c.date+'</span>'
+      +'</div>'
+      +'<div class="tc-card-body" id="body-'+c.rowId+'">'+c.comment+'</div>'
+      +'<div class="tc-actions">'
+      // ── LIKE BUTTON ──
+      +'<button id="like-btn-'+c.rowId+'" data-liked="'+(isLiked?"1":"0")+'" '
+      +'onclick="handleLike(\''+c.rowId+'\')" '
+      +'style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 4px;'
+      +'border-radius:20px;display:inline-flex;align-items:center;gap:4px;transition:transform 0.2s;">'
+      +(isLiked?"❤️":"🤍")
+      +' <span id="like-count-'+c.rowId+'" style="font-size:12px;font-weight:700;color:var(--text-muted,#666);">'+likeCount+'</span>'
+      +'</button>'
+      +'<button onclick="checkAuthAndOpen(\''+c.rowId+'\',\'reply\')">Reply</button>'
+      +(canEdit  ?'<button onclick="checkAuthAndOpen(\''+c.rowId+'\',\'edit\')">Edit</button>':"")
+      +(canDelete?'<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\''+c.rowId+'\')">Delete</button>':"")
+      +'</div>'
+      +'<div id="box-'+c.rowId+'" class="tc-inline-box"></div>'
+      +'</div>';
+
+    list.filter(function(r){return r.parentId==c.rowId;})
+        .forEach(function(r){html+=renderCard(r,list);});
     return html;
   }
 
-  window.checkAuthAndOpen = function(id, type) {
+  window.checkAuthAndOpen = function(id,type) {
     if (!user) return alert("Login to interact!");
-    isTyping = true;
-    document.querySelectorAll(".tc-inline-box").forEach(function(b){ b.innerHTML = ""; });
-    var box = document.getElementById("box-" + id);
-    if (type === "reply") {
-      box.innerHTML = '<textarea id="reply-in-' + id + '" placeholder="Write a reply..."></textarea>'
-        + '<div style="text-align:right;margin-top:5px;"><button onclick="handleAction(\'' + id + '\')" class="tc-post-btn">Reply</button></div>';
+    isTyping=true;
+    document.querySelectorAll(".tc-inline-box").forEach(function(b){b.innerHTML="";});
+    var box=document.getElementById("box-"+id);
+    if (type==="reply") {
+      box.innerHTML='<textarea id="reply-in-'+id+'" placeholder="Write a reply..."></textarea>'
+        +'<div style="text-align:right;margin-top:5px;">'
+        +'<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
+        +'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
+        +'<button class="tc-post-btn" onclick="handleAction(\''+id+'\')">Reply</button></div>';
     } else {
-      var old = document.getElementById("body-" + id) ? document.getElementById("body-" + id).innerText : "";
-      box.innerHTML = '<textarea id="edit-in-' + id + '">' + old + '</textarea>'
-        + '<div style="text-align:right;margin-top:5px;"><button onclick="handleAction(\'0\',\'edit\',\'' + id + '\')" class="tc-post-btn">Update</button></div>';
+      var old=document.getElementById("body-"+id)?document.getElementById("body-"+id).innerText:"";
+      box.innerHTML='<textarea id="edit-in-'+id+'">'+old+'</textarea>'
+        +'<div style="text-align:right;margin-top:5px;">'
+        +'<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
+        +'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
+        +'<button class="tc-post-btn" onclick="handleAction(\'0\',\'edit\',\''+id+'\')">Update</button></div>';
     }
+    var ta=box.querySelector("textarea"); if(ta) ta.focus();
   };
 
   window.deleteMsg = async function(id) {
-    if (!confirm("Delete?")) return;
-    await fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-      body: JSON.stringify({ action:"delete", rowId:id, userEmail:user.e }) });
+    if (!confirm("Delete permanently?")) return;
+    await fetch(SU,{method:"POST",mode:"no-cors",
+      body:JSON.stringify({action:"delete",rowId:id,userEmail:user.e})});
     sync();
   };
 
@@ -588,10 +560,9 @@ window.addEventListener("load", function() {
 })();
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 {% endif %}
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
+<!-- FOOTER -->
 <footer class="tc-footer" role="contentinfo">
   <div class="footer-grid">
     <div>
@@ -621,7 +592,6 @@ window.addEventListener("load", function() {
   </div>
 </footer>
 
-<!-- Scroll To Top -->
 <button id="tyagi-top-wrap" aria-label="Scroll to top">
   <svg class="tyagi-progress-svg" viewBox="-1 -1 102 102" aria-hidden="true">
     <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
@@ -629,16 +599,13 @@ window.addEventListener("load", function() {
   <i class="fas fa-arrow-up top-arrow-icon" aria-hidden="true"></i>
 </button>
 
-<!-- Posts Data -->
 <script>
 window.tyagiPosts = [
   {% assign all_posts = site.pages | where: "is_post", true %}
   {% for p in all_posts %}{"title":{{ p.title | jsonify }},"url":{{ p.url | relative_url | jsonify }},"image":{{ p.image | default: "" | jsonify }},"excerpt":{{ p.description | default: "" | strip_html | truncate: 120 | jsonify }}}{% unless forloop.last %},{% endunless %}{% endfor %}
 ];
 </script>
-
 <script src="{{ '/assets/js/main.js' | absolute_url }}" defer></script>
-
 
 </body>
 </html>
