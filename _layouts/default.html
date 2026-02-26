@@ -392,88 +392,70 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMk
 const messaging  = getMessaging(initializeApp(FB_CONFIG));
 
 /* Bell UI update */
-function updateBell(on) {
+/* --- Real Bell Logic --- */
+window._updateBell = function(on) {
   var btn = document.getElementById("tc-bell-btn");
   if (!btn) return;
-  btn.style.display    = "flex";
-  btn.innerHTML        = on ? "🔔" : "🔕";
-  btn.title            = on ? "Notifications ON — band karne ke liye click karo"
-                            : "Notifications OFF — allow karne ke liye click karo";
-  btn.style.background = on ? "var(--accent-light,#e8f0fe)" : "none";
-  btn.style.borderColor= on ? "var(--accent,#1a73e8)"       : "var(--border-color,#ddd)";
-}
-window._updateBell = updateBell;
-
-/* Subscribe — called on login or bell click */
-window._tcInitFCM = async function() {
-  var u = JSON.parse(localStorage.getItem("tc_user"));
-  if (!u) return;
-  try {
-    var sw   = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
-    await navigator.serviceWorker.ready;
-    var perm = await Notification.requestPermission();
-    if (perm !== "granted") { updateBell(false); return; }
-    var token = await getToken(messaging, { vapidKey: VAPID, serviceWorkerRegistration: sw });
-    if (token) {
-      localStorage.setItem("tc_fcm_token",    token);
-      localStorage.setItem("tc_notif_enabled", "1");
-      fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-        body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:u.e, name:u.n }) });
-      updateBell(true);
-    }
-  } catch(e) { console.log("FCM:", e); updateBell(false); }
-
-  /* Foreground message handler */
-  onMessage(messaging, function(payload) {
-    var title = (payload.notification || {}).title || "TyagiCore 🔔";
-    var body  = (payload.notification || {}).body  || "";
-    var url   = (payload.data && payload.data.url) || "https://tyagicore.gklearnstudy.in";
-    if (url.startsWith("/")) url = "https://tyagicore.gklearnstudy.in" + url;
-    navigator.serviceWorker.ready.then(function(reg) {
-      reg.showNotification(title, {
-        body: body, icon: "/assets/images/tyagi_core.png",
-        tag: "tc-notif-" + Date.now(), data: { url: url }, vibrate: [200,100,200]
-      });
-    });
-  });
+  
+  // Browser ki asli permission check karo
+  var isBlocked = (Notification.permission === "denied");
+  
+  btn.style.display = "flex";
+  
+  if (isBlocked) {
+    btn.innerHTML = "🚫"; // Blocked icon
+    btn.title = "Browser settings se notifications blocked hain. Address bar mein Lock icon par click karke Allow karein.";
+    btn.style.background = "#ffebee";
+    btn.style.borderColor = "#ef5350";
+  } else {
+    btn.innerHTML = on ? "🔔" : "🔕";
+    btn.title = on ? "Notifications ON — click to pause" : "Notifications OFF — click to enable";
+    btn.style.background = on ? "#e8f0fe" : "none";
+    btn.style.borderColor = on ? "#1a73e8" : "#ddd";
+  }
 };
 
 window.tcToggleBell = async function() {
   if (!user) return alert("Pehle login karo!");
 
-  let status = Notification.permission;
-
-  if (status === "default") {
-    status = await Notification.requestPermission();
+  // 1. Agar user ne browser se block kar rakha hai
+  if (Notification.permission === "denied") {
+    alert("Aapne browser settings mein notifications block ki hain.\n\nTheek karne ke liye:\nAddress bar mein 🔒 icon par click karein -> Notifications -> Allow");
+    return;
   }
 
-  if (status === "granted") {
-    let currentlyOn = localStorage.getItem("tc_notif_enabled") === "1";
+  // 2. Agar permission 'default' hai (pehli baar click kiya)
+  if (Notification.permission !== "granted") {
+    var perm = await Notification.requestPermission();
+    if (perm === "granted") {
+      await window._tcInitFCM(); // Asli FCM register karo
+      localStorage.setItem("tc_notif_enabled", "1");
+      alert("Notifications Enabled! ✅");
+    } else {
+      return; // User ne dismiss kar diya
+    }
+  } 
+  // 3. Agar permission 'granted' hai (sirf toggle karna hai)
+  else {
+    var currentlyOn = localStorage.getItem("tc_notif_enabled") === "1";
     if (currentlyOn) {
       localStorage.setItem("tc_notif_enabled", "0");
-      alert("Notifications OFF (Paused)");
+      // Note: Browser permission 'granted' hi rahegi, bas hum server ko token nahi bhejenge
+      alert("Notifications Paused! 🔕");
     } else {
       localStorage.setItem("tc_notif_enabled", "1");
-      await window._tcInitFCM(); // Asli FCM register
-      alert("Notifications ON (Active)");
+      await window._tcInitFCM(); // Token dobara register karo
+      alert("Notifications Resumed! 🔔");
     }
-  } else {
-    alert("Browser settings mein notifications blocked hain!");
   }
   
-  // Bell icon update karne ke liye
-  if (window._updateBell) window._updateBell(localStorage.getItem("tc_notif_enabled") === "1" && Notification.permission === "granted");
+  window._updateBell(localStorage.getItem("tc_notif_enabled") === "1");
 };
 
-/* Page load — restore bell state */
+// Page load par status check karo
 window.addEventListener("load", function() {
-  var u       = JSON.parse(localStorage.getItem("tc_user"));
-  var enabled = localStorage.getItem("tc_notif_enabled") === "1"
-                && Notification.permission === "granted";
-  if (u) {
-    updateBell(enabled);
-    if (enabled) window._tcInitFCM();
-  }
+  var isEnabled = localStorage.getItem("tc_notif_enabled") === "1" && Notification.permission === "granted";
+  window._updateBell(isEnabled);
 });
 </script>
 
