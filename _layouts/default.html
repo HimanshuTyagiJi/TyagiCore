@@ -367,16 +367,20 @@ window.addEventListener("load", function() {
 <script>
 (function() {
   var SU = "https://script.google.com/macros/s/AKfycbzN_IpDncCGpgAWzLph8EqtDGfjed1C-Xr3ItHNYWFnyp0J7z6B-oh4fGG3FWXD9tHq/exec";
-  var user=JSON.parse(localStorage.getItem("tc_user"))||null;
-  var serverData=[],tempLocal=[],isTyping=false,currentRating=0;
+  var user         = JSON.parse(localStorage.getItem("tc_user")) || null;
+  var serverData   = [];
+  var tempLocal    = []; // Comment locally save — server aane tak dikhta rahe
+  var localLikes   = {}; // { rowId: true/false } — like state locally save
+  var isTyping     = false;
+  var currentRating= 0;
 
   function init() {
     if (user) {
-      document.getElementById("tc-auth-gate").style.display="none";
-      document.getElementById("tc-user-pill").style.display="flex";
-      document.getElementById("tc-user-name").innerText=user.n;
-      document.getElementById("tc-user-pfp").src=user.p;
-      document.cookie="tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+      document.getElementById("tc-auth-gate").style.display = "none";
+      document.getElementById("tc-user-pill").style.display = "flex";
+      document.getElementById("tc-user-name").innerText     = user.n;
+      document.getElementById("tc-user-pfp").src            = user.p;
+      document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
       setTimeout(function(){ if(window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
     sync();
@@ -386,13 +390,13 @@ window.addEventListener("load", function() {
   window.onGoogleAuth = function(r) {
     if (user) return;
     var p = JSON.parse(atob(r.credential.split(".")[1]));
-    user = { n:p.name, e:p.email, p:p.picture };
+    user  = { n:p.name, e:p.email, p:p.picture };
     localStorage.setItem("tc_user", JSON.stringify(user));
-    document.cookie="tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
-    document.getElementById("tc-auth-gate").style.display="none";
-    document.getElementById("tc-user-pill").style.display="flex";
-    document.getElementById("tc-user-name").innerText=user.n;
-    document.getElementById("tc-user-pfp").src=user.p;
+    document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+    document.getElementById("tc-auth-gate").style.display = "none";
+    document.getElementById("tc-user-pill").style.display = "flex";
+    document.getElementById("tc-user-name").innerText     = user.n;
+    document.getElementById("tc-user-pfp").src            = user.p;
     setTimeout(function(){ if(window._tcInitFCM) window._tcInitFCM(); }, 800);
     sync();
   };
@@ -401,165 +405,220 @@ window.addEventListener("load", function() {
     localStorage.removeItem("tc_user");
     localStorage.removeItem("tc_notif_enabled");
     localStorage.removeItem("tc_fcm_token");
-    document.cookie="tc_skip_prompt=; path=/; max-age=0";
+    document.cookie = "tc_skip_prompt=; path=/; max-age=0";
     location.reload();
   };
 
-  window.hoverStar = function(n){ if(!isTyping&&currentRating===0) paintStars(n); };
+  window.hoverStar = function(n){ if(!isTyping && currentRating===0) paintStars(n); };
   window.resetStar = function()  { paintStars(currentRating); };
   window.handleStar = function(n) {
     if (!user) return alert("Login required!");
-    currentRating=n; paintStars(n);
-    fetch(SU,{method:"POST",mode:"no-cors",
-      body:JSON.stringify({url:location.pathname,email:user.e,rating:n,comment:"__RATING_ONLY__"})});
+    currentRating = n; paintStars(n);
+    fetch(SU, { method:"POST", mode:"no-cors",
+      body: JSON.stringify({ url:location.pathname, email:user.e, rating:n, comment:"__RATING_ONLY__" }) });
   };
   function paintStars(n) {
-    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active",i<n); });
+    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active", i<n); });
   }
 
-  /* ── LIKE ── */
+  /* ── LIKE — local state save, flicker nahi ── */
   window.handleLike = function(rowId) {
     if (!user) return alert("Like karne ke liye login karo!");
-    // Optimistic UI
+
     var btn     = document.getElementById("like-btn-"+rowId);
     var countEl = document.getElementById("like-count-"+rowId);
     if (btn) {
       var isLiked  = btn.getAttribute("data-liked") === "1";
       var count    = parseInt(countEl ? countEl.innerText : "0") || 0;
-      btn.setAttribute("data-liked", isLiked ? "0" : "1");
-      btn.innerHTML = isLiked ? "🤍" : "❤️";
+      var newState = !isLiked;
+
+      // Local save karo
+      localLikes[rowId] = newState;
+
+      // UI turat update
+      btn.setAttribute("data-liked", newState ? "1" : "0");
+      btn.innerHTML = newState ? "❤️" : "🤍";
       btn.style.transform = "scale(1.3)";
       setTimeout(function(){ btn.style.transform = "scale(1)"; }, 250);
-      if (countEl) countEl.innerText = isLiked ? Math.max(0,count-1) : count+1;
+      if (countEl) countEl.innerText = newState ? count+1 : Math.max(0, count-1);
     }
-    fetch(SU,{method:"POST",mode:"no-cors",
-      body:JSON.stringify({action:"like",rowId:rowId,email:user.e})});
+
+    fetch(SU, { method:"POST", mode:"no-cors",
+      body: JSON.stringify({ action:"like", rowId:rowId, email:user.e }) });
     setTimeout(sync, 1500);
   };
 
+  /* ── POST / REPLY / EDIT ── */
   window.handleAction = function(pid, mode, rowId) {
-    mode=mode||"new"; rowId=rowId||null;
+    mode = mode||"new"; rowId = rowId||null;
     if (!user) return alert("Please Login!");
-    var inputId=mode==="edit"?"edit-in-"+rowId:(pid==="0"?"tc-input":"reply-in-"+pid);
-    var inputEl=document.getElementById(inputId);
-    var msg=inputEl?inputEl.value.trim():"";
+    var inputId = mode==="edit" ? "edit-in-"+rowId : (pid==="0" ? "tc-input" : "reply-in-"+pid);
+    var inputEl = document.getElementById(inputId);
+    var msg     = inputEl ? inputEl.value.trim() : "";
     if (!msg) return;
-    if (mode==="new") {
-      tempLocal.push({rowId:"temp_"+Date.now(),name:user.n,comment:msg,
-        parentId:pid,pic:user.p,date:"Saving...",pending:true,
-        isAdmin:false,isPostAdmin:false,email:user.e,likesCount:0,isLiked:false});
+
+    if (mode === "new") {
+      // ✅ Local mein save — server aane tak dikhta rahe, hatega nahi
+      tempLocal.push({
+        rowId    : "temp_"+Date.now(),
+        name     : user.n,
+        comment  : msg,
+        parentId : pid,
+        pic      : user.p,
+        date     : "Saving...",
+        pending  : true,
+        isAdmin  : false,
+        isPostAdmin: false,
+        email    : user.e,
+        likesCount: 0,
+        isLiked  : false,
+        _localMsg: msg  // Match karne ke liye
+      });
     } else {
-      var t=serverData.find(function(c){return c.rowId==rowId;});
-      if (t){t.comment=msg;t.date="Updating...";}
+      var t = serverData.find(function(c){ return c.rowId == rowId; });
+      if (t) { t.comment = msg; t.date = "Updating..."; }
     }
-    render(); inputEl.value=""; isTyping=false;
-    var pl={url:location.pathname,name:user.n,email:user.e,pic:user.p,comment:msg,parentId:pid,rating:currentRating};
-    if (mode==="edit"){pl.action="edit";pl.rowId=rowId;}
-    fetch(SU,{method:"POST",body:JSON.stringify(pl),mode:"no-cors"});
-    setTimeout(sync,1500);
+
+    render(); inputEl.value = ""; isTyping = false;
+
+    var pl = { url:location.pathname, name:user.n, email:user.e,
+               pic:user.p, comment:msg, parentId:pid, rating:currentRating };
+    if (mode === "edit") { pl.action = "edit"; pl.rowId = rowId; }
+    fetch(SU, { method:"POST", body:JSON.stringify(pl), mode:"no-cors" });
+    setTimeout(sync, 1500);
   };
 
+  /* ── SYNC — tempLocal ko hat nahi jane deta jab tak server confirm na kare ── */
   async function sync() {
     try {
-      var ep=user?"&email="+encodeURIComponent(user.e):"";
-      var r=await fetch(SU+"?url="+location.pathname+ep);
-      var data=await r.json();
-      serverData=data.comments||[]; tempLocal=[];
-      if (user&&data.myRating>0) currentRating=data.myRating;
-      updateRatingUI(data.avgRating,data.totalVotes);
-      paintStars(currentRating); render();
-    } catch(e){}
+      var ep   = user ? "&email="+encodeURIComponent(user.e) : "";
+      var r    = await fetch(SU+"?url="+location.pathname+ep);
+      var data = await r.json();
+
+      serverData = data.comments || [];
+
+      // ✅ tempLocal mein se sirf woh hatao jo server mein aa gaye
+      // Match: same email + same comment text
+      tempLocal = tempLocal.filter(function(t) {
+        var foundOnServer = serverData.some(function(s) {
+          return s.email === t.email && s.comment === t._localMsg;
+        });
+        return !foundOnServer; // Server mein nahi aaya? Local mein rakho
+      });
+
+      if (user && data.myRating > 0) currentRating = data.myRating;
+      updateRatingUI(data.avgRating, data.totalVotes);
+      paintStars(currentRating);
+      render();
+    } catch(e) {}
   }
 
-  function updateRatingUI(avg,total) {
-    document.getElementById("tc-avg-num").innerText=avg;
-    document.getElementById("tc-total-votes").innerText=(total||0)+" reviews";
-    var s="",r=Math.round(parseFloat(avg)||0);
-    for (var i=1;i<=5;i++) s+=i<=r?"★":"☆";
-    document.getElementById("tc-avg-stars").innerText=s;
+  function updateRatingUI(avg, total) {
+    document.getElementById("tc-avg-num").innerText     = avg;
+    document.getElementById("tc-total-votes").innerText = (total||0)+" reviews";
+    var s = "", r = Math.round(parseFloat(avg)||0);
+    for (var i = 1; i <= 5; i++) s += i<=r ? "★" : "☆";
+    document.getElementById("tc-avg-stars").innerText = s;
   }
 
   function render() {
-    var feed=document.getElementById("tc-feed");
-    var all=serverData.concat(tempLocal);
-    feed.innerHTML=all.filter(function(c){return c.parentId=="0";})
-      .reverse().map(function(c){return renderCard(c,all);}).join("");
+    var feed = document.getElementById("tc-feed");
+    var all  = serverData.concat(tempLocal); // Server + pending local dono
+    feed.innerHTML = all
+      .filter(function(c){ return c.parentId == "0"; })
+      .reverse()
+      .map(function(c){ return renderCard(c, all); })
+      .join("");
   }
 
-  function renderCard(c,list) {
-    var isMine   =user&&(user.e===c.email);
-    var amIAdmin =(c.isAdmin===true);   // Sheet: current user admin hai
-    var canEdit  =isMine||amIAdmin;     // User apna, Admin sabka
-    var canDelete=isMine||amIAdmin;
+  function renderCard(c, list) {
+    var isMine    = user && (user.e === c.email);
+    var amIAdmin  = (c.isAdmin === true);
+    var canEdit   = isMine || amIAdmin;
+    var canDelete = isMine || amIAdmin;
 
-    var starStr=c.userRating>0
-      ?'<span style="color:#f4b400;font-size:10px;margin-left:8px;">'+"★".repeat(c.userRating)+'</span>':"";
-    var likeCount=c.likesCount||0;
-    var isLiked  =c.isLiked||false;
+    var starStr = c.userRating > 0
+      ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">'+"★".repeat(c.userRating)+'</span>' : "";
 
-    var html='<div class="tc-card '+(c.parentId!=="0"?"reply ":"")+(c.pending?"pending":"")+'" role="listitem">'
+    // ✅ Like state — localLikes override karta hai server value ko
+    // Taki sync ke baad bhi button flicker na kare
+    var serverLiked = c.isLiked || false;
+    var isLiked     = (c.rowId in localLikes) ? localLikes[c.rowId] : serverLiked;
+    var likeCount   = c.likesCount || 0;
+    // Count adjust karo agar local override hai
+    if (c.rowId in localLikes) {
+      if (localLikes[c.rowId] !== serverLiked) {
+        likeCount = localLikes[c.rowId] ? likeCount+1 : Math.max(0, likeCount-1);
+      }
+    }
+
+    var html = '<div class="tc-card '+(c.parentId!=="0"?"reply ":"")+(c.pending?"pending":"")+'" role="listitem">'
       +'<div class="tc-card-meta">'
       +'<img src="'+c.pic+'" class="tc-card-pfp" alt="'+c.name+'" loading="lazy">'
       +'<span class="tc-card-name">'+c.name+'</span>'
-      +(c.isPostAdmin?'<span class="tc-admin-badge">ADMIN ⭐</span>':"")
+      +(c.isPostAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : "")
       +starStr
       +'<span class="tc-card-time">'+c.date+'</span>'
       +'</div>'
       +'<div class="tc-card-body" id="body-'+c.rowId+'">'+c.comment+'</div>'
       +'<div class="tc-actions">'
+
       // ── LIKE BUTTON ──
       +'<button id="like-btn-'+c.rowId+'" data-liked="'+(isLiked?"1":"0")+'" '
       +'onclick="handleLike(\''+c.rowId+'\')" '
       +'style="background:none;border:none;cursor:pointer;font-size:15px;padding:2px 4px;'
       +'border-radius:20px;display:inline-flex;align-items:center;gap:4px;transition:transform 0.2s;">'
-      +(isLiked?"❤️":"🤍")
+      +(isLiked ? "❤️" : "🤍")
       +' <span id="like-count-'+c.rowId+'" style="font-size:12px;font-weight:700;color:var(--text-muted,#666);">'+likeCount+'</span>'
       +'</button>'
+
       +'<button onclick="checkAuthAndOpen(\''+c.rowId+'\',\'reply\')">Reply</button>'
-      +(canEdit  ?'<button onclick="checkAuthAndOpen(\''+c.rowId+'\',\'edit\')">Edit</button>':"")
-      +(canDelete?'<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\''+c.rowId+'\')">Delete</button>':"")
+      +(canEdit   ? '<button onclick="checkAuthAndOpen(\''+c.rowId+'\',\'edit\')">Edit</button>'   : "")
+      +(canDelete ? '<button style="color:var(--red,#ef4444)" onclick="deleteMsg(\''+c.rowId+'\')">Delete</button>' : "")
       +'</div>'
       +'<div id="box-'+c.rowId+'" class="tc-inline-box"></div>'
       +'</div>';
 
-    list.filter(function(r){return r.parentId==c.rowId;})
-        .forEach(function(r){html+=renderCard(r,list);});
+    list.filter(function(r){ return r.parentId == c.rowId; })
+        .forEach(function(r){ html += renderCard(r, list); });
     return html;
   }
 
-  window.checkAuthAndOpen = function(id,type) {
+  window.checkAuthAndOpen = function(id, type) {
     if (!user) return alert("Login to interact!");
-    isTyping=true;
-    document.querySelectorAll(".tc-inline-box").forEach(function(b){b.innerHTML="";});
-    var box=document.getElementById("box-"+id);
-    if (type==="reply") {
-      box.innerHTML='<textarea id="reply-in-'+id+'" placeholder="Write a reply..."></textarea>'
+    isTyping = true;
+    document.querySelectorAll(".tc-inline-box").forEach(function(b){ b.innerHTML = ""; });
+    var box = document.getElementById("box-"+id);
+    if (type === "reply") {
+      box.innerHTML = '<textarea id="reply-in-'+id+'" placeholder="Write a reply..."></textarea>'
         +'<div style="text-align:right;margin-top:5px;">'
         +'<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
         +'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
         +'<button class="tc-post-btn" onclick="handleAction(\''+id+'\')">Reply</button></div>';
     } else {
-      var old=document.getElementById("body-"+id)?document.getElementById("body-"+id).innerText:"";
-      box.innerHTML='<textarea id="edit-in-'+id+'">'+old+'</textarea>'
+      var old = document.getElementById("body-"+id) ? document.getElementById("body-"+id).innerText : "";
+      box.innerHTML = '<textarea id="edit-in-'+id+'">'+old+'</textarea>'
         +'<div style="text-align:right;margin-top:5px;">'
         +'<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
         +'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
         +'<button class="tc-post-btn" onclick="handleAction(\'0\',\'edit\',\''+id+'\')">Update</button></div>';
     }
-    var ta=box.querySelector("textarea"); if(ta) ta.focus();
+    var ta = box.querySelector("textarea"); if (ta) ta.focus();
   };
 
   window.deleteMsg = async function(id) {
     if (!confirm("Delete permanently?")) return;
-    await fetch(SU,{method:"POST",mode:"no-cors",
-      body:JSON.stringify({action:"delete",rowId:id,userEmail:user.e})});
+    await fetch(SU, { method:"POST", mode:"no-cors",
+      body: JSON.stringify({ action:"delete", rowId:id, userEmail:user.e }) });
     sync();
   };
 
   init();
 })();
 </script>
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+
 {% endif %}
 
 <!-- FOOTER -->
