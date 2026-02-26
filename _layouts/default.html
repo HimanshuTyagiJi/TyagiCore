@@ -319,13 +319,6 @@
 
     <div id="tc-auth-zone" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
 
-      <!-- BELL ICON — sirf login ke baad dikhega -->
-      <button id="tc-bell-btn"
-        onclick="tcToggleBell()"
-        style="display:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--border-color,#ddd);
-               background:none;cursor:pointer;font-size:17px;align-items:center;justify-content:center;
-               transition:all 0.2s;flex-shrink:0;"
-        title="Notifications">🔕</button>
 
       <!-- GOOGLE LOGIN -->
       <div id="tc-auth-gate">
@@ -375,197 +368,325 @@
 
 <!-- ═══ FIREBASE — Foreground Notifications ═══ -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
+import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getMessaging, getToken, onMessage, deleteToken } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
 const FB_CONFIG = {
-    apiKey: "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
-    authDomain: "appcomment.firebaseapp.com",
-    projectId: "appcomment",
-    messagingSenderId: "156258808941",
-    appId: "1:156258808941:web:04a1f7470ac43657c7fb64"
+  apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
+  authDomain       : "appcomment.firebaseapp.com",
+  projectId        : "appcomment",
+  storageBucket    : "appcomment.firebasestorage.app",
+  messagingSenderId: "156258808941",
+  appId            : "1:156258808941:web:04a1f7470ac43657c7fb64"
 };
-const VAPID = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
-const app = initializeApp(FB_CONFIG);
-const messaging = getMessaging(app);
-
-// SCRIPT URL (Make sure this is your LATEST deployment URL)
+const VAPID      = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMkH5Y4I3HsJkQaCoTCS0gSzBq2FCZ0qaA2GvEefG266MSYqK-/exec";
 
-window._updateBell = function(on) {
-    const btn = document.getElementById("tc-bell-btn");
-    if (!btn) return;
-    const isBlocked = Notification.permission === "denied";
-    btn.style.display = "flex";
-    if (isBlocked) {
-        btn.innerHTML = "🚫";
-        btn.title = "Blocked in Browser";
-    } else {
-        btn.innerHTML = on ? "🔔" : "🔕";
-        btn.style.background = on ? "#e8f0fe" : "none";
+const messaging  = getMessaging(initializeApp(FB_CONFIG));
+
+/* Bell UI update */
+function updateBell(on) {
+  var btn = document.getElementById("tc-bell-btn");
+  if (!btn) return;
+  btn.style.display    = "flex";
+  btn.innerHTML        = on ? "🔔" : "🔕";
+  btn.title            = on ? "Notifications ON — band karne ke liye click karo"
+                            : "Notifications OFF — allow karne ke liye click karo";
+  btn.style.background = on ? "var(--accent-light,#e8f0fe)" : "none";
+  btn.style.borderColor= on ? "var(--accent,#1a73e8)"       : "var(--border-color,#ddd)";
+}
+window._updateBell = updateBell;
+
+/* Subscribe — called on login or bell click */
+window._tcInitFCM = async function() {
+  var u = JSON.parse(localStorage.getItem("tc_user"));
+  if (!u) return;
+  try {
+    var sw   = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+    await navigator.serviceWorker.ready;
+    var perm = await Notification.requestPermission();
+    if (perm !== "granted") { updateBell(false); return; }
+    var token = await getToken(messaging, { vapidKey: VAPID, serviceWorkerRegistration: sw });
+    if (token) {
+      localStorage.setItem("tc_fcm_token",    token);
+      localStorage.setItem("tc_notif_enabled", "1");
+      fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
+        body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:u.e, name:u.n }) });
+      updateBell(true);
     }
+  } catch(e) { console.log("FCM:", e); updateBell(false); }
+
+  /* Foreground message handler */
+  onMessage(messaging, function(payload) {
+    var title = (payload.notification || {}).title || "TyagiCore 🔔";
+    var body  = (payload.notification || {}).body  || "";
+    var url   = (payload.data && payload.data.url) || "https://tyagicore.gklearnstudy.in";
+    if (url.startsWith("/")) url = "https://tyagicore.gklearnstudy.in" + url;
+    navigator.serviceWorker.ready.then(function(reg) {
+      reg.showNotification(title, {
+        body: body, icon: "/assets/images/tyagi_core.png",
+        tag: "tc-notif-" + Date.now(), data: { url: url }, vibrate: [200,100,200]
+      });
+    });
+  });
 };
 
 window.tcToggleBell = async function() {
-    if (Notification.permission === "denied") return alert("Enable notifications in browser settings.");
-    
-    if (Notification.permission !== "granted") {
-        const perm = await Notification.requestPermission();
-        if (perm === "granted") {
-            localStorage.setItem("tc_notif_enabled", "1");
-            await window._tcInitFCM();
-        }
+  if (!user) return alert("Pehle login karo!");
+
+  let status = Notification.permission;
+
+  if (status === "default") {
+    status = await Notification.requestPermission();
+  }
+
+  if (status === "granted") {
+    let currentlyOn = localStorage.getItem("tc_notif_enabled") === "1";
+    if (currentlyOn) {
+      localStorage.setItem("tc_notif_enabled", "0");
+      alert("Notifications OFF (Paused)");
     } else {
-        const currentlyOn = localStorage.getItem("tc_notif_enabled") === "1";
-        localStorage.setItem("tc_notif_enabled", currentlyOn ? "0" : "1");
-        if (!currentlyOn) await window._tcInitFCM();
+      localStorage.setItem("tc_notif_enabled", "1");
+      await window._tcInitFCM(); // Asli FCM register
+      alert("Notifications ON (Active)");
     }
-    window._updateBell(localStorage.getItem("tc_notif_enabled") === "1");
+  } else {
+    alert("Browser settings mein notifications blocked hain!");
+  }
+  
+  // Bell icon update karne ke liye
+  if (window._updateBell) window._updateBell(localStorage.getItem("tc_notif_enabled") === "1" && Notification.permission === "granted");
 };
 
-window._tcInitFCM = async function() {
-    try {
-        const token = await getToken(messaging, { vapidKey: VAPID });
-        if (token && localStorage.getItem("tc_notif_enabled") === "1") {
-            const user = JSON.parse(localStorage.getItem("tc_user"));
-            if (user) {
-                fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", 
-                    body: JSON.stringify({ action: "register_fcm", email: user.e, token: token }) 
-                });
-            }
-        }
-    } catch (e) { console.error("FCM Error", e); }
-};
-
-onMessage(messaging, (payload) => {
-    new Notification(payload.notification.title, { body: payload.notification.body });
+/* Page load — restore bell state */
+window.addEventListener("load", function() {
+  var u       = JSON.parse(localStorage.getItem("tc_user"));
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1"
+                && Notification.permission === "granted";
+  if (u) {
+    updateBell(enabled);
+    if (enabled) window._tcInitFCM();
+  }
 });
 </script>
 
+<!-- ═══ COMMENT LOGIC ═══ -->
 <script>
 (function() {
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMkH5Y4I3HsJkQaCoTCS0gSzBq2FCZ0qaA2GvEefG266MSYqK-/exec";
-    let user = JSON.parse(localStorage.getItem("tc_user")) || null;
-    let serverData = [];
-    let currentRating = 0;
+  var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCjpj4Nh_pJzeTRZJMkH5Y4I3HsJkQaCoTCS0gSzBq2FCZ0qaA2GvEefG266MSYqK-/exec";
 
-    function init() {
-        if (user) {
-            document.getElementById("tc-auth-gate").style.display = "none";
-            document.getElementById("tc-user-pill").style.display = "flex";
-            document.getElementById("tc-user-name").innerText = user.n;
-            document.getElementById("tc-user-pfp").src = user.p;
-            document.getElementById("tc-bell-btn").style.display = "flex";
-            if (window._updateBell) window._updateBell(localStorage.getItem("tc_notif_enabled") === "1");
-        }
-        sync();
-        setInterval(sync, 10000);
+  var user          = JSON.parse(localStorage.getItem("tc_user")) || null;
+  var serverData    = [];
+  var tempLocal     = [];
+  var isTyping      = false;
+  var currentRating = 0;
+
+  /* ── INIT ── */
+  function init() {
+    if (user) {
+      document.getElementById("tc-auth-gate").style.display  = "none";
+      document.getElementById("tc-user-pill").style.display  = "flex";
+      document.getElementById("tc-user-name").innerText      = user.n;
+      document.getElementById("tc-user-pfp").src             = user.p;
+
+      /* Bell dikhao */
+      var bell = document.getElementById("tc-bell-btn");
+      if (bell) bell.style.display = "flex";
+
+      /* Google popup dobara na aaye */
+      document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+
+      /* FCM */
+      setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
+    }
+    sync();
+    setInterval(function() { if (!isTyping) sync(); }, 5000);
+  }
+
+  /* ── GOOGLE LOGIN ── */
+  window.onGoogleAuth = function(r) {
+    if (user) return; /* Already logged in — ignore */
+    var p = JSON.parse(atob(r.credential.split(".")[1]));
+    user  = { n: p.name, e: p.email, p: p.picture };
+    localStorage.setItem("tc_user", JSON.stringify(user));
+    document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+
+    /* UI update — no reload */
+    document.getElementById("tc-auth-gate").style.display  = "none";
+    document.getElementById("tc-user-pill").style.display  = "flex";
+    document.getElementById("tc-user-name").innerText      = user.n;
+    document.getElementById("tc-user-pfp").src             = user.p;
+
+    /* Bell dikhao */
+    var bell = document.getElementById("tc-bell-btn");
+    if (bell) {
+      bell.style.display = "flex";
+      if (window._updateBell) window._updateBell(false);
     }
 
-    window.onGoogleAuth = function(r) {
-        const p = JSON.parse(atob(r.credential.split(".")[1]));
-        user = { n: p.name, e: p.email, p: p.picture };
-        localStorage.setItem("tc_user", JSON.stringify(user));
-        location.reload();
-    };
+    setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 800);
+    sync();
+  };
 
-    window.tcLogout = function() {
-        localStorage.clear();
-        location.reload();
-    };
+  /* ── LOGOUT ── */
+  window.tcLogout = function() {
+    localStorage.removeItem("tc_user");
+    localStorage.removeItem("tc_notif_enabled");
+    localStorage.removeItem("tc_fcm_token");
+    document.cookie = "tc_skip_prompt=; path=/; max-age=0";
+    location.reload();
+  };
 
-    async function sync() {
-        try {
-            const ep = user ? "&email=" + encodeURIComponent(user.e) : "";
-            const r = await fetch(SCRIPT_URL + "?url=" + location.pathname + ep);
-            const data = await r.json();
-            serverData = data.comments || [];
-            updateRatingUI(data.avgRating, data.totalVotes);
-            render();
-        } catch(e) {}
+  /* ── STARS ── */
+  window.hoverStar = function(n) { if (!isTyping && currentRating === 0) paintStars(n); };
+  window.resetStar = function()  { paintStars(currentRating); };
+  window.handleStar = function(n) {
+    if (!user) return alert("Login required to rate!");
+    currentRating = n; paintStars(n);
+    fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
+      body: JSON.stringify({ url:location.pathname, email:user.e, rating:n, comment:"__RATING_ONLY__" }) });
+  };
+  function paintStars(n) {
+    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active", i < n); });
+  }
+
+  /* ── POST / REPLY / EDIT ── */
+  window.handleAction = function(pid, mode, rowId) {
+    mode = mode || "new"; rowId = rowId || null;
+    if (!user) return alert("Please Login!");
+    var inputId = mode === "edit" ? "edit-in-"+rowId : (pid === "0" ? "tc-input" : "reply-in-"+pid);
+    var inputEl = document.getElementById(inputId);
+    var msg     = inputEl ? inputEl.value.trim() : "";
+    if (!msg) return;
+
+    if (mode === "new") {
+      tempLocal.push({ rowId:"temp_"+Date.now(), name:user.n, comment:msg,
+        parentId:pid, pic:user.p, date:"Saving...", pending:true, isAdmin:false, email:user.e });
+    } else {
+      var t = serverData.find(function(c){ return c.rowId == rowId; });
+      if (t) { t.comment = msg; t.date = "Updating..."; }
     }
+    render(); inputEl.value = ""; isTyping = false;
 
-    function render() {
-        const feed = document.getElementById("tc-feed");
-        feed.innerHTML = serverData.filter(c => c.parentId == "0")
-            .reverse().map(c => renderCard(c, serverData)).join("");
+    var payload = { url:location.pathname, name:user.n, email:user.e,
+      pic:user.p, comment:msg, parentId:pid, rating:currentRating };
+    if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
+    fetch(SCRIPT_URL, { method:"POST", body:JSON.stringify(payload), mode:"no-cors" });
+    setTimeout(sync, 1500);
+  };
+
+  /* ── SYNC ── */
+  async function sync() {
+    try {
+      var ep   = user ? "&email=" + encodeURIComponent(user.e) : "";
+      var r    = await fetch(SCRIPT_URL + "?url=" + location.pathname + ep);
+      var data = await r.json();
+      serverData = data.comments || []; tempLocal = [];
+      if (user && data.myRating > 0) currentRating = data.myRating;
+      updateRatingUI(data.avgRating, data.totalVotes);
+      paintStars(currentRating); render();
+    } catch(e) {}
+  }
+
+  function updateRatingUI(avg, total) {
+    document.getElementById("tc-avg-num").innerText     = avg;
+    document.getElementById("tc-total-votes").innerText = total + " reviews";
+    var s = "", r = Math.round(parseFloat(avg));
+    for (var i = 1; i <= 5; i++) s += i <= r ? "★" : "☆";
+    document.getElementById("tc-avg-stars").innerText = s;
+  }
+
+  /* ── RENDER ── */
+  function render() {
+    var feed = document.getElementById("tc-feed");
+    var all  = serverData.concat(tempLocal);
+    feed.innerHTML = all.filter(function(c){ return c.parentId == "0"; })
+      .reverse().map(function(c){ return renderCard(c, all); }).join("");
+  }
+
+/* --- 1. RENDER FUNCTION (Isme pehle check karenge ki aap admin ho ya nahi) --- */
+function render() {
+    var feed = document.getElementById("tc-feed");
+    var all = serverData.concat(tempLocal);
+
+    // Pehle pure data mein check karo: Kya current login user ka koi comment 'isAdmin' hai?
+    window.iAmAdminGlobal = all.some(function(c) {
+        return (user && user.e === c.email && c.isAdmin === true);
+    });
+
+    feed.innerHTML = all.filter(function(c){ return c.parentId == "0"; })
+      .reverse().map(function(c){ return renderCard(c, all); }).join("");
+}
+
+/* --- 2. RENDERCARD (Isme Badge aur Power ko alag kar diya) --- */
+function renderCard(c, list) {
+    var isMine = user && (user.e === c.email);
+    
+    // c.isAdmin (Power) - Backend se aayega
+    // c.isPostAdmin (Badge) - Backend se aayega
+    var canDelete = isMine || c.isAdmin; 
+    var canEdit = isMine;
+
+    var starStr = c.userRating > 0
+      ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
+
+    var html = '<div class="tc-card ' + (c.parentId !== "0" ? "reply " : "") + (c.pending ? "pending" : "") + '">'
+      + '<div class="tc-card-meta">'
+      + '<img src="' + c.pic + '" class="tc-card-pfp">'
+      + '<span class="tc-card-name">' + c.name + '</span>'
+      
+      // FIX: Sirf asli admin comment par badge dikhega
+      + (c.isPostAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
+      
+      + starStr
+      + '<span class="tc-card-time">' + c.date + '</span>'
+      + '</div>'
+      + '<div class="tc-card-body">' + c.comment + '</div>'
+      + '<div class="tc-actions">'
+      + '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</button>'
+      + (canEdit ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
+      + (canDelete ? '<button style="color:#ef4444" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
+      + '</div>'
+      + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div>'
+      + '</div>';
+
+    list.filter(function(r){ return r.parentId == c.rowId; })
+        .forEach(function(r){ html += renderCard(r, list); });
+    return html;
+}
+  /* ── REPLY / EDIT BOX ── */
+  window.checkAuthAndOpen = function(id, type) {
+    if (!user) return alert("Login to interact!");
+    isTyping = true;
+    document.querySelectorAll(".tc-inline-box").forEach(function(b){ b.innerHTML = ""; });
+    var box = document.getElementById("box-" + id);
+    if (type === "reply") {
+      box.innerHTML = '<textarea id="reply-in-' + id + '" placeholder="Write a reply..."></textarea>'
+        + '<div style="text-align:right;margin-top:5px;">'
+        + '<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
+        + 'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
+        + '<button class="tc-post-btn" onclick="handleAction(\'' + id + '\')">Reply</button></div>';
+    } else {
+      var old = document.getElementById("body-" + id) ? document.getElementById("body-" + id).innerText : "";
+      box.innerHTML = '<textarea id="edit-in-' + id + '">' + old + '</textarea>'
+        + '<div style="text-align:right;margin-top:5px;">'
+        + '<button onclick="isTyping=false;this.parentElement.parentElement.innerHTML=\'\'" '
+        + 'style="background:none;border:none;cursor:pointer;font-size:12px;margin-right:10px;color:var(--text-muted,#666)">Cancel</button>'
+        + '<button class="tc-post-btn" onclick="handleAction(\'0\',\'edit\',\'' + id + '\')">Update</button></div>';
     }
+    var ta = box.querySelector("textarea");
+    if (ta) ta.focus();
+  };
 
-    function renderCard(c, list) {
-        const isMine = user && (user.e === c.email);
-        // Admin Power: Backend se isAdmin true aayega agar tu admin login hai
-        const canDelete = isMine || c.isAdmin;
-        const canEdit = isMine;
-        
-        const stars = c.userRating > 0 ? `<span style="color:#f4b400;font-size:10px;"> ${"★".repeat(c.userRating)}</span>` : "";
+  /* ── DELETE ── */
+  window.deleteMsg = async function(id) {
+    if (!confirm("Delete permanently?")) return;
+    await fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
+      body: JSON.stringify({ action:"delete", rowId:id, userEmail:user.e }) });
+    sync();
+  };
 
-        let html = `
-            <div class="tc-card">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <img src="${c.pic}" style="width:30px; height:30px; border-radius:50%;">
-                    <span style="font-weight:bold; font-size:14px;">${c.name}</span>
-                    ${c.isPostAdmin ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : ''}
-                    ${stars}
-                    <span style="font-size:11px; color:#999;">${c.date}</span>
-                </div>
-                <div id="body-${c.rowId}" style="margin:10px 0; font-size:14px;">${c.comment}</div>
-                <div style="font-size:12px; color:#1a73e8; cursor:pointer; gap:10px; display:flex;">
-                    <span onclick="checkAuthAndOpen('${c.rowId}','reply')">Reply</span>
-                    ${canEdit ? `<span onclick="checkAuthAndOpen('${c.rowId}','edit')">Edit</span>` : ''}
-                    ${canDelete ? `<span style="color:red" onclick="deleteMsg('${c.rowId}')">Delete</span>` : ''}
-                </div>
-                <div id="box-${c.rowId}" style="margin-top:10px;"></div>
-            </div>`;
-
-        const replies = list.filter(r => r.parentId == c.rowId);
-        if (replies.length > 0) {
-            html += `<div style="margin-left:30px; border-left:2px solid #eee;">${replies.map(r => renderCard(r, list)).join("")}</div>`;
-        }
-        return html;
-    }
-
-    window.handleAction = function(pid, mode = "new", rowId = null) {
-        if (!user) return alert("Login first!");
-        const inputId = mode === "edit" ? "edit-in-"+rowId : (pid === "0" ? "tc-input" : "reply-in-"+pid);
-        const msg = document.getElementById(inputId).value.trim();
-        if (!msg) return;
-
-        const payload = { url:location.pathname, name:user.n, email:user.e, pic:user.p, comment:msg, parentId:pid };
-        if (mode === "edit") { payload.action = "edit"; payload.rowId = rowId; }
-        
-        fetch(SCRIPT_URL, { method:"POST", body:JSON.stringify(payload), mode:"no-cors" });
-        setTimeout(sync, 1500);
-        if (pid === "0") document.getElementById("tc-input").value = "";
-    };
-
-    window.deleteMsg = async function(id) {
-        if (!confirm("Delete?")) return;
-        await fetch(SCRIPT_URL, { method:"POST", mode:"no-cors", body: JSON.stringify({ action:"delete", rowId:id, userEmail:user.e }) });
-        setTimeout(sync, 1000);
-    };
-
-    window.handleStar = function(n) {
-        if (!user) return alert("Login to rate!");
-        fetch(SCRIPT_URL, { method:"POST", mode:"no-cors", body: JSON.stringify({ url:location.pathname, email:user.e, rating:n, comment:"__RATING_ONLY__" }) });
-        setTimeout(sync, 1000);
-    };
-
-    function updateRatingUI(avg, total) {
-        document.getElementById("tc-avg-num").innerText = avg;
-        document.getElementById("tc-total-votes").innerText = total;
-    }
-
-    window.checkAuthAndOpen = function(id, type) {
-        const box = document.getElementById("box-" + id);
-        if (type === "reply") {
-            box.innerHTML = `<textarea id="reply-in-${id}" style="width:100%;"></textarea><button onclick="handleAction('${id}')">Send</button>`;
-        } else {
-            const old = document.getElementById("body-" + id).innerText;
-            box.innerHTML = `<textarea id="edit-in-${id}" style="width:100%;">${old}</textarea><button onclick="handleAction('0','edit','${id}')">Update</button>`;
-        }
-    };
-
-    init();
+  init();
 })();
 </script>
 
