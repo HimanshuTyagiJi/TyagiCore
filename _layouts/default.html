@@ -314,18 +314,35 @@
         </div>
       </div>
     </div>
-    <div id="tc-auth-zone">
+
+    <div id="tc-auth-zone" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+
+      <!-- Bell Notification Button -->
+      <button id="tc-bell-btn" onclick="tcToggleBell()" title="Notifications"
+        style="background:none;border:1px solid var(--border-color,#ddd);border-radius:50%;
+               width:36px;height:36px;cursor:pointer;font-size:17px;display:none;
+               align-items:center;justify-content:center;transition:all 0.2s;">
+        🔔
+      </button>
+
+      <!-- Google Login -->
       <div id="tc-auth-gate">
         <div id="g_id_onload"
           data-client_id="307990626713-iajvibefe9hrour51knqkcc5obouuher.apps.googleusercontent.com"
-          data-callback="onGoogleAuth"></div>
+          data-callback="onGoogleAuth"
+          data-auto_select="false"
+          data-skip_prompt_cookie="tc_skip_prompt">
+        </div>
         <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
       </div>
+
+      <!-- User Pill -->
       <div id="tc-user-pill" style="display:none" class="tc-user-pill">
         <img id="tc-user-pfp" src="" class="tc-pfp-small" alt="Profile">
         <span id="tc-user-name" class="tc-u-name"></span>
         <button onclick="tcLogout()" class="tc-logout-btn">Logout</button>
       </div>
+
     </div>
   </div>
 
@@ -350,10 +367,10 @@
   <div id="tc-feed" class="tc-feed" role="list"></div>
 </div>
 
-<!-- Firebase Foreground Notification -->
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
+import { getMessaging, getToken, onMessage, deleteToken } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
 const firebaseConfig = {
   apiKey           : "AIzaSyCFIKqQ5OICMZhWPtZqmgem0bEW7QpoPcw",
@@ -369,22 +386,35 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiS
 const app       = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
+// Bell button update
+function updateBell(state) {
+  var btn = document.getElementById("tc-bell-btn");
+  if (!btn) return;
+  btn.style.display      = "flex";
+  btn.title              = state ? "Notifications ON — click to turn OFF" : "Notifications OFF — click to turn ON";
+  btn.style.background   = state ? "var(--accent-light,#e8f0fe)" : "none";
+  btn.style.borderColor  = state ? "var(--accent,#1a73e8)" : "var(--border-color,#ddd)";
+  btn.innerHTML          = state ? "🔔" : "🔕";
+}
+
+// FCM subscribe
 window._tcInitFCM = async function() {
-  const storedUser = JSON.parse(localStorage.getItem("tc_user"));
+  var storedUser = JSON.parse(localStorage.getItem("tc_user"));
   if (!storedUser) return;
   try {
-    const sw   = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    var sw   = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
     await navigator.serviceWorker.ready;
-    const perm = await Notification.requestPermission();
-    if (perm !== "granted") return;
-    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
+    var perm = await Notification.requestPermission();
+    if (perm !== "granted") { updateBell(false); return; }
+    var token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
     if (token) {
-      fetch(SCRIPT_URL, {
-        method: "POST", mode: "no-cors",
-        body: JSON.stringify({ action: "fcm_subscribe", fcmToken: token, email: storedUser.e, name: storedUser.n })
-      });
+      localStorage.setItem("tc_fcm_token", token);
+      localStorage.setItem("tc_notif_enabled", "1");
+      fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
+        body: JSON.stringify({ action:"fcm_subscribe", fcmToken:token, email:storedUser.e, name:storedUser.n }) });
+      updateBell(true);
     }
-  } catch(err) { console.log("FCM Error:", err); }
+  } catch(err) { console.log("FCM Error:", err); updateBell(false); }
 
   onMessage(messaging, function(payload) {
     var title = payload.notification ? payload.notification.title : "TyagiCore 🔔";
@@ -399,9 +429,46 @@ window._tcInitFCM = async function() {
     });
   });
 };
+
+// Manual bell toggle
+window.tcToggleBell = async function() {
+  var storedUser = JSON.parse(localStorage.getItem("tc_user"));
+  if (!storedUser) return alert("Pehle login karo!");
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1";
+
+  if (enabled) {
+    // Unsubscribe
+    try {
+      var sw    = await navigator.serviceWorker.ready;
+      var token = localStorage.getItem("tc_fcm_token");
+      if (token) {
+        await deleteToken(messaging);
+        fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
+          body: JSON.stringify({ action:"fcm_unsubscribe", fcmToken:token, email:storedUser.e }) });
+      }
+    } catch(e) {}
+    localStorage.removeItem("tc_notif_enabled");
+    localStorage.removeItem("tc_fcm_token");
+    updateBell(false);
+  } else {
+    // Subscribe
+    await window._tcInitFCM();
+  }
+};
+
+// Page load pe bell state restore karo
+window.addEventListener("load", function() {
+  var user    = JSON.parse(localStorage.getItem("tc_user"));
+  var enabled = localStorage.getItem("tc_notif_enabled") === "1";
+  if (user) {
+    updateBell(enabled);
+    // Foreground listener re-attach
+    if (enabled) window._tcInitFCM();
+  }
+});
 </script>
 
-<!-- Comment Logic -->
+<!-- Comment Script -->
 <script>
 (function() {
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbympst5_Jwnf_IMo6aiSe0pxryLrrmdDY6ZfH7uf5Km69lZNTDD2OwqWGzstzKVPQvw/exec";
@@ -414,10 +481,12 @@ window._tcInitFCM = async function() {
 
   function init() {
     if (user) {
-      document.getElementById("tc-auth-gate").style.display  = "none";
-      document.getElementById("tc-user-pill").style.display  = "flex";
-      document.getElementById("tc-user-name").innerText      = user.n;
-      document.getElementById("tc-user-pfp").src             = user.p;
+      document.getElementById("tc-auth-gate").style.display = "none";
+      document.getElementById("tc-user-pill").style.display = "flex";
+      document.getElementById("tc-user-name").innerText     = user.n;
+      document.getElementById("tc-user-pfp").src            = user.p;
+      // Login ho chuka — Google popup dobara na aaye
+      document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
       setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 1500);
     }
     sync();
@@ -425,14 +494,28 @@ window._tcInitFCM = async function() {
   }
 
   window.onGoogleAuth = function(r) {
+    if (user) return; // Already logged in — ignore
     var p = JSON.parse(atob(r.credential.split('.')[1]));
     user  = { n: p.name, e: p.email, p: p.picture };
     localStorage.setItem("tc_user", JSON.stringify(user));
-    location.reload();
+    document.cookie = "tc_skip_prompt=1; path=/; max-age=2592000; SameSite=Lax";
+    // Reload nahi — directly UI update
+    document.getElementById("tc-auth-gate").style.display = "none";
+    document.getElementById("tc-user-pill").style.display = "flex";
+    document.getElementById("tc-user-name").innerText     = user.n;
+    document.getElementById("tc-user-pfp").src            = user.p;
+    if (window.updateBell) updateBell(false);
+    document.getElementById("tc-bell-btn").style.display = "flex";
+    setTimeout(function() { if (window._tcInitFCM) window._tcInitFCM(); }, 800);
+    sync();
   };
 
   window.tcLogout = function() {
     localStorage.removeItem("tc_user");
+    localStorage.removeItem("tc_notif_enabled");
+    localStorage.removeItem("tc_fcm_token");
+    // Cookie hatao — next visit pe login milega
+    document.cookie = "tc_skip_prompt=; path=/; max-age=0";
     location.reload();
   };
 
@@ -442,11 +525,10 @@ window._tcInitFCM = async function() {
     if (!user) return alert("Login required to rate!");
     currentRating = n; paintStars(n);
     fetch(SCRIPT_URL, { method:"POST", mode:"no-cors",
-      body: JSON.stringify({ url: location.pathname, email: user.e, rating: n, comment: "__RATING_ONLY__" })
-    });
+      body: JSON.stringify({ url:location.pathname, email:user.e, rating:n, comment:"__RATING_ONLY__" }) });
   };
   function paintStars(n) {
-    document.querySelectorAll(".tc-s").forEach(function(s,i) { s.classList.toggle("active", i < n); });
+    document.querySelectorAll(".tc-s").forEach(function(s,i){ s.classList.toggle("active", i < n); });
   }
 
   window.handleAction = function(pid, mode, rowId) {
@@ -499,7 +581,8 @@ window._tcInitFCM = async function() {
   }
 
   function renderCard(c, list) {
-    // ✅ user apna edit/delete, admin (c.isAdmin===true) sabka edit/delete
+    // ✅ Admin (c.isAdmin Sheet se aata hai) — sabka edit/delete
+    // ✅ User — sirf apna edit/delete
     var canEdit = user && (user.e === c.email || c.isAdmin === true);
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
