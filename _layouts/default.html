@@ -612,25 +612,24 @@ window.addEventListener("load", function() {
   }
 
 function renderCard(c, list) {
-    // 1. Badge Logic: Backend khud bata raha hai 'c.isAdmin' 
-    // Isse sirf asli admin ke profile par "ADMIN ⭐" dikhega.
-    var isActuallyAdminComment = c.isAdmin === true;
-
-    // 2. Power Logic: 
-    // Hume kaise pata chale ki aap admin ho bina email likhe?
-    // Trick: Agar kisi bhi comment par 'isAdmin' true aa raha hai 
-    // AUR wo comment aapka apna hai (isMine), toh iska matlab aap hi ADMIN ho!
-    
+    // 1. Current user check
     var isMine = user && (user.e === c.email);
     
-    // Global Admin check: Kya aapne kabhi koi admin comment kiya hai?
-    // Agar haan, toh aapko sab delete karne ki power mil jayegi.
-    if (isMine && isActuallyAdminComment) {
-        window.iAmTheAdmin = true; 
+    // 2. Badge Logic: 
+    // Backend se 'c.isAdmin' sirf asli admin ke comments ke liye true aata hai.
+    // Isliye ye sirf Admin ke naam ke aage badge dikhayega.
+    var showBadge = (c.isAdmin === true);
+
+    // 3. Power Logic: 
+    // Hum ek global variable set karenge agar kisi EK bhi comment mein 
+    // 'c.isAdmin' true hai AUR wo aapka (isMine) hai.
+    if (isMine && showBadge) {
+        window.tc_is_admin_mode = true;
     }
 
+    // Power check: Agar aap admin mode mein ho ya ye aapka apna comment hai
     var canEdit = isMine;
-    var canDelete = isMine || window.iAmTheAdmin; 
+    var canDelete = isMine || window.tc_is_admin_mode;
 
     var starStr = c.userRating > 0
       ? '<span style="color:#f4b400;font-size:10px;margin-left:8px;">' + "★".repeat(c.userRating) + '</span>' : "";
@@ -640,8 +639,9 @@ function renderCard(c, list) {
       + '<img src="' + c.pic + '" class="tc-card-pfp">'
       + '<span class="tc-card-name">' + c.name + '</span>'
       
-      // Fix 1: Badge sirf asli admin ke liye
-      + (isActuallyAdminComment ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
+      // FIX: Yahan 'showBadge' use kiya hai, 'canDelete' nahi. 
+      // Isliye badge sirf asli admin comments pe dikhega.
+      + (showBadge ? '<span class="tc-admin-badge">ADMIN ⭐</span>' : '')
       
       + starStr
       + '<span class="tc-card-time">' + c.date + '</span>'
@@ -650,7 +650,6 @@ function renderCard(c, list) {
       + '<div class="tc-actions">'
       + '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'reply\')">Reply</button>'
       + (canEdit ? '<button onclick="checkAuthAndOpen(\'' + c.rowId + '\',\'edit\')">Edit</button>' : '')
-      // Fix 2: Delete button admin ko har jagah dikhega
       + (canDelete ? '<button style="color:#ef4444" onclick="deleteMsg(\'' + c.rowId + '\')">Delete</button>' : '')
       + '</div>'
       + '<div id="box-' + c.rowId + '" class="tc-inline-box"></div>'
