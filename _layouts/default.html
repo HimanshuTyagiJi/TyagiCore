@@ -153,10 +153,11 @@
         By {{ page.author | default: "Himanshu Tyagi" }} · 
         {{ page.date | date: "%B %Y" }} · 
         <span class="read-time"><i class="far fa-clock"></i> {{ read_time }}</span>
-      </p>
-
-      {% if page.image %}
-      <div class="post-hero-img" style="margin-bottom:30px;">
+      </p> 
+        
+        {% if page.image %}
+<div class="post-hero-img" id="post-hero-wrap">
+    
         <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" width="1280" height="720" style="border-radius:12px; width:100%; height:auto;">
       </div>
       {% endif %}
