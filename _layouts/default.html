@@ -263,6 +263,7 @@
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
 
+   
     <svg class="sun-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -276,6 +277,33 @@
     </svg>
   </div>
 </button>
+
+  
+<style>
+ 
+  
+
+  .moon-icon, .sun-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  /* Tera Spinning Animation */
+  .sun {
+    animation: spin 8s linear infinite;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+ 
+ 
+</style>
 
 <!-- ═══════════════ COMMENTS ═══════════════ -->
 {% if page.is_post %}
