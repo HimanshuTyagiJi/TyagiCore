@@ -16,7 +16,7 @@
   /* Brand colors — Google palette */
   --blue:          #1052A2;
   --blue-dark:     #1557b0;
-  --red:           #ea4335;
+  --red:           #AB1912;
   --orange:        #f97316;
   --sky:           #0ea5e9;
   --yellow:        #f4b400;
@@ -94,7 +94,7 @@ button { cursor:pointer; font-family:inherit; }
   display:flex; align-items:center; gap:8px;
   font-weight:900; font-size:1.35rem;
   text-decoration:none; flex-shrink:0;
-  background: linear-gradient(135deg, #1a73e8, #ea4335, #f97316);
+  background: linear-gradient(135deg, #1a73e8, #AB1912, #f97316);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -224,7 +224,7 @@ button { cursor:pointer; font-family:inherit; }
 /* ── HERO ── */
 .tc-hero {
   padding:72px 5%; text-align:center;
-  background: linear-gradient(135deg, #1a73e8 0%, #ea4335 40%, #f97316 70%, #0ea5e9 100%);
+  background: linear-gradient(135deg, #1a73e8 0%, #AB1912 40%, #f97316 70%, #0ea5e9 100%);
   background-size:300% 300%;
   animation: gradMove 10s ease infinite;
   color:#fff; position:relative; overflow:hidden;
