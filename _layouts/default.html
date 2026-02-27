@@ -139,21 +139,36 @@
   <div class="tc-left">
 
 {% if page.is_post %}
-      <h1 class="post-title">{{ page.title }}</h1>
-      {% if page.image %}
-        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" class="featured-image">
+      {% assign words = content | number_of_words %}
+      {% if words < 360 %}
+        {% assign read_time = "2 min read" %}
+      {% else %}
+        {% assign minutes = words | divided_by: 180 %}
+        {% assign read_time = minutes | append: " min read" %}
       {% endif %}
-    {% endif %}
 
-    {% unless page.url == "/" or page.url == "/index.html" %}
-    <div class="toc-container" id="toc-box" style="display:none;" aria-label="Table of contents">
-      <div class="toc-title"><i class="fas fa-list-ul" aria-hidden="true"></i>&nbsp; Topics</div>
-      <ul id="toc-list" role="list"></ul>
-      <button id="toc-toggle-btn" class="toc-see-more" aria-expanded="false">
-        See More <i class="fas fa-chevron-down" aria-hidden="true"></i>
-      </button>
-    </div>
-    {% endunless %}
+      <h1 class="post-title" style="margin-bottom:10px;">{{ page.title }}</h1>
+      
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:28px;">
+        By {{ page.author | default: "Himanshu Tyagi" }} · 
+        {{ page.date | date: "%B %Y" }} · 
+        <span class="read-time"><i class="far fa-clock"></i> {{ read_time }}</span>
+      </p>
+
+      {% if page.image %}
+      <div class="post-hero-img" style="margin-bottom:30px;">
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" width="1280" height="720" style="border-radius:12px; width:100%; height:auto;">
+      </div>
+      {% endif %}
+
+      <div class="toc-container" id="toc-box" style="display:none; margin-bottom:30px;">
+        <div class="toc-title"><i class="fas fa-list-ul"></i>&nbsp; Topics</div>
+        <ul id="toc-list" role="list"></ul>
+        <button id="toc-toggle-btn" class="toc-see-more" aria-expanded="false">
+          See More <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+    {% endif %}
 
     {{ content }}
 
