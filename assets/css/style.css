@@ -4,7 +4,7 @@
    Dark mode: all colors in :root vars — fully visible
    ============================================================ */
 
-/* ── ROOT VARS ── */
+/* ── ROOT VARS ── */ 
 :root {
   /* Light */
   --bg:            #f5f7fa;
@@ -14,7 +14,7 @@
   --border-color:  #e2e8f0;
 
   /* Brand colors — Google palette */
-  --blue:          #1a73e8;
+  --blue:          #1052A2;
   --blue-dark:     #1557b0;
   --red:           #ea4335;
   --orange:        #f97316;
