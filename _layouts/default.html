@@ -138,6 +138,13 @@
 <main class="tc-wrapper" id="main-content">
   <div class="tc-left">
 
+{% if page.is_post %}
+      <h1 class="post-title">{{ page.title }}</h1>
+      {% if page.image %}
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" class="featured-image">
+      {% endif %}
+    {% endif %}
+
     {% unless page.url == "/" or page.url == "/index.html" %}
     <div class="toc-container" id="toc-box" style="display:none;" aria-label="Table of contents">
       <div class="toc-title"><i class="fas fa-list-ul" aria-hidden="true"></i>&nbsp; Topics</div>
