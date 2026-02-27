@@ -465,7 +465,7 @@ window._tcInitFCM = async function() {
   }
 
   window.handleLike = function(rowId) {
-    if (!user) return alert("Like karne ke liye login karo!");
+    if (!user) return alert("Please Login!");
     var btn     = document.getElementById("like-btn-"+rowId);
     var countEl = document.getElementById("like-count-"+rowId);
     if (btn) {
