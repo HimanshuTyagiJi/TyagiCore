@@ -1,8 +1,8 @@
 backend:
   name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
-  branch: main # Teri main branch
-  publish_mode: editorial_workflow # Isse approval system chalu hoga
+  branch: main
+  publish_mode: editorial_workflow # Approval system on hai
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
@@ -10,7 +10,8 @@ public_folder: "/assets/images"
 collections:
   - name: "blog"
     label: "My Articles"
-    folder: "_posts" # Agar tera folder 'posts' hai toh wahi likhna
+    folder: "" # <--- Ab ye seedha root check karega
+    extension: "md" # Sirf Markdown files dikhayega
     create: true
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
