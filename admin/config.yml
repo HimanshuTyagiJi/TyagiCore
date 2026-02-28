@@ -2,9 +2,8 @@ backend:
   name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
   branch: main
-  identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity"
-  gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
-  publish_mode: editorial_workflow # Approval system ke liye
+  site_domain: astounding-dasik-6c4834.netlify.app # Tera Netlify ID
+  publish_mode: editorial_workflow
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
@@ -12,7 +11,7 @@ public_folder: "/assets/images"
 collections:
   - name: "blog"
     label: "My Articles"
-    folder: "" # Root directory
+    folder: "" # Root directory (Bahar hi files hain)
     extension: "md"
     format: "frontmatter"
     create: true
