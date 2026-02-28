@@ -1,23 +1,7 @@
 backend:
-  name: git-gateway
+  name: github
   repo: HimanshuTyagiJi/tyagicore
   branch: main
-  # Yahan Netlify ka direct URL dalna hi solution hai
-  identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity"
-  gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
-
-publish_mode: editorial_workflow # Tera approval system
-
-media_folder: "assets/images"
-public_folder: "/assets/images"
-
-collections:
-  - name: "blog"
-    label: "Blog Posts"
-    folder: "" # Root directory
-    extension: "md"
-    format: "frontmatter"
-    create: true
-    fields:
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Body", name: "body", widget: "markdown"}
+  base_url: https://api.netlify.com # Ye sirf login handle karega
+  auth_endpoint: auth
+  publish_mode: editorial_workflow # Tera approval system active rahega
