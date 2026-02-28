@@ -47,7 +47,7 @@
 <!-- HEADER -->
 <header class="tc-header-bar" role="banner">
   <div class="header-inner">
-    <a href="{{ '/' | absolute_url }}" class="logo"  aria-label="{{ site.title }} Home"><img src="{{ 'assets/images/tyagi_core.png' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle;">
+    <a href="{{ '/' | absolute_url }}" class="logo"  aria-label="{{ site.title }} Home"><img src="{{ 'assets/images/tyagi_core.webp' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle;">
 
       <svg width="155" height="38" viewBox="0 0 490 118" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
@@ -106,7 +106,7 @@
 <!-- MOBILE MENU -->
 <div class="mobile-overlay" onclick="toggleMenu(false)" aria-hidden="true"></div>
 <nav class="mobile-menu" role="navigation" aria-label="Mobile menu">
-  <div class="mobile-header" style="border-bottom:1px solid #ccc;"><img src="{{ 'assets/images/tyagi_core.png' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle;">
+  <div class="mobile-header" style="border-bottom:1px solid #ccc;"><img src="{{ 'assets/images/tyagi_core.webp' | relative_url }}" alt="Tyagi Core" style="height: 40px; vertical-align: middle;">
     <span style="font-weight:900;font-size:20px;background:linear-gradient(135deg,#1a73e8,#AB1912,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">TYAGI CORE</span>
     <button onclick="toggleMenu(false)" aria-label="Close" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--text-color)">✕</button>
   </div>
@@ -415,7 +415,7 @@ window._tcInitFCM = async function() {
       var url   = (payload.data && payload.data.url) || "https://tyagicore.gklearnstudy.in";
       navigator.serviceWorker.ready.then(function(reg) {
         reg.showNotification(title, {
-          body:body, icon:"/assets/images/tyagi_core.png",
+          body:body, icon:"/assets/images/tyagi_core.webp",
           tag:"tc-notif", // ✅ tag fixed — same tag = sirf ek notification replace hoga
           data:{url:url}, vibrate:[200,100,200]
         });
