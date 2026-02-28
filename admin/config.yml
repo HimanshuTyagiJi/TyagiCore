@@ -6,7 +6,7 @@ media_folder: "assets/images"
 public_folder: "/assets/images"
 collections:
   - name: "blog"
-    label: "My Articles"
+    label: "default"
     folder: "_posts"
     create: true
     fields:
