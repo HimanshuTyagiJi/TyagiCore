@@ -3,13 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TyagiCore Admin</title>
+  <title>Admin | TyagiCore</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  
   <script>
+    // 1. Force Netlify URL in LocalStorage (Sabse important)
+    localStorage.setItem("netlifySiteURL", "https://astounding-dasik-6c4834.netlify.app");
 
+    // 2. Identity Init
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
         if (!user) {
@@ -19,8 +23,15 @@
         }
       });
     }
-    
-    localStorage.setItem("netlifySiteURL", "https://astounding-dasik-6c4834.netlify.app");
+
+    // 3. CMS Registry Fix (Jab Identity ready ho jaye)
+    window.CMS_CONFIG = {
+      backend: {
+        name: "git-gateway",
+        identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity",
+        gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
+      }
+    };
   </script>
 </body>
 </html>
