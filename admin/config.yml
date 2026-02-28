@@ -2,21 +2,22 @@ backend:
   name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
   branch: main
-  site_domain: astounding-dasik-6c4834.netlify.app # Tera Netlify ID
-  publish_mode: editorial_workflow
+  # Yahan Netlify ka direct URL dalna hi solution hai
+  identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity"
+  gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
+
+publish_mode: editorial_workflow # Tera approval system
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
 
 collections:
   - name: "blog"
-    label: "My Articles"
-    folder: "" # Root directory (Bahar hi files hain)
+    label: "Blog Posts"
+    folder: "" # Root directory
     extension: "md"
     format: "frontmatter"
     create: true
     fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
       - {label: "Title", name: "title", widget: "string"}
-      - {label: "Date", name: "date", widget: "datetime"}
       - {label: "Body", name: "body", widget: "markdown"}
