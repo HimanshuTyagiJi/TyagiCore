@@ -1,7 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
   repo: HimanshuTyagiJi/tyagicore
   branch: main
+  base_url: https://api.netlify.com # Ye sirf backend login ke liye hai
   publish_mode: editorial_workflow
 
 media_folder: "assets/images"
@@ -18,5 +19,4 @@ collections:
       - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
-      - {label: "Description", name: "description", widget: "string"}
       - {label: "Body", name: "body", widget: "markdown"}
