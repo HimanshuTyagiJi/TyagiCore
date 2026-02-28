@@ -2,12 +2,9 @@ backend:
   name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
   branch: main
-  site_domain: tyagicore.gklearnstudy.in # Tera asli domain
-  publish_mode: editorial_workflow
-
-# Is line ko backend ke niche add kar de
-identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity"
-gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
+  identity_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/identity"
+  gateway_url: "https://astounding-dasik-6c4834.netlify.app/.netlify/git"
+  publish_mode: editorial_workflow # Approval system ke liye
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
@@ -17,6 +14,7 @@ collections:
     label: "My Articles"
     folder: "" # Root directory
     extension: "md"
+    format: "frontmatter"
     create: true
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
