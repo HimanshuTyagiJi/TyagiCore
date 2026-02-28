@@ -1,0 +1,19 @@
+backend:
+  name: github
+  repo: HimanshuTyagiJi/tyagicore
+  branch: main
+
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+collections:
+  - name: "blog"
+    label: "My Articles"
+    folder: "posts" # <--- Yahan tere folder ka asli naam aayega (jo bina '_' ke hai)
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "default"} # Kyunki tune kaha layout 'default' hai
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
