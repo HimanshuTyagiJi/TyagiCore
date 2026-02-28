@@ -1,7 +1,21 @@
 backend:
-  name: github
+  name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
   branch: main
-  base_url: https://api.netlify.com # Ye sirf login handle karega
-  auth_endpoint: auth
-  publish_mode: editorial_workflow # Tera approval system active rahega
+  publish_mode: editorial_workflow
+
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+collections:
+  - name: "blog"
+    label: "My Articles"
+    folder: ""
+    extension: "md"
+    format: "frontmatter"
+    create: true
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
