@@ -1,7 +1,8 @@
 backend:
-  name: github
+  name: git-gateway
   repo: HimanshuTyagiJi/tyagicore
-  branch: main
+  branch: main # Teri main branch
+  publish_mode: editorial_workflow # Isse approval system chalu hoga
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
@@ -9,11 +10,11 @@ public_folder: "/assets/images"
 collections:
   - name: "blog"
     label: "My Articles"
-    folder: "posts" # <--- Yahan tere folder ka asli naam aayega (jo bina '_' ke hai)
+    folder: "_posts" # Agar tera folder 'posts' hai toh wahi likhna
     create: true
-    slug: "{{slug}}"
     fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "default"} # Kyunki tune kaha layout 'default' hai
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Description", name: "description", widget: "string"}
       - {label: "Body", name: "body", widget: "markdown"}
