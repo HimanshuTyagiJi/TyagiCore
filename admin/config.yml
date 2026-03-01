@@ -1,9 +1,6 @@
 backend:
-  name: github
-  repo: HimanshuTyagiJi/tyagicore
+  name: git-gateway
   branch: main
-  base_url: https://api.netlify.com # Ye sirf backend login ke liye hai
-  publish_mode: editorial_workflow
 
 media_folder: "assets/images"
 public_folder: "/assets/images"
@@ -11,12 +8,11 @@ public_folder: "/assets/images"
 collections:
   - name: "blog"
     label: "My Articles"
-    folder: ""
-    extension: "md"
-    format: "frontmatter"
+    folder: "_posts"
     create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Date", name: "date", widget: "datetime"}
-      - {label: "Body", name: "body", widget: "markdown"}
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
