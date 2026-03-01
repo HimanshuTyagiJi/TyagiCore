@@ -6,8 +6,13 @@ baseurl: ""
 permalink: /:title
 markdown: kramdown
 highlighter: rouge
+
 plugins:
   - jekyll-seo-tag
+
+include:
+  - admin
+
 defaults:
   - scope:
       path: ""
