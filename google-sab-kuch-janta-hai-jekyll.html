@@ -1,0 +1,712 @@
+---
+layout: default
+title: "Google सब कुछ जानता है आपके बारे में — सबूत देखो"
+description: "Google आपके बारे में क्या-क्या जानता है? आपकी location, searches, photos, habits — सब कुछ। यह जानकर आप चौंक जाएंगे — और यह भी जानो कि खुद को कैसे बचाओ। पूरी हिंदी गाइड।"
+image: ""
+is_post: true
+categories: [Cyber Security, Privacy, Digital Awareness]
+date: 2026-04-04
+author: "Himanshu Tyagi"
+lang: hi
+tags: [google aapke baare mein kya janta hai, google privacy hindi, google data collection india, google se data kaise delete kare, google tracking band kare, digital privacy hindi, google location history, google search history delete, google account privacy settings, apna data google se kaise hataye, google surveillance hindi, online privacy tips india]
+---
+
+<article class="post-content">
+
+<!-- ═══ CANVAS HERO IMAGE ═══ -->
+<div class="post-hero-img" id="post-hero-wrap" style="height:420px;position:relative;overflow:hidden;border-radius:16px;">
+  <canvas id="post-hero-canvas" width="1280" height="720"
+    style="width:100%;height:100%;object-fit:cover;border-radius:16px;display:block;"></canvas>
+  <img
+    id="post-hero-img"
+    src=""
+    data-title="Google सब कुछ जानता है आपके बारे में — सबूत देखो!"
+    data-autothumb="true"
+    alt="Google आपके बारे में सब कुछ जानता है डेटा प्राइवेसी हिंदी — InfoShield India"
+    title="Google सब कुछ जानता है आपके बारे में — Proof देखो — InfoShield India"
+    width="1280"
+    height="720"
+    loading="eager"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:16px;"
+  >
+</div>
+
+<script>
+(function(){
+  var canvas = document.getElementById("post-hero-canvas");
+  if(!canvas) return;
+  var ctx = canvas.getContext("2d");
+  canvas.width = 1280; canvas.height = 720;
+
+  /* Dark surveillance theme */
+  var bg = ctx.createLinearGradient(0,0,1280,720);
+  bg.addColorStop(0,"#020408");
+  bg.addColorStop(0.5,"#040810");
+  bg.addColorStop(1,"#020408");
+  ctx.fillStyle = bg; ctx.fillRect(0,0,1280,720);
+
+  /* Grid */
+  ctx.strokeStyle="rgba(66,133,244,0.06)"; ctx.lineWidth=1;
+  for(var x=0;x<1280;x+=70){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,720);ctx.stroke();}
+  for(var y=0;y<720;y+=70){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(1280,y);ctx.stroke();}
+
+  /* Data nodes — scattered */
+  var nodes=[
+    [120,90,"📍"],[1140,80,"🔍"],[80,580,"📷"],[1150,560,"📧"],
+    [250,50,"🛒"],[980,640,"📱"],[640,38,"🎵"],[200,660,"💳"],
+    [1060,110,"📺"],[320,620,"🗺️"]
+  ];
+  nodes.forEach(function(n){
+    ctx.strokeStyle="rgba(66,133,244,0.20)"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(n[0],n[1],22,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle="rgba(66,133,244,0.06)";
+    ctx.beginPath(); ctx.arc(n[0],n[1],22,0,Math.PI*2); ctx.fill();
+    ctx.font="18px Arial"; ctx.textAlign="center";
+    ctx.fillText(n[2],n[0],n[1]+6);
+    /* Line to center */
+    ctx.strokeStyle="rgba(66,133,244,0.12)"; ctx.lineWidth=1;
+    ctx.setLineDash([4,6]);
+    ctx.beginPath(); ctx.moveTo(n[0],n[1]); ctx.lineTo(640,290); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  /* Central Google eye */
+  var eyeGrad = ctx.createRadialGradient(640,290,0,640,290,180);
+  eyeGrad.addColorStop(0,"rgba(66,133,244,0.20)");
+  eyeGrad.addColorStop(0.5,"rgba(234,67,53,0.08)");
+  eyeGrad.addColorStop(1,"transparent");
+  ctx.fillStyle=eyeGrad;
+  ctx.beginPath(); ctx.ellipse(640,290,260,130,0,0,Math.PI*2); ctx.fill();
+
+  /* Google G logo colors ring */
+  var gColors=["#4285f4","#ea4335","#fbbc04","#34a853"];
+  for(var i=0;i<4;i++){
+    ctx.strokeStyle=gColors[i]; ctx.lineWidth=6;
+    ctx.beginPath();
+    ctx.arc(640,290,100,i*Math.PI/2,(i+1)*Math.PI/2);
+    ctx.stroke();
+  }
+
+  /* Eye pupil */
+  ctx.fillStyle="rgba(66,133,244,0.9)";
+  ctx.beginPath(); ctx.arc(640,290,35,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#ffffff";
+  ctx.beginPath(); ctx.arc(640,290,20,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#1a1a2e";
+  ctx.beginPath(); ctx.arc(640,290,12,0,Math.PI*2); ctx.fill();
+  /* Eye shine */
+  ctx.fillStyle="rgba(255,255,255,0.8)";
+  ctx.beginPath(); ctx.arc(647,283,4,0,Math.PI*2); ctx.fill();
+
+  /* "You are being watched" */
+  ctx.shadowColor="rgba(234,67,53,0.9)"; ctx.shadowBlur=20;
+  ctx.fillStyle="#ea4335"; ctx.font="bold 26px Arial"; ctx.textAlign="center";
+  ctx.fillText("⚠ आपको देखा जा रहा है ⚠",640,210);
+  ctx.shadowBlur=0;
+
+  /* Data labels around eye */
+  var labels=[
+    [480,170,"Location: Meerut, UP"],
+    [800,175,"Searches: 14,832"],
+    [440,390,"Photos: 8,421"],
+    [820,395,"Emails: 23,091"],
+    [540,450,"YouTube: 4,200 hrs"]
+  ];
+  labels.forEach(function(l){
+    ctx.fillStyle="rgba(66,133,244,0.15)";
+    ctx.beginPath(); ctx.roundRect(l[0]-85,l[1]-12,170,24,6); ctx.fill();
+    ctx.fillStyle="rgba(66,133,244,0.7)"; ctx.font="11px Arial"; ctx.textAlign="center";
+    ctx.fillText(l[2],l[0],l[1]+4);
+  });
+
+  /* Title */
+  ctx.shadowColor="rgba(66,133,244,0.9)"; ctx.shadowBlur=30;
+  ctx.fillStyle="#ffffff"; ctx.font="bold 62px Arial"; ctx.textAlign="center";
+  ctx.fillText("Google सब कुछ जानता है",640,520);
+  ctx.shadowBlur=20;
+  ctx.fillStyle="#93c5fd"; ctx.font="bold 36px Arial";
+  ctx.fillText("आपके बारे में — सबूत देखो — अभी",640,575);
+  ctx.shadowBlur=0;
+  ctx.fillStyle="rgba(255,255,255,0.4)"; ctx.font="20px Arial";
+  ctx.fillText("infoshieldindia.in",640,618);
+
+  var c1=ctx.createRadialGradient(0,0,0,0,0,280);
+  c1.addColorStop(0,"rgba(66,133,244,0.10)"); c1.addColorStop(1,"transparent");
+  ctx.fillStyle=c1; ctx.fillRect(0,0,350,350);
+  var c2=ctx.createRadialGradient(1280,720,0,1280,720,280);
+  c2.addColorStop(0,"rgba(234,67,53,0.08)"); c2.addColorStop(1,"transparent");
+  ctx.fillStyle=c2; ctx.fillRect(900,400,380,320);
+
+  var img=document.getElementById("post-hero-img");
+  if(img){img.src=canvas.toDataURL("image/jpeg",0.92);canvas.style.display="none";}
+})();
+</script>
+
+<!-- ═══ SVG एनिमेशन 1 — Google की नज़र ═══ -->
+<div style="display:flex;justify-content:center;margin:36px 0 24px;">
+<svg width="360" height="200" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Google आपको track कर रहा है — data collection animation">
+  <defs>
+    <linearGradient id="gGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4285f4"/>
+      <stop offset="100%" stop-color="#ea4335"/>
+    </linearGradient>
+  </defs>
+
+  <!-- आप — बायीं तरफ -->
+  <circle cx="50" cy="100" r="28" fill="none" stroke="#4285f4" stroke-width="2"/>
+  <text x="50" y="94" text-anchor="middle" font-size="20">🧑</text>
+  <text x="50" y="113" text-anchor="middle" font-size="8" fill="#4285f4">आप</text>
+
+  <!-- Data rays -->
+  <line x1="80" y1="80" x2="155" y2="65" stroke="#4285f4" stroke-width="1" stroke-dasharray="4,3" opacity="0.6">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="80" y1="100" x2="155" y2="100" stroke="#34a853" stroke-width="1" stroke-dasharray="4,3" opacity="0.6">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.2s"/>
+  </line>
+  <line x1="80" y1="120" x2="155" y2="135" stroke="#fbbc04" stroke-width="1" stroke-dasharray="4,3" opacity="0.6">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.4s"/>
+  </line>
+
+  <!-- Data labels -->
+  <text x="118" y="62" text-anchor="middle" font-size="8" fill="#4285f4">📍 Location</text>
+  <text x="118" y="98" text-anchor="middle" font-size="8" fill="#34a853">🔍 Searches</text>
+  <text x="118" y="138" text-anchor="middle" font-size="8" fill="#fbbc04">📷 Photos</text>
+
+  <!-- Google eye center -->
+  <circle cx="200" cy="100" r="35" fill="#0a0e1a" stroke="none"/>
+  <!-- G colors ring -->
+  <path d="M200,65 A35,35 0 0,1 235,100" fill="none" stroke="#4285f4" stroke-width="4"/>
+  <path d="M235,100 A35,35 0 0,1 200,135" fill="none" stroke="#ea4335" stroke-width="4"/>
+  <path d="M200,135 A35,35 0 0,1 165,100" fill="none" stroke="#fbbc04" stroke-width="4"/>
+  <path d="M165,100 A35,35 0 0,1 200,65" fill="none" stroke="#34a853" stroke-width="4"/>
+  <!-- Eye -->
+  <circle cx="200" cy="100" r="16" fill="#4285f4"/>
+  <circle cx="200" cy="100" r="9" fill="white"/>
+  <circle cx="200" cy="100" r="5" fill="#1a1a2e"/>
+  <circle cx="203" cy="97" r="2" fill="white" opacity="0.8"/>
+  <!-- Pulse -->
+  <circle cx="200" cy="100" r="35" fill="none" stroke="#4285f4" stroke-width="1" opacity="0.5">
+    <animate attributeName="r" values="35;55;70" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.1;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <text x="200" y="148" text-anchor="middle" font-size="8" fill="#4285f4">Google</text>
+
+  <!-- Output rays right -->
+  <line x1="237" y1="80" x2="295" y2="62" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="4,3">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <line x1="237" y1="100" x2="295" y2="100" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="4,3">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.3s"/>
+  </line>
+  <line x1="237" y1="120" x2="295" y2="138" stroke="#ea4335" stroke-width="1.5" stroke-dasharray="4,3">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.6s"/>
+  </line>
+
+  <text x="318" y="65" text-anchor="middle" font-size="8" fill="#ea4335">Ads target</text>
+  <text x="318" y="103" text-anchor="middle" font-size="8" fill="#ea4335">Profile बना</text>
+  <text x="318" y="141" text-anchor="middle" font-size="8" fill="#ea4335">Sold करे</text>
+
+  <text x="180" y="185" text-anchor="middle" font-size="10" fill="#ea4335" font-weight="700">
+    👁️ आपकी हर हरकत Record हो रही है
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+  </text>
+</svg>
+</div>
+
+<p style="color:var(--text-muted);font-size:14px;margin-bottom:8px;">
+  By <strong>Himanshu Tyagi</strong> · InfoShield India ·
+  <a href="https://tyagicore.gklearnstudy.in" style="color:var(--accent);">tyagicore.gklearnstudy.in</a> ·
+  अप्रैल 2026 · 20 मिनट पढ़ाई
+</p>
+<p style="color:var(--text-muted);font-size:13px;margin-bottom:28px;">
+  🏷️
+  <a href="/cyber-security" style="color:var(--accent);text-decoration:none;">#CyberSecurity</a> &nbsp;
+  <a href="/privacy" style="color:var(--accent);text-decoration:none;">#Privacy</a> &nbsp;
+  <a href="/google-data" style="color:var(--accent);text-decoration:none;">#GoogleData</a> &nbsp;
+  <a href="/digital-awareness" style="color:var(--accent);text-decoration:none;">#DigitalAwareness</a>
+</p>
+
+<div class="tip-box info">
+  <span class="tip-icon">💡</span>
+  <div class="tip-text">
+    <strong>इस लेख में क्या मिलेगा:</strong>
+    Google आपके बारे में क्या-क्या जानता है — पूरी list,
+    यह data कहाँ जाता है और कैसे use होता है,
+    खुद अपना data Google पर जाकर कैसे देखो — live proof,
+    और Google की tracking कम कैसे करो — आसान तरीके।
+  </div>
+</div>
+
+<h2>😨 एक सवाल — जो आपको रात को सोने नहीं देगा</h2>
+
+<p>
+  आप अभी इस लेख को पढ़ रहे हैं।
+  आपके phone में Google Chrome खुला है — या Google Search।
+  आपके phone में Gmail है। Google Maps है। YouTube है।
+  शायद Google Photos भी है।
+</p>
+<p>
+  अब यह सोचो — इन सभी apps ने मिलकर
+  पिछले 1 साल में आपके बारे में क्या-क्या record किया होगा?
+  कहाँ गए। क्या खाया। क्या खरीदा। किससे बात की।
+  किस doctor के पास गए। कौन सी बीमारी search की।
+  रात को 2 बजे क्या देख रहे थे YouTube पर।
+</p>
+<p>
+  यह सब — <strong>Google के servers पर आज भी मौजूद है।</strong>
+  और सबसे डरावनी बात?
+  <strong>आप खुद जाकर यह सब देख सकते हो।</strong>
+  यही इस लेख का "सबूत" है।
+</p>
+
+<div class="tip-box danger">
+  <span class="tip-icon">🚨</span>
+  <div class="tip-text">
+    <strong>चौंकाने वाला सच:</strong>
+    Google हर रोज़ दुनिया भर से <strong>15 exabytes</strong> से ज़्यादा data collect करता है।
+    एक Android phone औसतन <strong>हर 12 मिनट</strong> में Google को data भेजता है — screen बंद हो तब भी।
+    आपकी <strong>location हर 2 मिनट</strong> में record होती है — GPS बंद हो तब भी।
+    यह WiFi signals और nearby cell towers से होता है।
+    India में <strong>55 करोड़</strong> Google account users हैं — और उनमें से 98% को नहीं पता
+    कि उनका data कहाँ जा रहा है।
+  </div>
+</div>
+
+<h2>🔍 Google आपके बारे में क्या-क्या जानता है</h2>
+
+<h3>1. आपकी पूरी Location History</h3>
+<p>
+  Google Maps use करते हो? तो Google जानता है — आप हर रोज़ कहाँ जाते हो।
+  कौन से hospital गए। कौन से दोस्त के घर। कौन सी दुकान।
+  यह सब <strong>timeline</strong> के रूप में save है — साल दर साल।
+  खुद देखो: <strong>myactivity.google.com</strong> → Location History।
+  वहाँ आपका हर दिन का map मिलेगा। आपकी पूरी ज़िंदगी की यात्रा।
+</p>
+
+<h3>2. हर Search जो आपने कभी की</h3>
+<p>
+  2015 से लेकर आज तक — Google पर जो भी search किया —
+  वो सब record है। हर शब्द। हर सवाल।
+  "क्या यह cancer है?" "शादी कैसे तोड़ें?" "घर से भागने का तरीका?"
+  जो searches आपने खुद भूल गए — Google ने नहीं भुलाया।
+  देखो: <strong>myactivity.google.com</strong> → Search History।
+</p>
+
+<h3>3. YouTube पर क्या-क्या देखा</h3>
+<p>
+  हर वीडियो जो देखी। कितनी देर देखी। कहाँ pause किया।
+  रात को कौन से videos देखे। किस category में ज़्यादा interest है।
+  यहाँ तक कि जो videos आपने <strong>delete</strong> किया history से —
+  वो भी Google के पास है।
+  देखो: <strong>myactivity.google.com</strong> → YouTube History।
+</p>
+
+<h3>4. आपकी सारी Photos और Faces</h3>
+<p>
+  Google Photos use करते हो? तो Google ने आपके चेहरे को
+  <strong>facial recognition</strong> से identify किया हुआ है।
+  आपके परिवार के सदस्यों के चेहरे अलग-अलग categorize किए हुए हैं।
+  आपकी 10 साल पुरानी photos — Google के servers पर।
+  आपकी private moments — Google का AI देख चुका है।
+</p>
+
+<h3>5. आपकी सारी Emails</h3>
+<p>
+  Gmail use करते हो? Google ने आपकी हर email पढ़ी है — AI से।
+  Bank statements, medical reports, personal conversations।
+  यह सब scan होता है ताकि आपको "relevant ads" दिखाए जा सकें।
+  2017 तक Google literally email content पढ़कर ads target करता था।
+  अब वो कहते हैं — "नहीं करते।" लेकिन data अभी भी उनके पास है।
+</p>
+
+<h3>6. आपकी Voice Recordings</h3>
+<p>
+  "Ok Google" या "Hey Google" कभी use किया?
+  हर command record है। आपकी आवाज़ — Google के servers पर।
+  कुछ cases में — Google Assistant गलती से activate होकर
+  background conversations भी record कर चुका है।
+  देखो: <strong>myactivity.google.com</strong> → Voice & Audio Activity।
+  आपको अपनी आवाज़ में recordings मिलेंगी।
+</p>
+
+<h3>7. आप क्या खरीदते हो</h3>
+<p>
+  Google Pay use करते हो? तो हर transaction record है।
+  Amazon, Flipkart पर जो भी खरीदा — Gmail में उसकी receipt है।
+  Google उसे scan करके जानता है — आपकी spending habits।
+  कौन सी category में ज़्यादा खर्च। कौन से products पसंद।
+  यह सब — targeted advertising के लिए use होता है।
+</p>
+
+<h3>8. आपका पूरा Profile</h3>
+<p>
+  Google के पास आपकी age, gender, interests, income level,
+  political views, health concerns, relationship status —
+  एक अनुमानित profile है।
+  देखो: <strong>adssettings.google.com</strong>
+  वहाँ Google ने जो आपके बारे में सोचा है — वो दिखेगा।
+  यह देखकर ज़्यादातर लोग चौंक जाते हैं।
+</p>
+
+<!-- ═══ SVG एनिमेशन 2 — Data Types Map ═══ -->
+<div style="display:flex;justify-content:center;margin:36px 0;">
+<svg width="380" height="250" viewBox="0 0 380 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Google किस तरह का data collect करता है — India privacy awareness">
+  <defs>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4285f4"/>
+      <stop offset="50%" stop-color="#ea4335"/>
+      <stop offset="100%" stop-color="#34a853"/>
+    </linearGradient>
+  </defs>
+
+  <text x="190" y="18" text-anchor="middle" font-size="12" fill="#4285f4" font-weight="800">Google आपके बारे में क्या-क्या जानता है</text>
+
+  <!-- Center Google eye -->
+  <circle cx="190" cy="125" r="32" fill="#0a0e1a" stroke="none"/>
+  <path d="M190,93 A32,32 0 0,1 222,125" fill="none" stroke="#4285f4" stroke-width="3.5"/>
+  <path d="M222,125 A32,32 0 0,1 190,157" fill="none" stroke="#ea4335" stroke-width="3.5"/>
+  <path d="M190,157 A32,32 0 0,1 158,125" fill="none" stroke="#fbbc04" stroke-width="3.5"/>
+  <path d="M158,125 A32,32 0 0,1 190,93" fill="none" stroke="#34a853" stroke-width="3.5"/>
+  <circle cx="190" cy="125" r="15" fill="#4285f4"/>
+  <circle cx="190" cy="125" r="8" fill="white"/>
+  <circle cx="190" cy="125" r="4" fill="#1a1a2e"/>
+  <circle cx="190" cy="125" r="32" fill="none" stroke="#4285f4" stroke-width="1" opacity="0.4">
+    <animate attributeName="r" values="32;55;75" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.1;0" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Node 1 Location -->
+  <circle cx="52" cy="55" r="22" fill="#0a0e1a" stroke="#4285f4" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <text x="52" y="49" text-anchor="middle" font-size="14">📍</text>
+  <text x="52" y="62" text-anchor="middle" font-size="7" fill="#4285f4">Location</text>
+  <text x="52" y="72" text-anchor="middle" font-size="7" fill="#4285f4">History</text>
+  <line x1="72" y1="70" x2="160" y2="108" stroke="#4285f4" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Node 2 Search -->
+  <circle cx="190" cy="35" r="22" fill="#0a0e1a" stroke="#ea4335" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+  </circle>
+  <text x="190" y="29" text-anchor="middle" font-size="14">🔍</text>
+  <text x="190" y="42" text-anchor="middle" font-size="7" fill="#ea4335">Search</text>
+  <text x="190" y="52" text-anchor="middle" font-size="7" fill="#ea4335">History</text>
+  <line x1="190" y1="57" x2="190" y2="93" stroke="#ea4335" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.1s"/>
+  </line>
+
+  <!-- Node 3 YouTube -->
+  <circle cx="328" cy="55" r="22" fill="#0a0e1a" stroke="#ea4335" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+  </circle>
+  <text x="328" y="49" text-anchor="middle" font-size="14">▶️</text>
+  <text x="328" y="62" text-anchor="middle" font-size="7" fill="#ea4335">YouTube</text>
+  <text x="328" y="72" text-anchor="middle" font-size="7" fill="#ea4335">History</text>
+  <line x1="308" y1="70" x2="220" y2="108" stroke="#ea4335" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.2s"/>
+  </line>
+
+  <!-- Node 4 Photos -->
+  <circle cx="52" cy="195" r="22" fill="#0a0e1a" stroke="#34a853" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0.9s"/>
+  </circle>
+  <text x="52" y="189" text-anchor="middle" font-size="14">📷</text>
+  <text x="52" y="202" text-anchor="middle" font-size="7" fill="#34a853">Photos</text>
+  <text x="52" y="212" text-anchor="middle" font-size="7" fill="#34a853">& Faces</text>
+  <line x1="72" y1="180" x2="160" y2="143" stroke="#34a853" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.4s"/>
+  </line>
+
+  <!-- Node 5 Voice -->
+  <circle cx="190" cy="215" r="22" fill="#0a0e1a" stroke="#fbbc04" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="1.2s"/>
+  </circle>
+  <text x="190" y="209" text-anchor="middle" font-size="14">🎙️</text>
+  <text x="190" y="222" text-anchor="middle" font-size="7" fill="#fbbc04">Voice</text>
+  <text x="190" y="232" text-anchor="middle" font-size="7" fill="#fbbc04">Recordings</text>
+  <line x1="190" y1="193" x2="190" y2="157" stroke="#fbbc04" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.5s"/>
+  </line>
+
+  <!-- Node 6 Emails -->
+  <circle cx="328" cy="195" r="22" fill="#0a0e1a" stroke="#4285f4" stroke-width="1.5">
+    <animate attributeName="stroke-opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+  <text x="328" y="189" text-anchor="middle" font-size="14">📧</text>
+  <text x="328" y="202" text-anchor="middle" font-size="7" fill="#4285f4">Gmail</text>
+  <text x="328" y="212" text-anchor="middle" font-size="7" fill="#4285f4">& Emails</text>
+  <line x1="308" y1="180" x2="220" y2="143" stroke="#4285f4" stroke-width="1" stroke-dasharray="4,3" opacity="0.4">
+    <animate attributeName="stroke-dashoffset" values="0;-14" dur="1s" repeatCount="indefinite" begin="0.7s"/>
+  </line>
+
+  <text x="190" y="245" text-anchor="middle" font-size="9" fill="#ea4335" font-weight="700">
+    👁️ यह सब आपके Google Account में आज भी मौजूद है
+    <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+  </text>
+</svg>
+</div>
+
+<h2>🧪 Live Proof — खुद अपना Data देखो</h2>
+
+<p>
+  बस 5 links खोलो — और आप चौंक जाएंगे:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>क्या देखना है</th>
+      <th>Link खोलो</th>
+      <th>क्या मिलेगा</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>सारी Activity</strong></td>
+      <td>myactivity.google.com</td>
+      <td>हर search, click, यूट्यूब वीडियो — साल दर साल</td>
+    </tr>
+    <tr>
+      <td><strong>Location History</strong></td>
+      <td>timeline.google.com</td>
+      <td>हर दिन का map — कहाँ-कहाँ गए</td>
+    </tr>
+    <tr>
+      <td><strong>Google का आपका Profile</strong></td>
+      <td>adssettings.google.com</td>
+      <td>Google ने आपको क्या समझा — age, interests, income</td>
+    </tr>
+    <tr>
+      <td><strong>Voice Recordings</strong></td>
+      <td>myactivity.google.com → Voice</td>
+      <td>आपकी आवाज़ में recordings सुनो</td>
+    </tr>
+    <tr>
+      <td><strong>पूरा Data Download</strong></td>
+      <td>takeout.google.com</td>
+      <td>Google के पास आपका सारा data — ZIP में download</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="tip-box warning">
+  <span class="tip-icon">⚠️</span>
+  <div class="tip-text">
+    <strong>takeout.google.com पर जाओ — यह करो:</strong>
+    "Select All" → "Next Step" → Download।
+    जो ZIP file आएगी — उसका size आपको बताएगा
+    Google ने आपके बारे में कितना data इकट्ठा किया है।
+    ज़्यादातर लोगों का data <strong>10GB से 50GB</strong> के बीच होता है।
+    कुछ लोगों का <strong>100GB से भी ज़्यादा।</strong>
+    यह सिर्फ text और links नहीं — photos, voice clips, location points — सब।
+  </div>
+</div>
+
+<h2>💰 Google यह Data क्यों रखता है?</h2>
+
+<p>
+  Google एक search company नहीं है — <strong>Google एक advertising company है।</strong>
+  उसकी 80% से ज़्यादा कमाई — ads से होती है।
+  और ads तब ज़्यादा effective होते हैं जब वो targeted हों।
+  जितना ज़्यादा Google आपके बारे में जानता है —
+  उतने ज़्यादा targeted ads दिखा सकता है —
+  उतना ज़्यादा पैसा advertisers से मिलता है।
+</p>
+<p>
+  <strong>आप Google का product नहीं हैं — आप Google का product बनाने का raw material हैं।</strong>
+  आपका data → आपका profile → targeted ads → advertiser का पैसा → Google की कमाई।
+  2025 में Google ने ads से <strong>$198 billion</strong> कमाए — आपके data से।
+</p>
+
+<h2>🛡️ खुद को कैसे बचाओ — 8 तरीके</h2>
+
+<h3>तरीका 1 — Web & App Activity बंद करो</h3>
+<p>
+  myaccount.google.com → Data & Privacy → Web & App Activity → बंद करो।
+  इससे Google आपकी future searches record नहीं करेगा।
+  पुराना data भी "Auto-delete" पर set कर सकते हो — 3 महीने या 18 महीने।
+</p>
+
+<h3>तरीका 2 — Location History बंद करो</h3>
+<p>
+  Google Maps → Profile → Settings → Personal Content → Location History → बंद।
+  या myaccount.google.com → Data & Privacy → Location History → बंद।
+  पुरानी location history भी delete करो — "Delete All Location History।"
+</p>
+
+<h3>तरीका 3 — Ad Personalization बंद करो</h3>
+<p>
+  adssettings.google.com → "Ad Personalization" → बंद करो।
+  Ads तो आएंगे — लेकिन आपके personal data पर based नहीं होंगे।
+  यह आपकी profiling को रोकता है।
+</p>
+
+<h3>तरीका 4 — Chrome की जगह Firefox या Brave इस्तेमाल करो</h3>
+<p>
+  Google Chrome — Google का browser — हर website visit track करता है।
+  Firefox (Mozilla) या Brave — privacy-focused browsers हैं।
+  Brave तो built-in ad blocker के साथ आता है।
+  सिर्फ browser बदलने से — tracking 60% कम हो जाती है।
+</p>
+
+<h3>तरीका 5 — Google Search की जगह DuckDuckGo</h3>
+<p>
+  DuckDuckGo — search engine जो track नहीं करता।
+  Search history save नहीं होती। Profile नहीं बनती।
+  India में results भी अच्छे आते हैं।
+  Mobile पर DuckDuckGo app free में मिलती है।
+</p>
+
+<h3>तरीका 6 — Gmail की जगह ProtonMail</h3>
+<p>
+  ProtonMail — Switzerland based, end-to-end encrypted।
+  Google emails पढ़ नहीं सकता।
+  Free plan में 1GB storage मिलती है — शुरुआत के लिए काफी।
+  proton.me पर free account बना सकते हो।
+</p>
+
+<h3>तरीका 7 — Phone पर Google Services Limit करो</h3>
+<p>
+  Settings → Accounts → Google → Account Sync → 
+  जो services track नहीं करनी — उनका sync बंद करो।
+  खासकर "Location", "Web History", "Device Information" बंद करो।
+  Background data — Settings → Apps → Google → Data Usage → Background Data बंद।
+</p>
+
+<h3>तरीका 8 — Regular Data Delete करो</h3>
+<p>
+  myactivity.google.com पर हर 3 महीने में जाओ।
+  "Delete Activity By" → "All Time" → Delete।
+  Location History, Search History, YouTube History — तीनों।
+  Auto-delete feature भी on करो — 3 months पर set करो।
+</p>
+
+<!-- ═══ SVG एनिमेशन 3 — Protection Shield ═══ -->
+<div style="display:flex;justify-content:center;margin:36px 0;">
+<svg width="340" height="210" viewBox="0 0 340 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Google data से बचने के तरीके — privacy shield India">
+  <defs>
+    <linearGradient id="shieldBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4285f4"/>
+      <stop offset="100%" stop-color="#34a853"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M170 18 L238 48 V100 C238 138 208 162 170 172 C132 162 102 138 102 100 V48 Z"
+    fill="none" stroke="url(#shieldBlue)" stroke-width="3">
+    <animate attributeName="stroke-dasharray" values="0;600;600" dur="2s" fill="freeze"/>
+  </path>
+  <path d="M170 30 L226 56 V100 C226 132 200 153 170 162 C140 153 114 132 114 100 V56 Z"
+    fill="#4285f4" opacity="0.05">
+    <animate attributeName="opacity" values="0.05;0.12;0.05" dur="3s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- G crossed out inside shield -->
+  <text x="170" y="115" text-anchor="middle" font-size="42" fill="#4285f4" opacity="0.3">G</text>
+  <line x1="148" y1="78" x2="192" y2="135" stroke="#ea4335" stroke-width="3" stroke-linecap="round" opacity="0.8">
+    <animate attributeName="stroke-dasharray" values="0;80;80" dur="0.8s" begin="1.8s" fill="freeze"/>
+  </line>
+
+  <!-- Orbiting dot -->
+  <circle cx="238" cy="100" r="5" fill="#ea4335" opacity="0.6">
+    <animateTransform attributeName="transform" type="rotate" values="0 170 100;360 170 100" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0.2;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <text x="28" y="58" text-anchor="middle" font-size="12" fill="#4285f4" font-weight="800">$198B</text>
+  <text x="28" y="72" text-anchor="middle" font-size="7" fill="#ea4335">कमाई</text>
+  <text x="28" y="84" text-anchor="middle" font-size="7" fill="#ea4335">आपके Data से</text>
+
+  <text x="312" y="58" text-anchor="middle" font-size="12" fill="#4285f4" font-weight="800">55 करोड़</text>
+  <text x="312" y="72" text-anchor="middle" font-size="7" fill="#ea4335">India में</text>
+  <text x="312" y="84" text-anchor="middle" font-size="7" fill="#ea4335">Google Users</text>
+
+  <text x="170" y="192" text-anchor="middle" font-size="11" fill="#4285f4" font-weight="700">🛡️ जागरूकता ही सबसे बड़ी सुरक्षा है</text>
+</svg>
+</div>
+
+<h2>⚖️ क्या यह गैरकानूनी है?</h2>
+
+<p>
+  India में <strong>Digital Personal Data Protection Act 2023</strong> लागू हो चुका है।
+  इसके तहत — कोई भी company आपका data आपकी consent के बिना नहीं रख सकती।
+  लेकिन जब आपने Gmail या Google account बनाया —
+  तो एक लंबा "Terms & Conditions" था जिसमें आपने "Agree" किया था।
+  उसी में data collection की permission थी।
+</p>
+<p>
+  यूरोप में GDPR law है जिसके तहत Google को
+  users के data को लेकर बहुत सख्त नियम follow करने पड़ते हैं।
+  India में अभी यह law नया है — implementation होने में समय लगेगा।
+  अभी के लिए — <strong>खुद जागरूक रहना ही सबसे बड़ा बचाव है।</strong>
+</p>
+
+<div class="tip-box success">
+  <span class="tip-icon">🏆</span>
+  <div class="tip-text">
+    <strong>आज से यह 5 काम करो:</strong><br><br>
+    ✅ myactivity.google.com खोलो — अपना data देखो — चौंको — फिर delete करो<br>
+    ✅ adssettings.google.com → Ad Personalization बंद करो<br>
+    ✅ Location History → Auto-delete → 3 months पर set करो<br>
+    ✅ Chrome की जगह Brave या Firefox try करो — एक हफ्ते के लिए<br>
+    ✅ यह लेख परिवार के साथ share करो — विशेषकर बच्चों के साथ<br><br>
+    याद रखो: <strong>"अगर कोई service मुफ़्त है — तो असल product आप हो।"</strong>
+  </div>
+</div>
+
+<h2>🎯 निष्कर्ष — Google बुरा नहीं है, लेकिन जागरूकता ज़रूरी है</h2>
+
+<p>
+  Google ने दुनिया को बहुत कुछ दिया है — Maps, Search, Gmail, YouTube।
+  यह सब मुफ़्त है। लेकिन "मुफ़्त" का मतलब यह नहीं कि cost नहीं है।
+  Cost है — आपका data, आपकी privacy, आपकी digital identity।
+</p>
+<p>
+  आपको Google छोड़ने की ज़रूरत नहीं।
+  बस यह जानना ज़रूरी है — <strong>क्या share हो रहा है।</strong>
+  और जो ज़रूरी नहीं वो बंद कर दो।
+  यही digital literacy है।
+  <strong>यही InfoShield India का मिशन है।</strong>
+</p>
+
+<!-- ═══ CTA ═══ -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:36px 0;">
+  <div style="background:linear-gradient(135deg,#0088cc,#005580);border-radius:14px;padding:22px;text-align:center;color:white;">
+    <div style="font-size:36px;margin-bottom:8px;">📡</div>
+    <div style="font-weight:900;font-size:16px;margin-bottom:6px;">रोज़ाना Privacy Tips पाओ</div>
+    <div style="font-size:13px;opacity:0.9;margin-bottom:14px;">
+      Digital privacy alerts —<br>
+      सबसे पहले Telegram पर
+    </div>
+    <a href="https://t.me/InfoShieldIndia" target="_blank" rel="noopener noreferrer"
+      style="display:inline-block;background:white;color:#0088cc;font-weight:800;font-size:13px;padding:10px 22px;border-radius:30px;text-decoration:none;">
+      🔔 जुड़ो — @InfoShieldIndia
+    </a>
+  </div>
+  <div style="background:linear-gradient(135deg,#ea4335,#cc0000);border-radius:14px;padding:22px;text-align:center;color:white;">
+    <div style="font-size:36px;margin-bottom:8px;">▶️</div>
+    <div style="font-weight:900;font-size:16px;margin-bottom:6px;">Video देखो</div>
+    <div style="font-size:13px;opacity:0.9;margin-bottom:14px;">
+      Privacy guides हिंदी में<br>
+      मुफ़्त — अभी देखो
+    </div>
+    <a href="https://youtube.com/@InfoShieldIndia" target="_blank" rel="noopener noreferrer"
+      style="display:inline-block;background:white;color:#ea4335;font-weight:800;font-size:13px;padding:10px 22px;border-radius:30px;text-decoration:none;">
+      ▶ Subscribe — @InfoShieldIndia
+    </a>
+  </div>
+</div>
+
+<p style="margin-top:24px;padding:18px;background:var(--accent-light,#e8f0fe);border-radius:12px;font-size:14px;">
+  📌 <strong>यह लेख आँखें खोलने वाला लगा?</strong>
+  अपने परिवार और दोस्तों को ज़रूर share करो।
+  नीचे comment करो — आपके Google data का size कितना था?<br><br>
+  🔗 और गाइड:
+  <a href="/investment-app-scam" style="color:var(--accent);">Investment App Scam</a> |
+  <a href="/electricity-bill-scam" style="color:var(--accent);">Electricity Bill Scam</a> |
+  <a href="/phone-tracking-hindi" style="color:var(--accent);">क्या Phone Track हो रहा है?</a>
+</p>
+
+</article>
