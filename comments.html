@@ -80,7 +80,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging.js";
 
-// TERA NAYA EXACT RE-VERIFIED FIREBASE CONFIGURATION OBJECT BLOCK
+// VERIFIED NEW FIREBASE CONFIGURATION OBJECT BLOCK
 const firebaseConfig = {
   apiKey: "AIzaSyAx8ogDygFYQ88PdlNXpRqe_a7-XH1Oh88",
   authDomain: "tyagicore.firebaseapp.com",
@@ -91,52 +91,38 @@ const firebaseConfig = {
   measurementId: "G-6KKYWVG5TH"
 };
 
-const VAPID_KEY  = "BPSPa7nCW1nGok9peZQepk25VC1OxeFxFHtWVZsen2TnwVCya3Sq2Dtb4W0sX8u06fRsg-eAqgxEUoW2XP1Oyvo";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbza0bNfLrQEJyzsLueascSpsXJCkcwDYS8L469fE3HMwPnycOlGuCPTkl7v8Ar2CWie5w/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxJjwwRFEZ7WHl7NMte2JUhtVmUMN7n1VpDJUI1t47ASlXHyTtE-YQvxr9qWBTEzSi1A/exec";
 
-const app       = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+const app = initializeApp(firebaseConfig);
 
-window._tcInitFCM = async function() {
-  const storedUser = JSON.parse(localStorage.getItem("tc_user"));
-  if (!storedUser) return;
-  try {
-    const sw = await navigator.serviceWorker.register('./sw.js', { scope: './' });
-    await navigator.serviceWorker.ready;
-    const perm = await Notification.requestPermission();
-    if (perm !== "granted") return;
-    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: sw });
-    if (token) {
-      fetch(SCRIPT_URL, {
-        method: "POST", mode: "no-cors",
-        body: JSON.stringify({ action: "fcm_subscribe", fcmToken: token, email: storedUser.e, name: storedUser.n })
-      });
-      console.log("New Project FCM Link Certified ✅");
-    }
-  } catch(err) { console.log("FCM registration error."); }
-
-  onMessage(messaging, function(payload) {
-    var title  = payload.notification ? payload.notification.title : "TyagiCore 🔔";
-    var body   = payload.notification ? payload.notification.body  : "";
-    var url    = (payload.data && payload.data.url) ? payload.data.url : "https://infoshield.gklearnstudy.in/";
-    if (url.startsWith("/")) url = "https://infoshield.gklearnstudy.in" + url;
-
-    navigator.serviceWorker.ready.then(function(reg) {
-      reg.showNotification(title, {
-        body   : body,
-        icon   : "https://infoshield.gklearnstudy.in/assets/images/icon-192.png",
-        tag    : "tc-notif",
-        data   : { url: url },
-        vibrate: [200, 100, 200]
-      });
-    });
-  });
-};
+// Try catch mapping to avoid analytical scripts crashes online
+try {
+  const messaging = getMessaging(app);
+  window._tcInitFCM = async function() {
+    const storedUser = JSON.parse(localStorage.getItem("tc_user"));
+    if (!storedUser) return;
+    try {
+      const sw = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+      await navigator.serviceWorker.ready;
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") return;
+      const token = await getToken(messaging, { serviceWorkerRegistration: sw });
+      if (token) {
+        fetch(SCRIPT_URL, {
+          method: "POST", mode: "no-cors",
+          body: JSON.stringify({ action: "fcm_subscribe", fcmToken: token, email: storedUser.e, name: storedUser.n })
+        });
+        console.log("FCM Stack Bound ✅");
+      }
+    } catch(e) {}
+  };
+} catch(err) { console.log("Analytics block ignored."); }
 </script>
 
 <script>
 (function() {
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxJjwwRFEZ7WHl7NMte2JUhtVmUMN7n1VpDJUI1t47ASlXHyTtE-YQvxr9qWBTEzSi1A/exec";
+  // NEW CERTIFIED API GATEWAY macro URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxCB4ytpyduVAFwP9Tsr0qwGo7UTHlcxmzmRquLTIL9qj1vHJJL87tXDqtuUP9wHddTQ/exec";
 
   let user          = JSON.parse(localStorage.getItem("tc_user")) || null;
   let serverData    = [];
@@ -169,7 +155,7 @@ window._tcInitFCM = async function() {
   window.resetStar = function()  { paintStars(currentRating); };
   
   window.handleStar = function(n) {
-    if (!user) return alert("Verification Error: Google identity session required to broadcast review stars!");
+    if (!user) return alert("Verification Error: Google identity session required!");
     currentRating = n;
     paintStars(n);
     fetch(SCRIPT_URL, {
@@ -196,7 +182,7 @@ window._tcInitFCM = async function() {
       tempLocal.push({ rowId: "temp_"+Date.now(), name: user.n, comment: msg, parentId: pid, pic: user.p, date: "Sending...", pending: true, isAdmin: false, email: user.e });
     } else {
       var t = serverData.find(function(c) { return c.rowId == rowId; });
-      if (t) { t.comment = msg; t.date = "Updating cells..."; }
+      if (t) { t.comment = msg; t.date = "Updating..."; }
     }
     
     render();
@@ -230,7 +216,7 @@ window._tcInitFCM = async function() {
       updateRatingUI(data.avgRating, data.totalVotes);
       paintStars(currentRating);
       render();
-    } catch(e) { console.log("Background synchronization drop."); }
+    } catch(e) { console.log("Synchronization frame skip."); }
   }
 
   function updateRatingUI(avg, total) {
@@ -271,7 +257,7 @@ window._tcInitFCM = async function() {
   }
 
   window.checkAuthAndOpen = function(id, type) {
-    if (!user) return alert("Google session token validation dropped: Login Required!");
+    if (!user) return alert("Authorization Required!");
     isTyping = true;
     document.querySelectorAll(".tc-inline-box").forEach(function(b) { b.innerHTML = ""; });
     var box = document.getElementById("box-" + id);
@@ -291,7 +277,7 @@ window._tcInitFCM = async function() {
   };
 
   window.deleteMsg = async function(id) {
-    if (!confirm("Are you sure you want to completely wipe this dataset row node?")) return;
+    if (!confirm("Wipe entry from master array?")) return;
     await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "delete", rowId: id, userEmail: user.e }), mode: "no-cors" });
     sync();
   };
